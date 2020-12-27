@@ -5,14 +5,9 @@
 </template>
 
 <style lang="scss">
-@import '@/common.blocks/body/body.scss';
-@import '@/common.blocks/body/_theme/body_theme_dark.scss';
-@import '@/common.blocks/container/container.scss';
-@import '@/common.blocks/main/main.scss';
-@import '@/common.blocks/index/pt.scss';
-@import '@/common.blocks/index/pb.scss';
-@import '@/common.blocks/input/input.scss';
-@import '@/common.blocks/form/form.scss';
+@import '@/common.blocks/aliases.scss';
+@import '@/common.blocks/main.scss';
+
 
 html {
   padding: 0;

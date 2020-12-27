@@ -1,0 +1,71 @@
+/* ------Body files start here------ */
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------Body files end here------ */
+
+
+/* ------Input files start here------ */
+input {
+  outline: none;
+  border: none;
+  padding: 0.8em;
+  margin: 0;
+}
+
+input[type="submit"] {
+  cursor: pointer;
+}
+
+.input_type-index {
+  border-radius: 2px;
+}
+
+.input_type-index:not(:last-child) {
+  border-bottom: 1px solid #ECEAEA;
+}
+
+.input_type-submit_full {
+  width: 100%;
+}
+
+.input_theme-blue {
+  background-color: #408fe9;
+  color: white;
+  border-radius: 2px;
+}
+/* ------Input files end here------ */
+
+/* ------Button files start here------ */
+button {
+  outline: none;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+.button_type-index {
+  padding: 8px 13px;
+  border-radius: 3px;
+}
+
+.button_theme-green {
+  background-color: #00aa33;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9em;
+}
+/* ------Button files end here------ */
+
+/* ------Form files start here */
+.form_type-main {
+  width: auto;
+  height: auto;
+  display: inline-block;
+}
+/* ------Form files end here------ */
