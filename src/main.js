@@ -6,6 +6,8 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+axios.defaults.baseURL = 'http://skyber.loc'
+
 new Vue({
   router,
   store,
