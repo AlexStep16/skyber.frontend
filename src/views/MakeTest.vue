@@ -1,18 +1,25 @@
 <template>
   <div class="container">
     <div class="main">
-      <div class="test"></div>
+      <div class="test">
+        <TestForm />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 //import RegisterForm from '@/components/RegisterForm.vue';
-
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MakeTest',
+  computed: {
+    ...mapGetters({
+      authenticated: 'auth/authenticated',
+      user: 'auth/user'
+    })
+  },
   components: {
   },
   methods: {

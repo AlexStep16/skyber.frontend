@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '../store'
 import Register from '../views/Register.vue'
 import MakeTest from '../views/MakeTest.vue'
 
@@ -11,25 +12,40 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    meta: {
-      auth: undefined
-    }
+    beforeEnter: (to, from, next) => {
+      if (store.getters['auth/authenticated']) {
+        return next({
+          name: 'MakeTest'
+        })
+      }
+      next();
+    },
+    
   },
   {
     path: '/register',
     name: 'Register',
     component: Register,
-    meta: {
-      auth: undefined
-    }
+    beforeEnter: (to, from, next) => {
+      if (store.getters['auth/authenticated']) {
+        return next({
+          name: 'MakeTest'
+        })
+      }
+      next();
+    },
   },
   {
     path: '/create',
     name: 'MakeTest',
     component: MakeTest,
-    meta: {
-      auth: true
-    }
+    /*beforeEnter: (to, from, next) => {
+      if (!store.getters['auth/authenticated']) {
+        return next({
+          name: 'Home'
+        })
+      }
+    },*/
   }
 ]
 
