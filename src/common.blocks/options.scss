@@ -1,0 +1,30 @@
+.options {
+  width: 300px;
+  height: auto;
+  box-shadow: 0 0 15px rgba(226, 226, 226, 0.267);
+  border-radius: 10px;
+  padding: 13px;
+  background-color: #171717;
+}
+
+.option {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(50% - 2.5px);
+  height: 136px;
+  border-radius: 10px;
+  background-color: #1d1d1d;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.4em;
+  cursor: pointer;
+}
+
+.option:first-child {
+  margin-right: 5px;
+}
+
+.option:hover {
+  color: #6699FF;
+}

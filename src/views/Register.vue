@@ -1,21 +1,20 @@
 <template>
   <div class="container">
     <div class="main">
-      <LoginForm />
-      <button class="button_type-index button_theme-green" @click="makeTest">Создать тест</button>
+      <RegisterForm />
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import LoginForm from '@/components/LoginForm.vue';
+import RegisterForm from '@/components/RegisterForm.vue';
 
 
 export default {
-  name: 'Home',
+  name: 'Register',
   components: {
-    LoginForm
+    RegisterForm
   },
   methods: {
     makeTest() {
@@ -29,6 +28,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
 
+.main {
+  width: auto;
+}
 
 </style>
-
