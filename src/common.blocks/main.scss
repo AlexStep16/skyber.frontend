@@ -7,7 +7,21 @@ body {
   padding: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* ------Body files end here------ */
+
+
+/* ------h1 files start here------ */
+
+h3 {
+  font-size: 1em;
+  color: #444444;
+}
+
+/* ------h1 files end here------ */
 
 
 /* ------Input files start here------ */
@@ -30,6 +44,17 @@ input[type="submit"] {
   border-bottom: 1px solid #ECEAEA;
 }
 
+.input_type-test {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 1px 3px rgba(156, 156, 156, 0.8);
+}
+
+.input_type-option {
+  width: 100%;
+  border-radius: 10px;
+}
+
 .input_type-submit_full {
   width: 100%;
 }
@@ -37,6 +62,12 @@ input[type="submit"] {
 .input_theme-blue {
   background-color: #408fe9;
   color: white;
+  border-radius: 2px;
+}
+
+.input_theme-dark {
+  background-color: #1d1d1d;
+  color: rgb(247, 247, 247);
   border-radius: 2px;
 }
 /* ------Input files end here------ */
@@ -67,5 +98,10 @@ button {
   width: auto;
   height: auto;
   display: inline-block;
+}
+
+.form_type-test {
+  @extend .form_type-main;
+  width: 100%;
 }
 /* ------Form files end here------ */

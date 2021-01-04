@@ -2,7 +2,9 @@
   <div class="container">
     <div class="main">
       <div class="test">
-        <TestForm />
+        <div class="test__header">
+          <TestForm />
+        </div>
       </div>
     </div>
   </div>
@@ -10,6 +12,7 @@
 
 <script>
 //import RegisterForm from '@/components/RegisterForm.vue';
+import TestForm from '@/components/TestForm.vue'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -21,6 +24,7 @@ export default {
     })
   },
   components: {
+    TestForm
   },
   methods: {
     makeTest() {
@@ -33,6 +37,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
-@import '@/common.blocks/register.scss';
+@import '@/common.blocks/maketest.scss';
 
 </style>

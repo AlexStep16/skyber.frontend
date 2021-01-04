@@ -1,14 +1,26 @@
 <template>
-  <form class="form form_type-main">
+  <form class="form form_type-test">
     <div>
-      <h1>Название теста</h1>
-      <input type="text" name="name" id="name" placeholder="Введите E-Mail" class="input input_type-index pt4" v-model="testForm.name">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Название теста"
+        class="input input_type-test"
+        v-model="testForm.name"
+      />
     </div>
     <div>
-      <h1>Название теста</h1>
-      <input type="text" name="description" id="description" placeholder="Введите пароль" class="input input_type-index mt4" v-model="testForm.description">
+      <input
+        type="text"
+        name="description"
+        id="description"
+        placeholder="Описание теста"
+        class="input input_type-test"
+        v-model="testForm.description"
+      />
     </div>
-    <input type="submit" class="input input_type-submit_full input_theme-blue mt4" value="Войти" @click.prevent="submit">
+    <!-- <input type="submit" class="input input_type-submit_full input_theme-blue mt7" value="Создать тест" @click.prevent="submit"> -->
   </form>
 </template>
 
@@ -16,23 +28,23 @@
 //import axios from "axios"
 
 export default {
-  name: 'LoginForm',
+  name: "TestForm",
   data() {
     return {
       testForm: {
-        name: "",
-        description: ""
-      }
-    }
+        name: this.$store.state.testStore.name,
+        description: "",
+      },
+    };
   },
   methods: {
-    submit() {
-      
-    }
-  }
-}
+    submit() {},
+  },
+  mounted() {
+    console.log(this.$store.state);
+  },
+};
 </script>
 
 <style scoped lang="scss">
-  
 </style>

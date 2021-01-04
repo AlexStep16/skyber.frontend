@@ -27,6 +27,9 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
-@import '@/common.blocks/register.scss';
+
+.main {
+  width: auto;
+}
 
 </style>

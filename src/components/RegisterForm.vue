@@ -2,7 +2,7 @@
   <form class="form form_type-register">
     <h1 style="color: white">Регистрация</h1>
     <div>
-      <input type="text" name="email" id="email" placeholder="E-Mail" class="input input_type-index pt4" v-model="form.email">
+      <input type="text" name="email" id="email" placeholder="E-Mail" class="input input_type-index" v-model="form.email">
     </div>
     <div>
       <input type="password" name="password" id="password" placeholder="Пароль" class="input input_type-index mt4" v-model="form.password">
