@@ -15,8 +15,8 @@
 </template>
 
 <script>
+import axios from 'axios'
 //import axios from "axios"
-import { mapActions } from 'vuex'
 
 export default {
   name: 'RegisterForm',
@@ -29,12 +29,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      login: 'auth/login'
-    }),
-
     submit() {
-      this.login(this.form)
+      axios.post('/register', this.form)
+      .then(() => {
+        this.$router.push({name: 'Home'})
+      })
     }
   }
 }

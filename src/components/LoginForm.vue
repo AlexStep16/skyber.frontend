@@ -1,5 +1,5 @@
 <template>
-  <form action="api/login" class="form form_type-main">
+  <form action="api/login" class="form form_type-main mr8">
     <div>
       <input type="text" name="email" id="email" placeholder="E-Mail" class="input input_type-index" v-model="form.email">
     </div>

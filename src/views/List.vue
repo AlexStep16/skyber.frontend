@@ -1,25 +1,21 @@
 <template>
   <div class="container">
     <div class="main">
-      <RegisterForm />
+      
     </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import RegisterForm from '@/components/RegisterForm.vue';
-
+//import LoginForm from '@/components/LoginForm.vue';
 
 export default {
-  name: 'Register',
+  name: 'List',
   components: {
-    RegisterForm
+    
   },
   methods: {
-    makeTest() {
-      this.$router.push('/create');
-    }
+    
   }
 }
 
@@ -28,4 +24,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
 
+
 </style>
+

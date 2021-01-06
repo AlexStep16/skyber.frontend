@@ -30,6 +30,7 @@ input {
   border: none;
   padding: 0.8em;
   margin: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
 input[type="submit"] {
@@ -46,8 +47,17 @@ input[type="submit"] {
 
 .input_type-test {
   width: 100%;
-  border-radius: 15px;
-  box-shadow: 0 1px 3px rgba(156, 156, 156, 0.8);
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 1.5em;
+  padding: 13px;
+  padding-left: 0;
+}
+
+.input_type-test-small {
+  @extend .input_type-test;
+  font-size: 1em;
+  padding: 5px 13px;
+  padding-left: 0;
 }
 
 .input_type-option {
@@ -57,18 +67,17 @@ input[type="submit"] {
 
 .input_type-submit_full {
   width: 100%;
+  border-radius: 2px;
 }
 
 .input_theme-blue {
   background-color: #408fe9;
   color: white;
-  border-radius: 2px;
 }
 
 .input_theme-dark {
   background-color: #1d1d1d;
   color: rgb(247, 247, 247);
-  border-radius: 2px;
 }
 /* ------Input files end here------ */
 
@@ -80,16 +89,41 @@ button {
   cursor: pointer;
 }
 
-.button_type-index {
+.button-clasic {
   padding: 8px 13px;
   border-radius: 3px;
+}
+
+.button_type-index {
+  @extend .button-clasic;
+}
+
+.button_type-question {
+  @extend .button-clasic;
+  flex-grow: 0;
+}
+
+.button_theme-roboto {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9em;
 }
 
 .button_theme-green {
   background-color: #00aa33;
   color: white;
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.9em;
+  @extend .button_theme-roboto;
+}
+
+.button_theme-red {
+  background-color: #ff6e34;
+  color: white;
+  @extend .button_theme-roboto;
+}
+
+.button_theme-blue {
+  background-color: #6699FF;
+  color: white;
+  @extend .button_theme-roboto;
 }
 /* ------Button files end here------ */
 

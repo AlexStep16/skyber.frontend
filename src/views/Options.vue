@@ -28,7 +28,9 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        name: '',
+        email: '',
+        status: 'draft'
       }
     }
   },
@@ -66,6 +68,12 @@ export default {
         })
       }
     }
+  },
+  mounted() {
+    let userEmail = this.$store.state.auth.user.email;
+    if(userEmail) {
+      this.form.email = userEmail;
+    }
   }
 }
 
@@ -74,9 +82,5 @@ export default {
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
 @import '@/common.blocks/options.scss';
-
-.main {
-  width: auto;
-}
 
 </style>

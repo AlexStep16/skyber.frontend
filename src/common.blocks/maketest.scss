@@ -8,10 +8,15 @@
   align-items: flex-start;
 }
 
-.test__header {
+.test__block {
   width: 700px;
   height: auto;
   background-color: white;
   border-radius: 10px;
   padding: 13px;
+}
+
+.test__item {
+  display: flex;
+  align-items: flex-start;
 }
