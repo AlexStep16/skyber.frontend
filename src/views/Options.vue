@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Header />
     <div class="main">
       <div class="options">
         <div>
@@ -21,6 +22,7 @@
 <script>
 // @ is an alias to /src
 import axios from "axios"
+import Header from "@/components/Header.vue"
 import { mapMutations } from 'vuex';
 
 export default {
@@ -30,12 +32,13 @@ export default {
       form: {
         name: '',
         email: '',
-        status: 'draft'
+        status: 'draft',
+        variants: [{id: 0, name: 'Вариант 1'}]
       }
     }
   },
   components: {
-    
+    Header
   },
   methods: {
     ...mapMutations([
@@ -61,7 +64,7 @@ export default {
         axios.post('poll/create', this.form)
         .then((res) => {
           this.SET_POLL(res.data.data)
-          this.$router.push({name: 'MakeTest'})
+          this.$router.push({name: 'MakePoll'})
         })
         .catch(() => { 
           this.$router.push({name: 'Home'})

@@ -1,0 +1,14 @@
+.list {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.list-item {
+  width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  height: auto;
+  margin-top: 20px;
+  padding: 10px;
+}

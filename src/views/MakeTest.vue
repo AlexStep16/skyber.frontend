@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Header />
     <div class="main">
       <div class="test">
         <div class="test__block test__header">
@@ -23,6 +24,22 @@
                 class="input input_type-test-small"
                 v-model="testDescription"
               />
+            </div>
+            <input
+              type="file"
+              name="image"
+              @change="uploadImage"
+              v-if="image.link == null"
+            />
+            <button
+              class="button button_type-question button_theme-red"
+              @click.prevent="deleteImage"
+              v-if="image.link != null"
+            >
+              Удалить изображение
+            </button>
+            <div class="test__image" v-if="image.link != null">
+              <img :src="image.link" />
             </div>
           </form>
         </div>
@@ -49,15 +66,35 @@
                 placeholder="Напишите свой вопрос"
                 v-model="question.name"
               />
+              
               <input
-                type="text"
-                class="input input_type-test-small"
-                placeholder="Напишите здесь вариант ответа"
-                v-model="variant.name"
-                v-for="(variant, index) in question.radioVariants"
-                :key="variant.id"
-                @keyup="addVariant(question, variant.id)"
-                @focusout="checkIsEmpty(variant, index)"
+                type="file"
+                name="image"
+                @change="questionImage($event, question)"
+                v-if="question.image.link == null"
+              />
+              <button
+                class="button button_type-question button_theme-red"
+                @click.prevent="questionImageDelete(question)"
+                v-if="question.image.link != null"
+              >
+                Удалить изображение
+              </button>
+              <div class="test__image" v-if="question.image.link != null">
+                <img :src="question.image.link" />
+              </div>
+
+              <multiselect
+                v-model="question.typeAnswer"
+                :options="options"
+              ></multiselect>
+              <VariantOne
+                :postQuestion="question"
+                v-if="question.typeAnswer == 'Один из списка'"
+              />
+              <VariantInput
+                :postQuestion="question"
+                v-if="question.typeAnswer == 'Ввод текста'"
               />
             </div>
             <button
@@ -67,28 +104,32 @@
               Удалить
             </button>
           </template>
+
           <template v-else>
-            <div style="display: flex; flex-direction: column">
+            <div
+              style="display: flex; flex-direction: column"
+              v-if="question.name != null"
+            >
               <div style="flex-grow: 1; display: flex; align-items: center">
                 {{ question.name }}
               </div>
-              <div class="form_type-radio mt5">
-                <div
-                  class="form_radio"
-                  v-for="variant in getRadioArray(question.radioVariants)"
-                  :key="variant.id"
-                >
-                  <input
-                    :id="`radio${variant.id}`"
-                    type="radio"
-                    name="radio"
-                    :value="variant.name"
-                  />
-                  <label :for="`radio${variant.id}`">{{ variant.name }}</label>
-                </div>
+              <div class="test__image mt5" v-if="question.image.link != null">
+                <img :src="question.image.link" />
               </div>
+              <VariantOneOutput
+                v-if="question.typeAnswer == 'Один из списка'"
+                :postQuestion="question"
+              />
+              <VariantInputOutput
+                v-if="question.typeAnswer == 'Ввод текста'"
+                :postQuestion="question"
+              />
             </div>
+            <div v-else>Пустой вопрос</div>
           </template>
+        </div>
+        <div class="test__block test__empty mt6" v-if="questions.length == 0">
+          Нет вопросов
         </div>
         <div style="display: flex; justify-content: space-between" class="mt8">
           <button
@@ -110,8 +151,20 @@
 </template>
 
 <script>
-//import RegisterForm from '@/components/RegisterForm.vue';
 import axios from "axios";
+import Multiselect from "vue-multiselect";
+import Header from "@/components/Header.vue";
+import VariantOne from "@/components/MakeTest/VariantOne.vue";
+import VariantInput from "@/components/MakeTest/VariantInput.vue";
+import VariantOneOutput from "@/components/MakeTest/VariantOneOutput.vue";
+import VariantInputOutput from "@/components/MakeTest/VariantInputOutput.vue";
+
+/**
+ * Структура data объекта questions:
+ * radioVariants для режима 'Один из списка'
+ * listVariants для режима 'Список'
+ * и т.д
+ */
 
 export default {
   name: "MakeTest",
@@ -121,32 +174,48 @@ export default {
       testId: "",
       testName: "",
       testDescription: "",
+      options: ["Один из списка", "Ввод текста"],
+      image: {
+        data: null,
+        link: null,
+      },
     };
   },
-  components: {},
+  components: {
+    Multiselect,
+    VariantOne,
+    VariantInput,
+    VariantOneOutput,
+    VariantInputOutput,
+    Header,
+  },
   computed: {},
   methods: {
-    getRadioArray(variant) {
-      return variant.filter((elem) => {
-        return elem.name != null;
-      });
-    },
     addQuestion() {
-      let name = "Введите название";
-      let radioVariant = [{ id: 0, name: "Вариант 1" }];
-      let question = {
+      let name = null;
+      let radioVariants = [{ id: 0, name: "Вариант 1" }];
+      let questionToPost = {
         testId: this.testId,
-        radioVariant: radioVariant,
+        variants: radioVariants,
         name: name,
+        typeAnswer: "Один из списка",
       };
 
-      axios.post("test/question", question).then((res) => {
-        this.questions.push({
+      axios.post("test/question", questionToPost).then((res) => {
+        let question = {
           id: res.data,
           name: name,
           focused: false,
-          radioVariants: radioVariant,
-        });
+          typeAnswer: "Один из списка",
+          radioVariants: radioVariants,
+          image: {
+            data: null,
+            link: null
+          }
+        };
+
+        this.questions.push(question);
+        this.questionFocus(question);
       });
     },
 
@@ -163,34 +232,23 @@ export default {
         }
       });
       question.focused = true;
-      if (
-        question.radioVariants.length == 1 &&
-        question.radioVariants[0].name != null
-      ) {
-        question.radioVariants.push({id: 1, name: null})
-      }
-    },
-
-    addVariant(question, id) {
-      let variant = question.radioVariants;
-
-      if (variant[id].name == "") return;
-
-      if (++id == variant.length) {
-        variant.push({
-          id: variant.length,
-          name: "Вариант " + id,
-        });
-      }
-    },
-
-    checkIsEmpty(variant, index) {
-      if (variant.name == "") {
-        variant.name = "Вариант " + index;
-      }
     },
 
     saveTest() {
+      this.questions.forEach((question) => {
+        switch (question.typeAnswer) {
+          case "Один из списка":
+            question.selectedVariants = question.radioVariants;
+            break;
+          case "Ввод текста":
+            question.selectedVariants = [];
+            break;
+          default:
+            question.selectedVariants = question.radioVariants;
+            break;
+        }
+      });
+      
       let test = {
         questions: this.questions,
         testName: this.testName,
@@ -198,9 +256,48 @@ export default {
         testId: this.testId,
       };
       axios.post("test/save", test).then(() => {
-        console.log("Succeed save");
+        this.$router.push({ name: "List" });
       });
     },
+
+    uploadImage(event) {
+      this.image.data = event.target.files[0];
+      const fd = new FormData();
+      this.image.data != undefined
+        ? fd.append("testImage", this.image.data)
+        : "";
+      fd.append("id", this.testId);
+
+      if (!this.image.data) return;
+
+      axios.post("test/upload", fd).then((res) => {
+        this.image.link = res.data.image;
+      });
+    },
+
+    deleteImage() {
+      axios.post("test/upload/delete", { id: this.testId }).then(() => {
+        this.image.link = null;
+      });
+    },
+
+    questionImage(event, question) {
+      let fd = new FormData()
+      fd.append('questionImage', event.target.files[0])
+      fd.append('id', question.id)
+
+      axios.post('test/question/upload', fd).then(() => {
+        question.image.data = event.target.files[0]
+        question.image.link = URL.createObjectURL(event.target.files[0])
+      })
+    },
+
+    questionImageDelete(question) {
+      axios.post('test/question/upload/delete', {id: question.id}).then(() => {
+        question.image.link = null;
+        question.image.data = null;
+      })
+    }
   },
 
   mounted() {
@@ -211,32 +308,46 @@ export default {
     this.testId = this.$store.state.testStore.id;
 
     axios.get("test/" + this.testId).then((res) => {
-      this.testName = res.data.data.testName;
-      this.testDescription = res.data.data.description;
+      res = res.data.data;
+
+      this.testName = res.testName;
+      this.testDescription = res.description;
+      this.image.link = res.imageLink;
     });
 
     axios
       .get("test/questions/" + this.testId)
       .then((res) => {
         res.data.forEach((element) => {
-          let radioVariants = JSON.parse(element.radio_variants);
+          let selectedVariants = JSON.parse(element.variants);
+          let radioVariants = [{ id: 0, name: "Вариант 1" }];
 
-          radioVariants = radioVariants.filter((elem) => {
-            return elem.name !== null;
-          });
-          radioVariants.push({ id: radioVariants.length, name: null });
+          if (element.typeAnswer == "Один из списка") {
+            selectedVariants = selectedVariants.filter((elem) => {
+              return elem.name !== null;
+            });
+
+            radioVariants = selectedVariants;
+          } else if (element.typeAnswer == "Ввод текста") {
+            //
+          }
 
           this.questions.push({
             id: element.id,
             name: element.question,
             focused: false,
             radioVariants: radioVariants,
+            typeAnswer: element.typeAnswer,
+            image: {
+              data: null,
+              link: element.imageLink
+            }
           });
         });
       })
       .catch((e) => {
-        console.log(e);
         //this.$router.push({name: 'Options'})
+        console.log(e);
       });
   },
 };
@@ -247,3 +358,7 @@ export default {
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
 </style>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style>

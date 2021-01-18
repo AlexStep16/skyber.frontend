@@ -6,7 +6,7 @@ export const testStore =  {
 
   mutations: {
     SET_TEST(state, testObj) {
-      state.id = testObj.testId
+      state.id = testObj.id
       state.name = testObj.name
     }
   },

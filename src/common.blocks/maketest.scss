@@ -20,3 +20,22 @@
   display: flex;
   align-items: flex-start;
 }
+
+.test__empty {
+  background-color: #6e6e6e;
+}
+
+.test__question {
+  width: 100%;
+  display: flex;
+}
+
+.test__image {
+  width: 100%;
+  text-align: left;
+  > img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+}
