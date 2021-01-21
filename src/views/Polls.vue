@@ -69,7 +69,7 @@ export default {
         alert("Вы не выбрали ни одного варианта");
         return
       }
-      if(!this.selected.isArray) {
+      if(!Array.isArray(this.selected)) {
         this.selected = [this.selected]
       }
       axios

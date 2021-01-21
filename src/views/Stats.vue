@@ -6,32 +6,12 @@
         <h1 class="h1-default">{{ name }}</h1>
         <span>Количество отправлений: {{ countSub }}</span>
         <hr />
-        <template v-if="type == 'test'">
-          <div v-for="question in questions" :key="question.id">
-            <span>{{ question.question }}: </span><br />
-            <div v-if="question.typeAnswer == 'Один из списка'">
-              <div v-for="variant in question.variants" :key="variant.id">
-                <span>{{ variant.name }}: {{ variant.percent }}%</span>
-              </div>
-            </div>
-
-            <div v-if="question.typeAnswer == 'Ввод текста'">
-              <div v-for="(answer, key) in question.answers" :key="key">
-                <span>{{ answer.name }} - {{ answer.count }}</span>
-              </div>
-            </div>
-            <br />
-          </div>
-        </template>
-
-        <template v-else>
-          <div v-for="(answer, key) in pollAnswers" :key="key">
-            <span>
-              {{ answer.answer }} -
-              {{ ((answer.count / countPollAnswers) * 100).toFixed(1) }}%
-            </span>
-          </div>
-        </template>
+        <TestStatOutput :postQuestions="this.questions" v-if="type == 'test'" />
+        <PollStatOutput
+          :postPollAnswers="this.pollAnswers"
+          :postCountPollAnswers="this.countPollAnswers"
+          v-else-if="type == 'poll'"
+        />
       </div>
     </div>
   </div>
@@ -41,6 +21,8 @@
 // @ is an alias to /src
 import axios from "axios";
 import Header from "@/components/Header.vue";
+import TestStatOutput from "@/components/Stats/TestStatOutput.vue";
+import PollStatOutput from "@/components/Stats/PollStatOutput.vue";
 
 export default {
   name: "Stats",
@@ -60,9 +42,110 @@ export default {
 
   components: {
     Header,
+    PollStatOutput,
+    TestStatOutput,
   },
 
-  methods: {},
+  methods: {
+    getTestQuestions() {
+      axios
+        .get("test/questions/getByHash/" + this.$route.params.hash)
+        .then((res) => {
+          this.questions = res.data;
+          this.questions.forEach((elem) => {
+            let variants = JSON.parse(elem.variants);
+            elem.answers = [];
+
+            variants.forEach((variant) => {
+              variant.percent = 0;
+            });
+            elem.variants = variants;
+          });
+          this.getTestAnswers();
+        });
+    },
+
+    getPollAnswers() {
+      axios.get("pollAnswers/" + this.id).then((res) => {
+        res = res.data;
+
+        let pollAnswers = res;
+        this.pollAnsType = res.type;
+
+        let simpleAnswersArr = [];
+        let countedAnsArr = [];
+        let countAll = 0;
+
+        pollAnswers.forEach((answer) => {
+          answer = JSON.parse(answer.answers);
+          answer.forEach((elem) => {
+            let index = simpleAnswersArr.indexOf(elem);
+            if (index === -1) {
+              simpleAnswersArr.push(elem);
+              countedAnsArr.push({ answer: elem, count: 1 });
+            } else {
+              countedAnsArr[index].count += 1;
+            }
+            countAll++;
+          });
+        });
+
+        this.countPollAnswers = countAll;
+        this.pollAnswers = countedAnsArr;
+      });
+    },
+
+    getTestAnswers() {
+      axios.get("answer/" + this.id).then((res) => {
+        res = res.data;
+        this.answers = res;
+
+        this.questions.forEach((question) => {
+          let answersArray = res.filter((answer) => {
+            return answer.questionId == question.id;
+          });
+
+          if (question.typeAnswer == "Один из списка") {
+            this.questionTypeOne(answersArray, question);
+          }
+          else if (question.typeAnswer == "Ввод текста") {
+            this.questionTypeInput(answersArray, question);
+          }
+        });
+      });
+    },
+
+    questionTypeOne(answersArray, question) {
+      question.variants.forEach((variant) => {
+        let countVariantFreq = answersArray.filter((answer) => {
+          return answer.checked == variant.name;
+        }).length;
+        variant.percent = (
+          (countVariantFreq / answersArray.length) *
+          100
+        ).toFixed(1);
+        answersArray.length == 0 ? (variant.percent = 0) : "";
+      });
+    },
+
+    questionTypeInput(answersArray, question) {
+      let simpleAnswersArr = [];
+      let countedAnsArr = [];
+
+      answersArray.forEach((answer) => {
+        let index = simpleAnswersArr.indexOf(answer.checked);
+
+        if (index !== -1) {
+          countedAnsArr[index].count += 1;
+        } else {
+          simpleAnswersArr.push(answer.checked);
+          countedAnsArr.push({ name: answer.checked, count: 1 });
+        }
+      });
+
+      question.answers = countedAnsArr;
+    },
+  },
 
   mounted() {
     axios
@@ -75,95 +158,15 @@ export default {
         this.id = res.id;
         this.type = res.testName ? "test" : "poll";
         this.countSub = res.countSub;
+
         if (this.type == "test") {
-          axios
-            .get("test/questions/getByHash/" + this.$route.params.hash)
-            .then((res) => {
-              this.questions = res.data;
-              this.questions.forEach((elem) => {
-                let variants = JSON.parse(elem.variants);
-                elem.answers = [];
-
-                variants.forEach((variant) => {
-                  variant.percent = 0;
-                });
-                elem.variants = variants;
-              });
-
-              axios.get("answer/" + this.id).then((res) => {
-                res = res.data;
-                this.answers = res;
-
-                this.questions.forEach((question) => {
-                  let answersArray = res.filter((answer) => {
-                    return answer.questionId == question.id;
-                  });
-
-                  if (question.typeAnswer == "Один из списка") {
-                    //--------Обработка варианта----------
-                    question.variants.forEach((variant) => {
-                      let countVariantFreq = answersArray.filter((answer) => {
-                        return answer.checked == variant.name;
-                      }).length;
-                      variant.percent = (
-                        (countVariantFreq / answersArray.length) *
-                        100
-                      ).toFixed(1);
-                      answersArray.length == 0 ? variant.percent = 0 : ''
-                    });
-                  } else if (question.typeAnswer == "Ввод текста") {
-                    //--------Обработка варианта----------
-                    let simpleAnswersArr = [];
-                    let countedAnsArr = [];
-
-                    answersArray.forEach((answer) => {
-                      let index = simpleAnswersArr.indexOf(answer.checked);
-
-                      if (index !== -1) {
-                        countedAnsArr[index].count += 1;
-                      } else {
-                        simpleAnswersArr.push(answer.checked);
-                        countedAnsArr.push({ name: answer.checked, count: 1 });
-                      }
-                    });
-
-                    question.answers = countedAnsArr;
-                  }
-                });
-              });
-            });
-        } else {
-          axios.get("pollAnswers/" + this.id).then((res) => {
-            res = res.data;
-
-            let pollAnswers = res;
-            this.pollAnsType = res.type;
-
-            let simpleAnswersArr = [];
-            let countedAnsArr = [];
-            let countAll = 0;
-
-            pollAnswers.forEach((answer) => {
-              answer = JSON.parse(answer.answers);
-              answer.forEach((elem) => {
-                let index = simpleAnswersArr.indexOf(elem);
-                if (index === -1) {
-                  simpleAnswersArr.push(elem);
-                  countedAnsArr.push({ answer: elem, count: 1 });
-                } else {
-                  countedAnsArr[index].count += 1;
-                }
-                countAll++;
-              });
-            });
-
-            this.countPollAnswers = countAll;
-            this.pollAnswers = countedAnsArr;
-          });
+          this.getTestQuestions();
+        }
+        else if (this.type == "poll"){
+          this.getPollAnswers();
         }
       })
       .catch((e) => {
-        //this.$router.push({name: 'Options'})
         console.log(e);
       });
   },
