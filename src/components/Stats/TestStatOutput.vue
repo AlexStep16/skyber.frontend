@@ -8,7 +8,7 @@
         </div>
       </div>
 
-      <div v-if="question.typeAnswer == 'Ввод текста'">
+      <div v-if="question.typeAnswer == 'Ввод текста' || question.typeAnswer == 'Несколько из списка'">
         <div v-for="(answer, key) in question.answers" :key="key">
           <span>{{ answer.name }} - {{ answer.count }}</span>
         </div>
@@ -23,11 +23,6 @@
 export default {
   name: "TestStatOutput",
   props: ["postQuestions"],
-  data() {
-    return {
-      questions: null
-    }
-  },
   components: {},
   methods: {},
 };

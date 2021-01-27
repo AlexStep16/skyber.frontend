@@ -104,18 +104,18 @@ export default {
           let answersArray = res.filter((answer) => {
             return answer.questionId == question.id;
           });
-
           if (question.typeAnswer == "Один из списка") {
-            this.questionTypeOne(answersArray, question);
-          }
-          else if (question.typeAnswer == "Ввод текста") {
-            this.questionTypeInput(answersArray, question);
+            this.variantsTypeOne(answersArray, question);
+          } else if (question.typeAnswer == "Несколько из списка") {
+            this.variantsTypeFew(answersArray, question);
+          } else if (question.typeAnswer == "Ввод текста") {
+            this.variantsTypeInput(answersArray, question);
           }
         });
       });
     },
 
-    questionTypeOne(answersArray, question) {
+    variantsTypeOne(answersArray, question) {
       question.variants.forEach((variant) => {
         let countVariantFreq = answersArray.filter((answer) => {
           return answer.checked == variant.name;
@@ -128,7 +128,25 @@ export default {
       });
     },
 
-    questionTypeInput(answersArray, question) {
+    variantsTypeFew(answersArray, question) {
+      let simpleAnswersArr = [];
+      let countedAnsArr = [];
+
+      answersArray.forEach((answer) => {
+        answer.checked.forEach((elem) => {
+          let index = simpleAnswersArr.indexOf(elem);
+          if (index === -1) {
+            simpleAnswersArr.push(elem);
+            countedAnsArr.push({ name: elem, count: 1 });
+          } else {
+            countedAnsArr[index].count += 1;
+          }
+        });
+      });
+      question.answers = countedAnsArr;
+    },
+
+    variantsTypeInput(answersArray, question) {
       let simpleAnswersArr = [];
       let countedAnsArr = [];
 
@@ -161,8 +179,7 @@ export default {
 
         if (this.type == "test") {
           this.getTestQuestions();
-        }
-        else if (this.type == "poll"){
+        } else if (this.type == "poll") {
           this.getPollAnswers();
         }
       })

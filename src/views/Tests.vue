@@ -15,15 +15,26 @@
           v-for="question in questions"
           :key="question.id"
         >
-          <div style="display: flex; flex-direction: column; width:100%">
+          <div style="display: flex; flex-direction: column; width: 100%">
             <div style="flex-grow: 1; display: flex; align-items: center">
               {{ question.name }}
             </div>
             <div class="test__image mt5" v-if="question.image.link != null">
               <img :src="question.image.link" />
             </div>
-            <VariantOneOutput v-if="question.typeAnswer == 'Один из списка'" :postQuestion="question" />
-            <VariantInputOutput v-if="question.typeAnswer == 'Ввод текста'" :postQuestion="question" />
+            <VariantOneOutput
+              v-if="question.typeAnswer == 'Один из списка'"
+              :postQuestion="question"
+            />
+            <VariantInputOutput
+              v-if="question.typeAnswer == 'Ввод текста'"
+              :postQuestion="question"
+            />
+            <VariantFewOutput
+              v-if="question.typeAnswer == 'Несколько из списка'"
+              :postQuestion="question"
+              @ready="question.checked = $event"
+            />
           </div>
         </div>
         <button
@@ -42,7 +53,8 @@
 import axios from "axios";
 import VariantOneOutput from "@/components/Tests/VariantOneOutput.vue";
 import VariantInputOutput from "@/components/Tests/VariantInputOutput.vue";
-import Header from "@/components/Header.vue"
+import VariantFewOutput from "@/components/Tests/VariantFewOutput.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   name: "Tests",
@@ -52,6 +64,7 @@ export default {
       testId: "",
       testName: "",
       testDescription: "",
+      selected: [],
       image: {
         data: null,
         link: null,
@@ -61,7 +74,8 @@ export default {
   components: {
     VariantOneOutput,
     VariantInputOutput,
-    Header
+    VariantFewOutput,
+    Header,
   },
   methods: {
     getRadioArray(variant) {
@@ -73,22 +87,29 @@ export default {
     sendTest() {
       let stop = false;
       this.questions.forEach((elem) => {
-        switch(elem.typeAnswer) {
-          case 'Один из списка':
+        switch (elem.typeAnswer) {
+          case "Один из списка":
             if (!elem.checked) {
               alert("Вы ответили не на все вопросы");
               stop = true;
             }
-            break
-          case 'Ввод текста':
+            break;
+          case "Ввод текста":
             if (!elem.checked) {
               alert("Вы ответили не на все вопросы");
               stop = true;
             }
+            break;
+          case "Несколько из списка":
+            if (!elem.checked) {
+              alert("Вы ответили не на все вопросы");
+              stop = true;
+            }
+            break;
         }
       });
       if (stop) return;
-
+      
       axios
         .post("answers/send", {
           questions: this.questions,
@@ -96,13 +117,13 @@ export default {
         })
         .then(() => {
           alert("Тест успешно отправлен");
-          this.$router.push({name: 'List'})
+          this.$router.push({ name: "List" });
         });
     },
   },
   mounted() {
     axios.get("test/getByHash/" + this.$route.params.hash).then((res) => {
-      res = res.data.data
+      res = res.data.data;
 
       this.testId = res.id;
       this.testName = res.testName;
@@ -124,13 +145,13 @@ export default {
             typeAnswer: element.typeAnswer,
             image: {
               data: null,
-              link: element.imageLink
-            }
+              link: element.imageLink,
+            },
           });
         });
       })
       .catch(() => {
-        this.$router.push({name: 'Options'})
+        this.$router.push({ name: "Options" });
       });
   },
 };

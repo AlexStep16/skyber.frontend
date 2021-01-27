@@ -66,7 +66,7 @@
                 placeholder="Напишите свой вопрос"
                 v-model="question.name"
               />
-              
+
               <input
                 type="file"
                 name="image"
@@ -90,7 +90,7 @@
               ></multiselect>
               <VariantOne
                 :postQuestion="question"
-                v-if="question.typeAnswer == 'Один из списка'"
+                v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка'"
               />
               <VariantInput
                 :postQuestion="question"
@@ -124,13 +124,19 @@
                 v-if="question.typeAnswer == 'Ввод текста'"
                 :postQuestion="question"
               />
+              <VariantFewOutput
+                v-if="question.typeAnswer == 'Несколько из списка'"
+                :postQuestion="question"
+              />
             </div>
             <div v-else>Пустой вопрос</div>
           </template>
         </div>
+
         <div class="test__block test__empty mt6" v-if="questions.length == 0">
           Нет вопросов
         </div>
+
         <div style="display: flex; justify-content: space-between" class="mt8">
           <button
             class="button button_type-index button_theme-green"
@@ -158,6 +164,7 @@ import VariantOne from "@/components/MakeTest/VariantOne.vue";
 import VariantInput from "@/components/MakeTest/VariantInput.vue";
 import VariantOneOutput from "@/components/MakeTest/VariantOneOutput.vue";
 import VariantInputOutput from "@/components/MakeTest/VariantInputOutput.vue";
+import VariantFewOutput from "@/components/MakeTest/VariantFewOutput.vue";
 
 /**
  * Структура data объекта questions:
@@ -174,7 +181,7 @@ export default {
       testId: "",
       testName: "",
       testDescription: "",
-      options: ["Один из списка", "Ввод текста"],
+      options: ["Один из списка", "Ввод текста", "Несколько из списка"],
       image: {
         data: null,
         link: null,
@@ -187,13 +194,14 @@ export default {
     VariantInput,
     VariantOneOutput,
     VariantInputOutput,
+    VariantFewOutput,
     Header,
   },
   computed: {},
   methods: {
     addQuestion() {
       let name = null;
-      let radioVariants = [{ id: 0, name: "Вариант 1" }];
+      let radioVariants = [{ id: 0, name: "Вариант 1" }]; //Стартовое количество вариантов
       let questionToPost = {
         testId: this.testId,
         variants: radioVariants,
@@ -210,8 +218,8 @@ export default {
           radioVariants: radioVariants,
           image: {
             data: null,
-            link: null
-          }
+            link: null,
+          },
         };
 
         this.questions.push(question);
@@ -240,6 +248,9 @@ export default {
           case "Один из списка":
             question.selectedVariants = question.radioVariants;
             break;
+          case "Несколько из списка":
+            question.selectedVariants = question.radioVariants;
+            break;
           case "Ввод текста":
             question.selectedVariants = [];
             break;
@@ -248,7 +259,6 @@ export default {
             break;
         }
       });
-      
       let test = {
         questions: this.questions,
         testName: this.testName,
@@ -282,22 +292,71 @@ export default {
     },
 
     questionImage(event, question) {
-      let fd = new FormData()
-      fd.append('questionImage', event.target.files[0])
-      fd.append('id', question.id)
+      let fd = new FormData();
+      fd.append("questionImage", event.target.files[0]);
+      fd.append("id", question.id);
 
-      axios.post('test/question/upload', fd).then(() => {
-        question.image.data = event.target.files[0]
-        question.image.link = URL.createObjectURL(event.target.files[0])
-      })
+      axios.post("test/question/upload", fd).then(() => {
+        question.image.data = event.target.files[0];
+        question.image.link = URL.createObjectURL(event.target.files[0]);
+      });
     },
 
     questionImageDelete(question) {
-      axios.post('test/question/upload/delete', {id: question.id}).then(() => {
-        question.image.link = null;
-        question.image.data = null;
-      })
-    }
+      axios
+        .post("test/question/upload/delete", { id: question.id })
+        .then(() => {
+          question.image.link = null;
+          question.image.data = null;
+        });
+    },
+
+    //Mounted methods
+    getTest() {
+      axios.get("test/" + this.testId).then((res) => {
+        res = res.data.data;
+
+        this.testName = res.testName;
+        this.testDescription = res.description;
+        this.image.link = res.imageLink;
+      });
+    },
+    getTestQuestions() {
+      axios
+        .get("test/questions/" + this.testId)
+        .then((res) => {
+          res.data.forEach((element) => {
+            let selectedVariants = JSON.parse(element.variants);
+            let radioVariants = [{ id: 0, name: "Вариант 1" }];
+
+            if (element.typeAnswer == "Один из списка" || element.typeAnswer == "Несколько из списка") {
+              selectedVariants = selectedVariants.filter((elem) => {
+                return elem.name !== null;
+              });
+
+              radioVariants = selectedVariants;
+            } else if (element.typeAnswer == "Ввод текста") {
+              //
+            }
+
+            this.questions.push({
+              id: element.id,
+              name: element.question,
+              focused: false,
+              radioVariants: radioVariants,
+              typeAnswer: element.typeAnswer,
+              image: {
+                data: null,
+                link: element.imageLink,
+              },
+            });
+          });
+        })
+        .catch((e) => {
+          //this.$router.push({name: 'Options'})
+          console.log(e);
+        });
+    },
   },
 
   mounted() {
@@ -307,48 +366,8 @@ export default {
 
     this.testId = this.$store.state.testStore.id;
 
-    axios.get("test/" + this.testId).then((res) => {
-      res = res.data.data;
-
-      this.testName = res.testName;
-      this.testDescription = res.description;
-      this.image.link = res.imageLink;
-    });
-
-    axios
-      .get("test/questions/" + this.testId)
-      .then((res) => {
-        res.data.forEach((element) => {
-          let selectedVariants = JSON.parse(element.variants);
-          let radioVariants = [{ id: 0, name: "Вариант 1" }];
-
-          if (element.typeAnswer == "Один из списка") {
-            selectedVariants = selectedVariants.filter((elem) => {
-              return elem.name !== null;
-            });
-
-            radioVariants = selectedVariants;
-          } else if (element.typeAnswer == "Ввод текста") {
-            //
-          }
-
-          this.questions.push({
-            id: element.id,
-            name: element.question,
-            focused: false,
-            radioVariants: radioVariants,
-            typeAnswer: element.typeAnswer,
-            image: {
-              data: null,
-              link: element.imageLink
-            }
-          });
-        });
-      })
-      .catch((e) => {
-        //this.$router.push({name: 'Options'})
-        console.log(e);
-      });
+    this.getTest();
+    this.getTestQuestions();
   },
 };
 </script>

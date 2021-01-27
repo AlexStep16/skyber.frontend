@@ -197,6 +197,19 @@ export default {
         this.image.link = null;
       });
     },
+
+    //Mounted methods
+    getPoll() {
+      axios.get("poll/" + this.pollId).then((res) => {
+        res = res.data.data;
+
+        this.pollName = res.pollName;
+        this.pollDescription = res.pollDescription;
+        this.variants = JSON.parse(res.variants);
+        this.typeVariants = res.typeVariants
+        this.image.link = res.imageLink
+      });
+    }
   },
   mounted() {
     if (!this.$store.state.pollStore.id) {
@@ -205,15 +218,7 @@ export default {
 
     this.pollId = this.$store.state.pollStore.id;
 
-    axios.get("poll/" + this.pollId).then((res) => {
-      res = res.data.data;
-
-      this.pollName = res.pollName;
-      this.pollDescription = res.pollDescription;
-      this.variants = JSON.parse(res.variants);
-      this.typeVariants = res.typeVariants
-      this.image.link = res.imageLink
-    });
+    this.getPoll();
   },
 };
 </script>

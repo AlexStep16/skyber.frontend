@@ -1,3 +1,13 @@
+.container {
+  align-items: flex-start;
+}
+
+.main {
+  align-items: flex-start;
+  flex-direction: column;
+  margin-top: 200px; // + header height
+}
+
 .list {
   display: flex;
   align-items: flex-start;
@@ -5,10 +15,38 @@
 }
 
 .list-item {
-  width: 300px;
+  width: 500px;
   background-color: white;
   border-radius: 10px;
   height: auto;
   margin-top: 20px;
   padding: 10px;
+  > h2, > span {
+    font-family: 'Roboto', sans-serif;
+  }
+}
+
+.pollOrTest {
+  width: 100%;
+  height: auto;
+  display: flex;
+}
+
+.pollOrTest__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em;
+  font-family: "Roboto", sans-serif;
+  color: white;
+  flex-grow: 1;
+  border-bottom: 2px solid #2c2c2c;
+  padding: 13px 0;
+  border-radius: 3px 3px 0 0;
+  cursor: pointer;
+}
+
+.pollOrTest__item:hover, .pollOrTest__item_selected {
+  border-bottom: 2px solid white;
+  background-color: rgb(36, 36, 36);
 }
