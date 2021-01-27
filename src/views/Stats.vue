@@ -52,7 +52,7 @@ export default {
         .get("test/questions/getByHash/" + this.$route.params.hash)
         .then((res) => {
           this.questions = res.data;
-          this.questions.forEach((elem) => {
+          this.questions.forEach((elem) => { 
             let variants = JSON.parse(elem.variants);
             elem.answers = [];
 
@@ -64,34 +64,41 @@ export default {
           this.getTestAnswers();
         });
     },
+    sortPollAnswers(pollAnswers) {
+      let simpleAnswersArr = [];
+      let countedAnsArr = [];
+      let countAll = 0;
+
+      pollAnswers.forEach((answer) => {
+        answer = JSON.parse(answer.answers);
+        answer.forEach((elem) => {
+          let index = simpleAnswersArr.indexOf(elem);
+          if (index === -1) {
+            simpleAnswersArr.push(elem);
+            countedAnsArr.push({ answer: elem, count: 1 });
+          } else {
+            countedAnsArr[index].count += 1;
+          }
+          countAll++;
+        });
+      });
+
+      return {
+        simpleAnswersArr: simpleAnswersArr,
+        countedAnsArr: countedAnsArr,
+        countAll: countAll
+      }
+    },
 
     getPollAnswers() {
       axios.get("pollAnswers/" + this.id).then((res) => {
         res = res.data;
 
-        let pollAnswers = res;
+        let sortAnswers = this.sortPollAnswers(res);
+
         this.pollAnsType = res.type;
-
-        let simpleAnswersArr = [];
-        let countedAnsArr = [];
-        let countAll = 0;
-
-        pollAnswers.forEach((answer) => {
-          answer = JSON.parse(answer.answers);
-          answer.forEach((elem) => {
-            let index = simpleAnswersArr.indexOf(elem);
-            if (index === -1) {
-              simpleAnswersArr.push(elem);
-              countedAnsArr.push({ answer: elem, count: 1 });
-            } else {
-              countedAnsArr[index].count += 1;
-            }
-            countAll++;
-          });
-        });
-
-        this.countPollAnswers = countAll;
-        this.pollAnswers = countedAnsArr;
+        this.countPollAnswers = sortAnswers.countAll;
+        this.pollAnswers = sortAnswers.countedAnsArr;
       });
     },
 
@@ -99,7 +106,7 @@ export default {
       axios.get("answer/" + this.id).then((res) => {
         res = res.data;
         this.answers = res;
-
+        
         this.questions.forEach((question) => {
           let answersArray = res.filter((answer) => {
             return answer.questionId == question.id;
@@ -120,6 +127,7 @@ export default {
         let countVariantFreq = answersArray.filter((answer) => {
           return answer.checked == variant.name;
         }).length;
+        
         variant.percent = (
           (countVariantFreq / answersArray.length) *
           100

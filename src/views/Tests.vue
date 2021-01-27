@@ -109,7 +109,12 @@ export default {
         }
       });
       if (stop) return;
-      
+      for(let key in this.questions) {
+        if(!Array.isArray(this.questions[key]['checked'])) {
+          this.questions[key]['checked'] = [this.questions[key]['checked']]
+        }
+      }
+
       axios
         .post("answers/send", {
           questions: this.questions,
@@ -117,6 +122,7 @@ export default {
         })
         .then(() => {
           alert("Тест успешно отправлен");
+          console.log(this.questions)
           this.$router.push({ name: "List" });
         });
     },
