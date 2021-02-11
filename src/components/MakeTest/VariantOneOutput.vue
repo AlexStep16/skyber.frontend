@@ -2,7 +2,7 @@
   <div class="form_type-radio mt5">
     <div
       class="form_radio"
-      v-for="variant in getRadioArray(postQuestion.radioVariants)"
+      v-for="variant in getRadioArray(postQuestion.standartVariants)"
       :key="variant.id"
     >
       <input
@@ -11,7 +11,9 @@
         :name="`radio${postQuestion.id}${variant.id}`"
         :value="variant.name"
       />
-      <label :for="`radio${postQuestion.id}${variant.id}`">
+      <label 
+        class="test__question-answer"
+        :for="`radio${postQuestion.id}${variant.id}`">
         {{ variant.name }}
       </label>
     </div>
@@ -39,4 +41,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/form-radio_type-main.scss";
+@import "@/common.blocks/maketest.scss";
 </style>

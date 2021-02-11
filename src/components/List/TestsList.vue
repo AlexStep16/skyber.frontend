@@ -5,25 +5,31 @@
       <h2 @click="goCreateTest(test)">{{ test.testName }}</h2>
       <p>{{ test.description }}</p>
       <span>Количество отправлений: {{ test.countSub }}</span
-      ><br />
-      <button
-        @click="testDelete(test.id, key)"
-        class="button button_type-index button_theme-red"
       >
-        Удалить тест
-      </button>
-      <router-link
-        :to="`/tests/${test.hash}`"
-        class="button button_type-index button_theme-blue"
-      >
-        Перейти к тесту
-      </router-link>
-      <router-link
-        :to="`/stats/${test.hash}`"
-        class="button button_type-index button_theme-red"
-      >
-        Статистика
-      </router-link>
+      <div class="list-item__panel mt8">
+        <div>
+          <router-link
+            :to="`/tests/${test.hash}`"
+            class="button button_type-list button_theme-purple"
+          >
+            Перейти к тесту
+          </router-link>
+        </div>
+        <div>
+          <router-link
+            :to="`/stats/${test.hash}`"
+            class="button"
+          >
+            <img src="/pictures/circle.svg" width="32px">
+          </router-link>
+          <span
+            @click="testDelete(test.id, key)"
+            class="button"
+          >
+            <img src="/pictures/trash.svg" width="32px">
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>

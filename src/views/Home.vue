@@ -2,7 +2,6 @@
   <div class="container">
     <div class="main">
       <LoginForm />
-      <button class="button_type-index button_theme-green" @click="makeTest">Создать тест</button>
     </div>
   </div>
 </template>

@@ -1,0 +1,95 @@
+.login {
+  display: flex;
+  width: 900px;
+
+  &__form {
+    width: 100%;
+    flex-grow: 1;
+    font-family: "Roboto", sans-serif;
+    padding-right: 40px;
+
+    h1 {
+      font-size: 2.3em;
+      font-weight: 400;
+      color: #6e71ff;
+    }
+    p {
+      font-size: 0.95em;
+      color: #707070;
+    }
+  }
+  &__side {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+}
+
+.forget-link {
+  color: #6b696a;
+  font-size: 0.85em;
+}
+
+.register-link {
+  color: #6769fc;
+  font-weight: bold;
+}
+
+.register {
+  font-size: 0.85em;
+  color: #6b696a;
+}
+
+
+.checkbox {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.checkbox-label {
+  font-size: 0.85em;
+  font-family: 'Roboto', sans-serif;
+  color: #6b696a;
+}
+
+.checkbox-label::before {
+  color: #6b696a;
+  background-color: #ecf6ff;
+}
+
+.checkbox + .checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  border: none;
+}
+.checkbox + .checkbox-label::before {
+  content: '';
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 7px;
+  margin-right: 17px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50% 50%;
+}
+
+.checkbox:checked + .checkbox-label::before {
+  background-color: #ecf6ff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%6668f9' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+/* стили для чекбокса, находящегося в состоянии disabled */
+.checkbox:disabled + .checkbox-label::before {
+  background-color: #e9ecef;
+}

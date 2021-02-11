@@ -51,19 +51,30 @@ input[type="submit"] {
 }
 
 .input_type-index {
-  border-radius: 2px;
+  border-radius: 13px;
+  background-color: #ecf6ff;
+  color: #69676a;
+  margin-top: 13px;
+  padding: 15px 20px;
+  font-size: 0.95em;
+  width: 100%;
 }
 
-.input_type-index:not(:last-child) {
-  border-bottom: 1px solid #ECEAEA;
+.input_type-main_submit {
+  width: 160px;
+  padding: 15px 0;
+  border-radius: 19px;
+  text-align: center;
+  font-size: 0.95em;
 }
 
 .input_type-test {
   width: 100%;
-  border-bottom: 1px solid #f1f1f1;
+  background: transparent;
   font-size: 1.5em;
   padding: 13px;
   padding-left: 0;
+  color: #676769;
 }
 
 .input_type-test-small {
@@ -75,7 +86,10 @@ input[type="submit"] {
 
 .input_type-option {
   width: 100%;
-  border-radius: 10px;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2em;
+  color: #676769;
+  background: transparent;
 }
 
 .input_type-submit_full {
@@ -88,6 +102,11 @@ input[type="submit"] {
   color: white;
 }
 
+.input_theme-purple {
+  background-color: #6769fc;
+  color: white;
+}
+
 .input_theme-dark {
   background-color: #1d1d1d;
   color: rgb(247, 247, 247);
@@ -95,7 +114,7 @@ input[type="submit"] {
 /* ------Input files end here------ */
 
 /* ------Button files start here------ */
-button {
+button, .button {
   outline: none;
   border: none;
   margin: 0;
@@ -114,6 +133,12 @@ button {
 .button_type-question {
   @extend .button-clasic;
   flex-grow: 0;
+}
+
+.button_type-list {
+  @extend .button-clasic;
+  padding: 13px 21px;
+  border-radius: 15px;
 }
 
 .button_theme-roboto {
@@ -138,11 +163,17 @@ button {
   color: white;
   @extend .button_theme-roboto;
 }
+
+.button_theme-purple {
+  background-color: #6769fc;
+  color: white;
+  @extend .button_theme-roboto;
+}
 /* ------Button files end here------ */
 
 /* ------Form files start here */
 .form_type-main {
-  width: auto;
+  width: 100%;
   height: auto;
   display: inline-block;
 }

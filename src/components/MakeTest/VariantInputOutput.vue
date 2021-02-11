@@ -21,4 +21,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/common.blocks/maketest.scss";
 </style>

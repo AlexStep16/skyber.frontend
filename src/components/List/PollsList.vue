@@ -5,25 +5,31 @@
       <h2 @click="goCreatePoll(poll)">{{ poll.pollName }}</h2>
       <p>{{ poll.pollDescription }}</p>
       <span>Количество отправлений: {{ poll.countSub }}</span
-      ><br />
-      <button
-        @click="pollDelete(poll.id, key)"
-        class="button button_type-index button_theme-red"
       >
-        Удалить опрос
-      </button>
-      <router-link
-        :to="`/polls/${poll.hash}`"
-        class="button button_type-index button_theme-blue"
-      >
-        Перейти к опросу
-      </router-link>
-      <router-link
-        :to="`/stats/${poll.hash}`"
-        class="button button_type-index button_theme-red"
-      >
-        Статистика
-      </router-link>
+      <div class="list-item__panel mt8">
+        <div>
+          <router-link
+            :to="`/polls/${poll.hash}`"
+            class="button button_type-list button_theme-purple"
+          >
+            Перейти к опросу
+          </router-link>
+        </div>
+        <div>
+          <router-link
+            :to="`/stats/${poll.hash}`"
+            class="button"
+          >
+            <img src="/pictures/circle.svg" width="32px">
+          </router-link>
+          <span
+            @click="pollDelete(poll.id, key)"
+            class="button"
+          >
+            <img src="/pictures/trash.svg" width="32px">
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
