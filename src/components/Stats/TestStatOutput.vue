@@ -2,7 +2,7 @@
   <div>
     <div v-for="question in postQuestions" :key="question.id">
       <span>{{ question.question }}: </span><br />
-      <div v-if="question.typeAnswer == 'Один из списка'">
+      <div v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Разворачивающийся список'">
         <div v-for="variant in question.variants" :key="variant.id">
           <span>{{ variant.name }}: {{ variant.percent }}%</span>
         </div>

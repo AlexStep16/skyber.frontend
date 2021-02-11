@@ -2,7 +2,7 @@
   <div class="form_type-checkbox mt5">
     <div
       class="checkbox mt5"
-      v-for="(variant, key) in getRadioArray(postQuestion.radioVariants)"
+      v-for="(variant, key) in getRadioArray(postQuestion.standartVariants)"
       :key="variant.id"
     >
       <input
@@ -38,4 +38,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/form-checkbox_type-main.scss";
+@import "@/common.blocks/maketest.scss";
 </style>

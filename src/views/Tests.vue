@@ -35,6 +35,11 @@
               :postQuestion="question"
               @ready="question.checked = $event"
             />
+            <VariantUnfoldOutput
+              v-if="question.typeAnswer == 'Разворачивающийся список'"
+              :postQuestion="question"
+              @ready="question.checked = $event"
+            />
           </div>
         </div>
         <button
@@ -54,6 +59,7 @@ import axios from "axios";
 import VariantOneOutput from "@/components/Tests/VariantOneOutput.vue";
 import VariantInputOutput from "@/components/Tests/VariantInputOutput.vue";
 import VariantFewOutput from "@/components/Tests/VariantFewOutput.vue";
+import VariantUnfoldOutput from "@/components/Tests/VariantUnfoldOutput.vue";
 import Header from "@/components/Header.vue";
 
 export default {
@@ -75,6 +81,7 @@ export default {
     VariantOneOutput,
     VariantInputOutput,
     VariantFewOutput,
+    VariantUnfoldOutput,
     Header,
   },
   methods: {
@@ -87,6 +94,7 @@ export default {
     sendTest() {
       let stop = false;
       this.questions.forEach((elem) => {
+        if(!Array.isArray(elem.checked)) elem.checked = [`${elem.checked}`]
         switch (elem.typeAnswer) {
           case "Один из списка":
             if (!elem.checked) {

@@ -5,7 +5,7 @@
 </template>
 
 <style lang="scss">
-@import '@/common.blocks/body/_themes/body_themes-dark.scss';
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import '@/common.blocks/aliases.scss';
 @import '@/common.blocks/main.scss';
 

@@ -104,7 +104,7 @@ export default {
           let answersArray = res.filter((answer) => {
             return answer.questionId == question.id;
           });
-          if (question.typeAnswer == "Один из списка") {
+          if (question.typeAnswer == "Один из списка" || question.typeAnswer == "Разворачивающийся список") {
             this.variantsTypeOne(answersArray, question);
           } else if (question.typeAnswer == "Несколько из списка") {
             this.variantsTypeFew(answersArray, question);
@@ -131,7 +131,6 @@ export default {
     variantsTypeFew(answersArray, question) {
       let simpleAnswersArr = [];
       let countedAnsArr = [];
-
       answersArray.forEach((answer) => {
         answer.checked.forEach((elem) => {
           let index = simpleAnswersArr.indexOf(elem);
@@ -151,13 +150,13 @@ export default {
       let countedAnsArr = [];
 
       answersArray.forEach((answer) => {
-        let index = simpleAnswersArr.indexOf(answer.checked);
+        let index = simpleAnswersArr.indexOf(answer.checked[0]);
 
         if (index !== -1) {
           countedAnsArr[index].count += 1;
         } else {
-          simpleAnswersArr.push(answer.checked);
-          countedAnsArr.push({ name: answer.checked, count: 1 });
+          simpleAnswersArr.push(answer.checked[0]);
+          countedAnsArr.push({ name: answer.checked[0], count: 1 });
         }
       });
 

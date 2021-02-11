@@ -15,7 +15,7 @@
                 v-model="testName"
               />
             </div>
-            <div class="mt5">
+            <div>
               <input
                 type="text"
                 name="description"
@@ -87,22 +87,27 @@
               <multiselect
                 v-model="question.typeAnswer"
                 :options="options"
+                selectLabel=""
+                selectedLabel=""
+                deselectLabel=""
+                :placeholder="question.typeAnswer || 'Выберите тип ответа'"
+                allowEmpty=true
+                
               ></multiselect>
-              <VariantOne
+              <VariantStandart
                 :postQuestion="question"
-                v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка'"
+                v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка' || question.typeAnswer == 'Разворачивающийся список'"
               />
               <VariantInput
                 :postQuestion="question"
                 v-if="question.typeAnswer == 'Ввод текста'"
               />
             </div>
-            <button
-              class="button button_type-question button_theme-red"
+            <span
               @click="deleteQuestion(key, question.id)"
             >
-              Удалить
-            </button>
+              <img src="/pictures/trash.svg" width="32px" />
+            </span>
           </template>
 
           <template v-else>
@@ -110,7 +115,9 @@
               style="display: flex; flex-direction: column"
               v-if="question.name != null"
             >
-              <div style="flex-grow: 1; display: flex; align-items: center">
+              <div
+                class="test__question-name"
+              >
                 {{ question.name }}
               </div>
               <div class="test__image mt5" v-if="question.image.link != null">
@@ -126,6 +133,10 @@
               />
               <VariantFewOutput
                 v-if="question.typeAnswer == 'Несколько из списка'"
+                :postQuestion="question"
+              />
+              <VariantUnfoldOutput
+                v-if="question.typeAnswer == 'Разворачивающийся список'"
                 :postQuestion="question"
               />
             </div>
@@ -160,18 +171,12 @@
 import axios from "axios";
 import Multiselect from "vue-multiselect";
 import Header from "@/components/Header.vue";
-import VariantOne from "@/components/MakeTest/VariantOne.vue";
+import VariantStandart from "@/components/MakeTest/VariantStandart.vue";
 import VariantInput from "@/components/MakeTest/VariantInput.vue";
+import VariantUnfoldOutput from "@/components/MakeTest/VariantUnfoldOutput.vue";
 import VariantOneOutput from "@/components/MakeTest/VariantOneOutput.vue";
 import VariantInputOutput from "@/components/MakeTest/VariantInputOutput.vue";
 import VariantFewOutput from "@/components/MakeTest/VariantFewOutput.vue";
-
-/**
- * Структура data объекта questions:
- * radioVariants для режима 'Один из списка'
- * listVariants для режима 'Список'
- * и т.д
- */
 
 export default {
   name: "MakeTest",
@@ -181,7 +186,7 @@ export default {
       testId: "",
       testName: "",
       testDescription: "",
-      options: ["Один из списка", "Ввод текста", "Несколько из списка"],
+      options: ["Один из списка", "Ввод текста", "Несколько из списка", "Разворачивающийся список"],
       image: {
         data: null,
         link: null,
@@ -190,21 +195,22 @@ export default {
   },
   components: {
     Multiselect,
-    VariantOne,
+    VariantStandart,
     VariantInput,
     VariantOneOutput,
     VariantInputOutput,
     VariantFewOutput,
+    VariantUnfoldOutput,
     Header,
   },
   computed: {},
   methods: {
     addQuestion() {
       let name = null;
-      let radioVariants = [{ id: 0, name: "Вариант 1" }]; //Стартовое количество вариантов
+      let standartVariants = [{ id: 0, name: "Вариант 1" }]; //Стартовое количество вариантов
       let questionToPost = {
         testId: this.testId,
-        variants: radioVariants,
+        variants: standartVariants,
         name: name,
         typeAnswer: "Один из списка",
       };
@@ -215,7 +221,7 @@ export default {
           name: name,
           focused: false,
           typeAnswer: "Один из списка",
-          radioVariants: radioVariants,
+          standartVariants: standartVariants,
           image: {
             data: null,
             link: null,
@@ -245,17 +251,11 @@ export default {
     saveTest() {
       this.questions.forEach((question) => {
         switch (question.typeAnswer) {
-          case "Один из списка":
-            question.selectedVariants = question.radioVariants;
-            break;
-          case "Несколько из списка":
-            question.selectedVariants = question.radioVariants;
-            break;
           case "Ввод текста":
             question.selectedVariants = [];
             break;
           default:
-            question.selectedVariants = question.radioVariants;
+            question.selectedVariants = question.standartVariants;
             break;
         }
       });
@@ -327,23 +327,23 @@ export default {
         .then((res) => {
           res.data.forEach((element) => {
             let selectedVariants = JSON.parse(element.variants);
-            let radioVariants = [{ id: 0, name: "Вариант 1" }];
+            let standartVariants = [{ id: 0, name: "Вариант 1" }];
 
-            if (element.typeAnswer == "Один из списка" || element.typeAnswer == "Несколько из списка") {
+            if (element.typeAnswer == "Ввод текста") {
+              //
+            } else {
               selectedVariants = selectedVariants.filter((elem) => {
                 return elem.name !== null;
               });
 
-              radioVariants = selectedVariants;
-            } else if (element.typeAnswer == "Ввод текста") {
-              //
+              standartVariants = selectedVariants;
             }
 
             this.questions.push({
               id: element.id,
               name: element.question,
               focused: false,
-              radioVariants: radioVariants,
+              standartVariants: standartVariants,
               typeAnswer: element.typeAnswer,
               image: {
                 data: null,

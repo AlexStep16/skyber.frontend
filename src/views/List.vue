@@ -25,6 +25,11 @@
         </div>
       </div>
       <div class="list">
+        <router-link to="/options" class="create-test">
+          <img src="/pictures/plus.svg" width="22" class="mr5">
+          <span v-if="listSelected == 'tests'">Создать новый тест</span>
+          <span v-if="listSelected == 'polls'">Создать новый опрос</span>
+        </router-link>
         <TestsList :postTests="tests" v-if="listSelected == 'tests'" />
         <PollsList :postPolls="polls" v-if="listSelected == 'polls'" />
       </div>
