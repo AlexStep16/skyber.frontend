@@ -15,18 +15,18 @@
             Перейти к опросу
           </router-link>
         </div>
-        <div>
+        <div class="flex flex-center">
           <router-link
             :to="`/stats/${poll.hash}`"
-            class="button"
+            class=""
           >
-            <img src="/pictures/circle.svg" width="32px">
+            <img src="/pictures/circle.svg" width="30px">
           </router-link>
           <span
             @click="pollDelete(poll.id, key)"
-            class="button"
+            class="ml5"
           >
-            <img src="/pictures/trash.svg" width="32px">
+            <img src="/pictures/trash.svg" width="22px">
           </span>
         </div>
       </div>
@@ -36,14 +36,17 @@
 
 <script>
 import axios from "axios";
+import { mapMutations } from "vuex";
 
 export default {
   name: "PollsList",
   props: ["postPolls"],
   components: {},
   methods: {
+    ...mapMutations(["SET_POLL"]),
+
     goCreatePoll(poll) {
-      this.$store.state.pollStore.id = poll.id;
+      this.SET_POLL({id: poll.id, name: poll.name});
       this.$router.push({ name: "MakePoll" });
     },
 

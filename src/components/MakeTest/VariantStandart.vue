@@ -1,35 +1,44 @@
 <template>
   <div style="width: 100%">
-    <div
-      class="test__question mt5"
-      v-for="(variant, index) in postQuestion.standartVariants"
-      :key="`${variant.id}${index}`"
+    <draggable
+      v-model="postQuestion.standartVariants"
+      group="standartVariants"
+      @start="drag = true"
+      @end="drag = false"
     >
-      <input
-        type="text"
-        class="input input_type-test-small"
-        placeholder="Напишите здесь вариант ответа"
-        v-model="variant.name"
-        @focusout="checkIsEmpty(variant, index)"
-      />
-      <span
-        @click="deleteVariant(index)"
+      <div
+        class="test__question mt5"
+        v-for="(variant, index) in postQuestion.standartVariants"
+        :key="`${variant.id}${index}`"
       >
-        <img src="/pictures/trash.svg" width="32px" />
-      </span>
-    </div>
-    <div class="test__add-variant mt5" @click="addVariant(postQuestion)">
-      Добавить вариант
-    </div>
+        <input
+          type="text"
+          class="input input_type-test-small"
+          placeholder="Напишите здесь вариант ответа"
+          v-model="variant.name"
+          @focusout="checkIsEmpty(variant, index)"
+        />
+        <span @click="deleteVariant(index)">
+          <img src="/pictures/trash.svg" width="19px" />
+        </span>
+      </div>
+      <div class="test__add-variant mt5" @click="addVariant(postQuestion)">
+        Добавить вариант
+      </div>
+    </draggable>
   </div>
 </template>
 
 <script>
 //import axios from 'axios'
+import draggable from 'vuedraggable'
 
 export default {
   name: "VariantStandart",
   props: ["postQuestion"],
+  components: {
+    draggable
+  },
   data() {
     return {};
   },

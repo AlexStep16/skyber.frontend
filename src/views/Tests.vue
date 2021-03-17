@@ -3,8 +3,8 @@
     <Header />
     <div class="main">
       <div class="test">
-        <div class="test__block test__header">
-          <h1>{{ testName }}</h1>
+        <div class="test__block test__header pt7 pb7">
+          <h1 class="h1-test">{{ testName }}</h1>
           <span>{{ testDescription }}</span>
           <div class="test__image" v-if="image.link != null">
             <img :src="image.link" />
@@ -16,7 +16,7 @@
           :key="question.id"
         >
           <div style="display: flex; flex-direction: column; width: 100%">
-            <div style="flex-grow: 1; display: flex; align-items: center">
+            <div class="test__question-name mb7">
               {{ question.name }}
             </div>
             <div class="test__image mt5" v-if="question.image.link != null">
@@ -36,7 +36,17 @@
               @ready="question.checked = $event"
             />
             <VariantUnfoldOutput
-              v-if="question.typeAnswer == 'Разворачивающийся список'"
+              v-if="question.typeAnswer == 'Выпадающий список'"
+              :postQuestion="question"
+              @ready="question.checked = $event"
+            />
+            <VariantDateOutput
+              v-if="question.typeAnswer == 'Дата'"
+              :postQuestion="question"
+              @ready="question.checked = $event"
+            />
+            <VariantTimeOutput
+              v-if="question.typeAnswer == 'Время'"
               :postQuestion="question"
               @ready="question.checked = $event"
             />
@@ -60,6 +70,8 @@ import VariantOneOutput from "@/components/Tests/VariantOneOutput.vue";
 import VariantInputOutput from "@/components/Tests/VariantInputOutput.vue";
 import VariantFewOutput from "@/components/Tests/VariantFewOutput.vue";
 import VariantUnfoldOutput from "@/components/Tests/VariantUnfoldOutput.vue";
+import VariantDateOutput from "@/components/Tests/VariantDateOutput.vue";
+import VariantTimeOutput from "@/components/Tests/VariantTimeOutput.vue";
 import Header from "@/components/Header.vue";
 
 export default {
@@ -82,6 +94,7 @@ export default {
     VariantInputOutput,
     VariantFewOutput,
     VariantUnfoldOutput,
+    VariantDateOutput, VariantTimeOutput,
     Header,
   },
   methods: {

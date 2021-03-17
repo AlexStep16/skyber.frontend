@@ -61,6 +61,12 @@
               v-model="typeVariants"
               :options="options"
               class="mt5"
+              :allow-empty="false"
+              :multiple="false"
+              selectLabel=""
+              selectedLabel=""
+              deselectLabel=""
+              :placeholder="'Выберите тип ответа'"
             ></multiselect>
 
             <div class="mt5">

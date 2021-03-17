@@ -1,6 +1,16 @@
 <template>
   <div>
-    <multiselect v-model="postQuestion.checked" :options="getUnfoldOptions(postQuestion.variants)"></multiselect>
+    <multiselect 
+      v-model="postQuestion.checked" 
+      :options="getUnfoldOptions(postQuestion.variants)"
+      :allow-empty="false"
+      :multiple="false"
+      selectLabel=""
+      selectedLabel=""
+      deselectLabel=""
+      :placeholder="'Выберите ответ из списка'"
+    >
+    </multiselect>
   </div>
 </template>
 

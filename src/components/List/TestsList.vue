@@ -15,18 +15,18 @@
             Перейти к тесту
           </router-link>
         </div>
-        <div>
+        <div class="flex flex-center">
           <router-link
             :to="`/stats/${test.hash}`"
-            class="button"
+            class=""
           >
-            <img src="/pictures/circle.svg" width="32px">
+            <img src="/pictures/circle.svg" width="30px">
           </router-link>
           <span
             @click="testDelete(test.id, key)"
-            class="button"
+            class="ml5"
           >
-            <img src="/pictures/trash.svg" width="32px">
+            <img src="/pictures/trash.svg" width="22px">
           </span>
         </div>
       </div>
@@ -36,14 +36,17 @@
 
 <script>
 import axios from "axios";
+import { mapMutations } from "vuex";
 
 export default {
   name: "TestList",
   props: ["postTests"],
   components: {},
   methods: {
+    ...mapMutations(["SET_TEST"]),
+
     goCreateTest(test) {
-      this.$store.state.testStore.id = test.id;
+      this.SET_TEST({id: test.id, name: test.name});
       this.$router.push({ name: "MakeTest" });
     },
 

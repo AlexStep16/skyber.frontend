@@ -4,16 +4,15 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #252525;
   display: flex;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 100px;
 }
 
 .header__links {
   flex-grow: 0;
   & > a{
-    color:white;
+    color: #7c7c7c;
     margin-left: 16px;
     text-decoration: none;
     font-size: 1.1em;
@@ -22,8 +21,8 @@
 
 .header > h1 {
   flex-grow: 1;
-  color: white;
-  font-family: 'Roboto';
+  color: #7c7c7c;
+  font-family: 'Montserrat';
   font-size: 2em;
 }
 

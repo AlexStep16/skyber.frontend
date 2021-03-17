@@ -19,7 +19,13 @@ body {
 .h1-default {
   font-size: 1.2em;
   color: #444444;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.h1-test {
+  font-size: 1.32em;
+  color: #444444;
+  font-family: 'Montserrat', sans-serif;
 }
 
 h3 {
@@ -43,7 +49,8 @@ input {
   border: none;
   padding: 0.8em;
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  transition: all .5s ease;
 }
 
 input[type="submit"] {
@@ -74,7 +81,11 @@ input[type="submit"] {
   font-size: 1.5em;
   padding: 13px;
   padding-left: 0;
-  color: #676769;
+  color: #444444;
+}
+
+.input_type-test-header {
+  font-weight: 500;
 }
 
 .input_type-test-small {
@@ -86,7 +97,7 @@ input[type="submit"] {
 
 .input_type-option {
   width: 100%;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.2em;
   color: #676769;
   background: transparent;
@@ -142,7 +153,7 @@ button, .button {
 }
 
 .button_theme-roboto {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.9em;
 }
 
@@ -183,3 +194,18 @@ button, .button {
   width: 100%;
 }
 /* ------Form files end here------ */
+
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-vertical {
+  flex-direction: column;
+  justify-content: flex-start;
+}

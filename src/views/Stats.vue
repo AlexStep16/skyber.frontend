@@ -36,6 +36,7 @@ export default {
       pollAnswers: [],
       pollAnsType: "",
       countPollAnswers: 0,
+      chartData: {},
     };
   },
   computed: {},
@@ -52,12 +53,13 @@ export default {
         .get("test/questions/getByHash/" + this.$route.params.hash)
         .then((res) => {
           this.questions = res.data;
-          this.questions.forEach((elem) => { 
+          this.questions.forEach((elem) => {
             let variants = JSON.parse(elem.variants);
             elem.answers = [];
 
             variants.forEach((variant) => {
               variant.percent = 0;
+              variant.count = 0;
             });
             elem.variants = variants;
           });
@@ -86,8 +88,8 @@ export default {
       return {
         simpleAnswersArr: simpleAnswersArr,
         countedAnsArr: countedAnsArr,
-        countAll: countAll
-      }
+        countAll: countAll,
+      };
     },
 
     getPollAnswers() {
@@ -106,16 +108,23 @@ export default {
       axios.get("answer/" + this.id).then((res) => {
         res = res.data;
         this.answers = res;
-        
+
         this.questions.forEach((question) => {
           let answersArray = res.filter((answer) => {
             return answer.questionId == question.id;
           });
-          if (question.typeAnswer == "Один из списка" || question.typeAnswer == "Разворачивающийся список") {
+          if (
+            question.typeAnswer == "Один из списка" ||
+            question.typeAnswer == "Выпадающий список"
+          ) {
             this.variantsTypeOne(answersArray, question);
           } else if (question.typeAnswer == "Несколько из списка") {
             this.variantsTypeFew(answersArray, question);
-          } else if (question.typeAnswer == "Ввод текста") {
+          } else if (
+            question.typeAnswer == "Ввод текста" ||
+            question.typeAnswer == "Дата" ||
+            question.typeAnswer == "Время"
+          ) {
             this.variantsTypeInput(answersArray, question);
           }
         });
@@ -127,11 +136,12 @@ export default {
         let countVariantFreq = answersArray.filter((answer) => {
           return answer.checked == variant.name;
         }).length;
-        
+
         variant.percent = (
           (countVariantFreq / answersArray.length) *
           100
         ).toFixed(1);
+        variant.count = countVariantFreq;
         answersArray.length == 0 ? (variant.percent = 0) : "";
       });
     },

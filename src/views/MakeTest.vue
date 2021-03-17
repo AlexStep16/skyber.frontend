@@ -2,165 +2,195 @@
   <div class="container">
     <Header />
     <div class="main">
-      <div class="test">
-        <div class="test__block test__header">
-          <form class="form form_type-test">
-            <div>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Название теста"
-                class="input input_type-test"
-                v-model="testName"
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                name="description"
-                id="description"
-                placeholder="Описание теста"
-                class="input input_type-test-small"
-                v-model="testDescription"
-              />
-            </div>
-            <input
-              type="file"
-              name="image"
-              @change="uploadImage"
-              v-if="image.link == null"
-            />
-            <button
-              class="button button_type-question button_theme-red"
-              @click.prevent="deleteImage"
-              v-if="image.link != null"
-            >
-              Удалить изображение
-            </button>
-            <div class="test__image" v-if="image.link != null">
-              <img :src="image.link" />
-            </div>
-          </form>
+      <div class="flex">
+        <div class="side-panel flex flex-center flex-vertical pt6 pb6">
+          <div>
+            <img src="/pictures/add.svg" width="36px" />
+          </div>
         </div>
-        <div
-          class="test__block test__item mt6"
-          v-for="(question, key) in questions"
-          :key="question.id"
-          @click="questionFocus(question)"
-        >
-          <template v-if="question.focused">
-            <div
-              style="
-                flex-grow: 1;
-                display: flex;
-                align-items: center;
-                flex-direction: column;
-              "
-            >
-              <input
-                type="text"
-                name="names"
-                id="names"
-                class="input input_type-option pl0"
-                placeholder="Напишите свой вопрос"
-                v-model="question.name"
-              />
-
+        <div class="test ml5">
+          <div class="test__block test__header">
+            <form class="form form_type-test">
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Название теста"
+                  class="input input_type-test input_type-test-header"
+                  v-model="testName"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="description"
+                  id="description"
+                  placeholder="Описание теста"
+                  class="input input_type-test-small mt5"
+                  v-model="testDescription"
+                />
+              </div>
               <input
                 type="file"
                 name="image"
-                @change="questionImage($event, question)"
-                v-if="question.image.link == null"
+                @change="uploadImage"
+                v-if="image.link == null"
               />
               <button
                 class="button button_type-question button_theme-red"
-                @click.prevent="questionImageDelete(question)"
-                v-if="question.image.link != null"
+                @click.prevent="deleteImage"
+                v-if="image.link != null"
               >
                 Удалить изображение
               </button>
-              <div class="test__image" v-if="question.image.link != null">
-                <img :src="question.image.link" />
+              <div class="test__image" v-if="image.link != null">
+                <img :src="image.link" />
               </div>
-
-              <multiselect
-                v-model="question.typeAnswer"
-                :options="options"
-                selectLabel=""
-                selectedLabel=""
-                deselectLabel=""
-                :placeholder="question.typeAnswer || 'Выберите тип ответа'"
-                allowEmpty=true
-                
-              ></multiselect>
-              <VariantStandart
-                :postQuestion="question"
-                v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка' || question.typeAnswer == 'Разворачивающийся список'"
-              />
-              <VariantInput
-                :postQuestion="question"
-                v-if="question.typeAnswer == 'Ввод текста'"
-              />
-            </div>
-            <span
-              @click="deleteQuestion(key, question.id)"
-            >
-              <img src="/pictures/trash.svg" width="32px" />
-            </span>
-          </template>
-
-          <template v-else>
+            </form>
+          </div>
+          <draggable v-model="questions" @end="dragEnd" handle=".drag">
             <div
-              style="display: flex; flex-direction: column"
-              v-if="question.name != null"
+              :class="question.focused ? 'test__block test__block_selected test__item mt8' : 'test__block test__item mt8'"
+              v-for="question in questions"
+              :key="question.index"
+              @click="questionFocus(question)"
             >
-              <div
-                class="test__question-name"
-              >
-                {{ question.name }}
-              </div>
-              <div class="test__image mt5" v-if="question.image.link != null">
-                <img :src="question.image.link" />
-              </div>
-              <VariantOneOutput
-                v-if="question.typeAnswer == 'Один из списка'"
-                :postQuestion="question"
-              />
-              <VariantInputOutput
-                v-if="question.typeAnswer == 'Ввод текста'"
-                :postQuestion="question"
-              />
-              <VariantFewOutput
-                v-if="question.typeAnswer == 'Несколько из списка'"
-                :postQuestion="question"
-              />
-              <VariantUnfoldOutput
-                v-if="question.typeAnswer == 'Разворачивающийся список'"
-                :postQuestion="question"
-              />
+              <!-- <div class="drag">
+                <img src="/pictures/iconfinder_move_2561476.svg" width="32">
+              </div> -->
+              <template v-if="question.focused">
+                <div
+                  style="
+                    flex-grow: 1;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                  "
+                >
+                  <div class="question-flex">
+                    <input
+                      type="text"
+                      name="names"
+                      id="names"
+                      class="input input_type-option pl0"
+                      placeholder="Напишите свой вопрос"
+                      v-model="question.name"
+                    />
+                    <div class="flex flex-center">
+                      <span>
+                        <img src="/pictures/copy.svg" width="21px" />
+                      </span>
+                      <span
+                        @click="deleteQuestion(question.index, question.id)"
+                        class="ml5"
+                      >
+                        <img src="/pictures/trash.svg" width="21px" />
+                      </span>
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    name="image"
+                    @change="questionImage($event, question)"
+                    v-if="question.image.link == null"
+                  />
+                  <button
+                    class="button button_type-question button_theme-red"
+                    @click.prevent="questionImageDelete(question)"
+                    v-if="question.image.link != null"
+                  >
+                    Удалить изображение
+                  </button>
+                  <div class="test__image" v-if="question.image.link != null">
+                    <img :src="question.image.link" />
+                  </div>
+
+                  <multiselect
+                    :allow-empty="false"
+                    :multiple="false"
+                    v-model="question.typeAnswer"
+                    :options="options"
+                    selectLabel=""
+                    selectedLabel=""
+                    deselectLabel=""
+                    :placeholder="'Выберите тип ответа'"
+                  ></multiselect>
+                  <VariantStandart
+                    :postQuestion="question"
+                    v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка' || question.typeAnswer == 'Выпадающий список'"
+                  />
+                  <VariantInput
+                    :postQuestion="question"
+                    v-if="question.typeAnswer == 'Ввод текста'"
+                  />
+                  <VariantDate 
+                    v-if="question.typeAnswer == 'Дата'"
+                  />
+                  <VariantTime
+                    v-if="question.typeAnswer == 'Время'"
+                  />
+                </div>
+              </template>
+
+              <template v-else>
+                <div
+                  style="display: flex; flex-direction: column"
+                  v-if="question.name != null"
+                >
+                  <div
+                    class="test__question-name mb7"
+                  >
+                    {{ question.name }}
+                  </div>
+                  <div class="test__image mt5" v-if="question.image.link != null">
+                    <img :src="question.image.link" />
+                  </div>
+                  <VariantOneOutput
+                    v-if="question.typeAnswer == 'Один из списка'"
+                    :postQuestion="question"
+                  />
+                  <VariantInputOutput
+                    v-if="question.typeAnswer == 'Ввод текста'"
+                    :postQuestion="question"
+                  />
+                  <VariantFewOutput
+                    v-if="question.typeAnswer == 'Несколько из списка'"
+                    :postQuestion="question"
+                  />
+                  <VariantUnfoldOutput
+                    v-if="question.typeAnswer == 'Выпадающий список'"
+                    :postQuestion="question"
+                  />
+                  <VariantDateOutput
+                    v-if="question.typeAnswer == 'Дата'"
+                  />
+                  <VariantTimeOutput
+                    v-if="question.typeAnswer == 'Время'"
+                  />
+                </div>
+                <div v-else>Пустой вопрос</div>
+              </template>
             </div>
-            <div v-else>Пустой вопрос</div>
-          </template>
-        </div>
+          </draggable>
+          <div class="test__block test__empty mt6" v-if="questions.length == 0">
+            Нет вопросов
+          </div>
 
-        <div class="test__block test__empty mt6" v-if="questions.length == 0">
-          Нет вопросов
-        </div>
-
-        <div style="display: flex; justify-content: space-between" class="mt8">
-          <button
-            class="button button_type-index button_theme-green"
-            @click="addQuestion"
-          >
-            Добавить вопрос
-          </button>
-          <button
-            class="button button_type-index button_theme-blue"
-            @click="saveTest"
-          >
-            Сохранить
-          </button>
+          <div style="display: flex; justify-content: space-between" class="mt8">
+            <button
+              class="button button_type-index button_theme-green"
+              @click="addQuestion"
+            >
+              Добавить вопрос
+            </button>
+            <button
+              class="button button_type-index button_theme-blue"
+              @click="saveTest"
+            >
+              Сохранить
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -170,13 +200,27 @@
 <script>
 import axios from "axios";
 import Multiselect from "vue-multiselect";
+
 import Header from "@/components/Header.vue";
+
 import VariantStandart from "@/components/MakeTest/VariantStandart.vue";
+
 import VariantInput from "@/components/MakeTest/VariantInput.vue";
-import VariantUnfoldOutput from "@/components/MakeTest/VariantUnfoldOutput.vue";
-import VariantOneOutput from "@/components/MakeTest/VariantOneOutput.vue";
 import VariantInputOutput from "@/components/MakeTest/VariantInputOutput.vue";
+
+import VariantUnfoldOutput from "@/components/MakeTest/VariantUnfoldOutput.vue";
+
+import VariantOneOutput from "@/components/MakeTest/VariantOneOutput.vue";
+
 import VariantFewOutput from "@/components/MakeTest/VariantFewOutput.vue";
+
+import VariantDate from "@/components/MakeTest/VariantDate.vue";
+import VariantDateOutput from "@/components/MakeTest/VariantDateOutput.vue";
+
+import VariantTime from "@/components/MakeTest/VariantTime.vue";
+import VariantTimeOutput from "@/components/MakeTest/VariantTimeOutput.vue";
+
+import draggable from 'vuedraggable'
 
 export default {
   name: "MakeTest",
@@ -186,7 +230,7 @@ export default {
       testId: "",
       testName: "",
       testDescription: "",
-      options: ["Один из списка", "Ввод текста", "Несколько из списка", "Разворачивающийся список"],
+      options: ["Один из списка", "Ввод текста", "Несколько из списка", "Выпадающий список", "Дата", "Время"],
       image: {
         data: null,
         link: null,
@@ -200,8 +244,10 @@ export default {
     VariantOneOutput,
     VariantInputOutput,
     VariantFewOutput,
-    VariantUnfoldOutput,
-    Header,
+    VariantUnfoldOutput, 
+    VariantDateOutput, VariantDate,
+    VariantTime, VariantTimeOutput,
+    draggable,  Header,
   },
   computed: {},
   methods: {
@@ -212,6 +258,7 @@ export default {
         testId: this.testId,
         variants: standartVariants,
         name: name,
+        index: this.questions.length,
         typeAnswer: "Один из списка",
       };
 
@@ -222,6 +269,7 @@ export default {
           focused: false,
           typeAnswer: "Один из списка",
           standartVariants: standartVariants,
+          index: this.questions.length,
           image: {
             data: null,
             link: null,
@@ -310,7 +358,12 @@ export default {
           question.image.data = null;
         });
     },
-
+    dragEnd() {
+      this.questions.forEach((question, index) => {
+        question.index = index;
+        console.log(question)
+      })
+    },
     //Mounted methods
     getTest() {
       axios.get("test/" + this.testId).then((res) => {
@@ -345,6 +398,7 @@ export default {
               focused: false,
               standartVariants: standartVariants,
               typeAnswer: element.typeAnswer,
+              index: element.index,
               image: {
                 data: null,
                 link: element.imageLink,
@@ -376,8 +430,20 @@ export default {
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
+
 </style>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
+
+.multiselect__option--selected.multiselect__option--highlight, .multiselect__option--highlight {
+    background: #6699ff;
+}
+
+.multiselect__option--selected {
+    background: #ffffff;
+    color: #6699ff;
+    font-weight: 700;
+}
+</style>
