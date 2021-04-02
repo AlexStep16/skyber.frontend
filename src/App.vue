@@ -5,7 +5,6 @@
 </template>
 
 <style lang="scss">
-@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import '@/common.blocks/aliases.scss';
 @import '@/common.blocks/main.scss';
 
@@ -20,6 +19,15 @@ html {
 #app {
   width: 100%;
   height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+.body {
+  overflow: auto;
+  padding-bottom: 100px;
 }
 
 </style>

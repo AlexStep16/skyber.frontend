@@ -22,10 +22,10 @@
           <img src="/pictures/trash.svg" width="19px" />
         </span>
       </div>
-      <div class="test__add-variant mt5" @click="addVariant(postQuestion)">
-        Добавить вариант
-      </div>
     </draggable>
+    <div class="test__add-variant pointer mt7" @click="addVariant(postQuestion)">
+      Добавить вариант
+    </div>
   </div>
 </template>
 

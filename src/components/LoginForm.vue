@@ -86,7 +86,7 @@ export default {
       this.login(this.form)
         .then(() => {
           this.$router.push({
-            name: "Options",
+            name: "List",
           });
         })
         .catch(() => {

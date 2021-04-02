@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <Header />
     <div class="main">
       <div class="stats">
@@ -208,6 +208,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/stats.scss";
 </style>

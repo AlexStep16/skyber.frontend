@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <Header />
     <div class="main">
       <div class="options">
@@ -51,7 +51,7 @@ export default {
         axios
           .post("test/create", this.form)
           .then((res) => {
-            this.SET_TEST(res.data.data);
+            this.SET_TEST({id: res.data.data.id});
             this.$router.push({ name: "MakeTest" });
           })
           .catch(() => {
@@ -65,7 +65,7 @@ export default {
         axios
           .post("poll/create", this.form)
           .then((res) => {
-            this.SET_POLL(res.data.data);
+            this.SET_POLL({id: res.data.data.id});
             this.$router.push({ name: "MakePoll" });
           })
           .catch(() => {
@@ -84,6 +84,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/options.scss";
 </style>

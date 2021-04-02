@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <div class="main">
       <LoginForm />
     </div>
@@ -28,6 +28,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
 
-
+.body {
+  background-color: #FFF;
+}
 </style>
 

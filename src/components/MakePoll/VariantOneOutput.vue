@@ -1,7 +1,7 @@
 <template>
-  <div class="form_type-radio mt5">
+  <div class="form_type-radio">
     <div
-      class="form_radio"
+      class="form_radio mb6"
       v-for="variant in getRadioArray(variants)"
       :key="variant.id"
     >
@@ -11,7 +11,9 @@
         :name="`poll`"
         :value="variant.name"
       />
-      <label :for="`radio${variant.id}`">
+      <label 
+        class="poll__question-answer"
+        :for="`radio${variant.id}`">
         {{ variant.name }}
       </label>
     </div>
@@ -37,6 +39,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/main.scss";
+@import "@/common.blocks/makepoll.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
 @import "@/common.blocks/form-checkbox_type-main.scss";
 </style>

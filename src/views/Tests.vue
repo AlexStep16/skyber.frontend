@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <Header />
     <div class="main">
       <div class="test">
-        <div class="test__block test__header pt7 pb7">
+        <div class="test__block bg-white-shadow test__header pt7 pb7">
           <h1 class="h1-test">{{ testName }}</h1>
           <span>{{ testDescription }}</span>
           <div class="test__image" v-if="image.link != null">
@@ -11,7 +11,7 @@
           </div>
         </div>
         <div
-          class="test__block test__item mt6"
+          class="test__block test__block_wraper bg-white-shadow test__item mt6"
           v-for="question in questions"
           :key="question.id"
         >
@@ -185,6 +185,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";

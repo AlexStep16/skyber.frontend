@@ -1,4 +1,4 @@
-/* ------Body files start here------ */
+/* ------Common styles start here------ */
 
 body {
   width: 100%;
@@ -11,19 +11,24 @@ body {
   box-sizing: border-box;
 }
 
-/* ------Body files end here------ */
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* ------Common styles end here------ */
 
 
 /* ------h files start here------ */
 
 .h1-default {
   font-size: 1.2em;
-  color: #444444;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.h1-test {
-  font-size: 1.32em;
   color: #444444;
   font-family: 'Montserrat', sans-serif;
 }
@@ -153,8 +158,13 @@ button, .button {
 }
 
 .button_theme-roboto {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95em;
+}
+
+.button_theme-mont {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.9em;
+  font-size: 0.95em;
 }
 
 .button_theme-green {
@@ -164,15 +174,23 @@ button, .button {
 }
 
 .button_theme-red {
-  background-color: #ff6e34;
+  background-color: #ff4c34;
   color: white;
   @extend .button_theme-roboto;
+}
+
+.button_theme-red_shadow {
+  box-shadow: 0 3px 0 #b83524;
 }
 
 .button_theme-blue {
   background-color: #6699FF;
   color: white;
   @extend .button_theme-roboto;
+}
+
+.button_theme-blue_shadow {
+  box-shadow: 0 3px 0 #376cd8;
 }
 
 .button_theme-purple {
@@ -196,6 +214,11 @@ button, .button {
 /* ------Form files end here------ */
 
 
+/* ------Display styles start here------ */
+.inline-block {
+  display: inline-block;
+}
+
 .flex {
   display: flex;
 }
@@ -205,7 +228,40 @@ button, .button {
   justify-content: center;
 }
 
+.flex-align-center {
+  align-items: center;
+}
+
+.flex-justify-center {
+  justify-content: center;
+}
+
 .flex-vertical {
   flex-direction: column;
   justify-content: flex-start;
 }
+
+/* ------Display styles end here------ */
+
+.pointer {
+  cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ------Colors styles start here------ */
+
+.bg-white-shadow {
+  background-color: white;
+  box-shadow: 0px 4px 12px rgba(30, 30, 30, 0.1);
+}
+
+.bg-white-border {
+  background-color: white;
+  border: 1px solid #ececec;
+}
+
+
+/* ------Colors styles end here------ */

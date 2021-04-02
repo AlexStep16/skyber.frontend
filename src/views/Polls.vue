@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <Header />
     <div class="main">
       <div class="poll">
-        <div class="poll__block">
-          <h1>Опрос</h1>
+        <div class="poll__block bg-white-shadow">
+          <h1 class="poll-tag">Опрос</h1>
           <template>
-            <h3>{{ pollName }}</h3>
+            <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
             <span>{{ pollDescription }}</span>
             <div class="test__image mt5" v-if="image.link != null">
               <img :src="image.link" />
@@ -99,6 +99,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/makepoll.scss";
 @import "@/common.blocks/maketest.scss";

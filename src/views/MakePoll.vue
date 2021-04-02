@@ -1,17 +1,16 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <Header />
     <div class="main">
       <div class="poll">
-        <div class="poll__block">
-          <h1>Опрос</h1>
+        <div class="poll__block bg-white-shadow">
           <template v-if="isPreview">
-            <h3>{{ pollName }}</h3>
+            <h1 class="poll-tag">Опрос</h1>
+            <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
             <span>{{ pollDescription }}</span>
             <div class="test__image mt5" v-if="image.link != null">
               <img :src="image.link" />
             </div>
-            <br /><br />
             <VariantFewOutput
               :variants="variants"
               v-if="typeVariants == 'Несколько из списка'"
@@ -29,6 +28,7 @@
           </template>
 
           <template v-else>
+            <h2>Опрос</h2>
             <input
               type="text"
               class="input input_type-test"
@@ -82,20 +82,13 @@
                   v-model="variant.name"
                   @focusout="checkIsEmpty(variant, index)"
                 />
-                <button
-                  class="button button_type-index"
-                  @click="deleteVariant(index)"
-                >
-                  Удалить
-                </button>
+                <span @click="deleteVariant(index)">
+                  <img src="/pictures/trash.svg" width="19px" />
+                </span>
               </div>
-              <input
-                type="text"
-                class="input input_type-test-small"
-                placeholder="Добавить вариант"
-                @click="addVariant()"
-                readonly
-              />
+              <div class="test__add-variant pointer mt5" @click="addVariant()">
+                Добавить вариант
+              </div>
               <button
                 class="button button_type-index button_theme-blue mt6"
                 @click="savePoll"
@@ -230,6 +223,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/makepoll.scss";
 @import "@/common.blocks/maketest.scss";

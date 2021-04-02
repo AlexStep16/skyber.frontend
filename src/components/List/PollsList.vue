@@ -23,25 +23,45 @@
             <img src="/pictures/circle.svg" width="30px">
           </router-link>
           <span
-            @click="pollDelete(poll.id, key)"
+            @click="showModal(poll.id, key)"
             class="ml5"
           >
-            <img src="/pictures/trash.svg" width="22px">
+            <img src="/pictures/trash.svg" class="pointer" width="22px">
           </span>
         </div>
       </div>
     </div>
+
+    <DeleteModal
+      v-if="!isModalHide"
+      message="Вы действительно хотите удалить опрос?" 
+      redMessage="Удалить" 
+      blueMessage="Отмена"
+      @action="deleteMessage($event)"
+    />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import DeleteModal from "@/components/DeleteModal.vue";
 import { mapMutations } from "vuex";
 
 export default {
   name: "PollsList",
   props: ["postPolls"],
-  components: {},
+  data() {
+    return {
+      tempDelete: {
+        id: null,
+        key: null
+      },
+      isModalHide: true,
+    }
+  },
+  components: {
+    DeleteModal
+  },
   methods: {
     ...mapMutations(["SET_POLL"]),
 
@@ -55,6 +75,19 @@ export default {
         this.postPolls.splice(key, 1);
       });
     },
+
+    deleteMessage(value) {
+      if(value === 1) {
+        this.pollDelete(this.tempDelete.id, this.tempDelete.key)
+      }
+      this.isModalHide = true
+    },
+
+    showModal(id, key) {
+      this.tempDelete.id = id
+      this.tempDelete.key = key
+      this.isModalHide = false
+    }
   },
 };
 </script>

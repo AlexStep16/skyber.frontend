@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container body">
     <Header />
     <div class="main">
       <div class="pollOrTest">
@@ -25,11 +25,14 @@
         </div>
       </div>
       <div class="list">
-        <router-link to="/options" class="create-test">
+        <div class="create-test pointer" v-if="listSelected == 'tests'" @click="makeTest()">
           <img src="/pictures/plus.svg" width="22" class="mr5">
-          <span v-if="listSelected == 'tests'">Создать новый тест</span>
-          <span v-if="listSelected == 'polls'">Создать новый опрос</span>
-        </router-link>
+          <span>Создать новый тест</span>
+        </div>
+        <div class="create-test pointer" v-if="listSelected == 'polls'" @click="makePoll()">
+          <img src="/pictures/plus.svg" width="22" class="mr5">
+          <span>Создать новый опрос</span>
+        </div>
         <TestsList :postTests="tests" v-if="listSelected == 'tests'" />
         <PollsList :postPolls="polls" v-if="listSelected == 'polls'" />
       </div>
@@ -42,6 +45,7 @@ import axios from "axios";
 import Header from "@/components/Header.vue";
 import TestsList from "@/components/List/TestsList.vue";
 import PollsList from "@/components/List/PollsList.vue";
+import { mapMutations } from "vuex";
 
 export default {
   name: "List",
@@ -50,6 +54,12 @@ export default {
       tests: [],
       polls: [],
       listSelected: "tests",
+      form: {
+        name: "",
+        email: "",
+        status: "draft",
+        variants: [],
+      },
     };
   },
   components: {
@@ -57,12 +67,43 @@ export default {
     TestsList,
     PollsList,
   },
-  methods: {},
+  methods: {
+    ...mapMutations(["SET_TEST", "SET_POLL"]),
+
+    makeTest() {
+      axios
+        .post("test/create", this.form)
+        .then((res) => {
+          this.SET_TEST({id: res.data.data.id});
+          this.$router.push({ name: "MakeTest" });
+        })
+        .catch(() => {
+          this.$router.push({ name: "Home" });
+        });
+    },
+
+    makePoll() {
+      axios
+        .post("poll/create", this.form)
+        .then((res) => {
+          this.SET_POLL({id: res.data.data.id});
+          this.$router.push({ name: "MakePoll" });
+        })
+        .catch(() => {
+          this.$router.push({ name: "Home" });
+        });
+    },
+
+    deleteMessage(value) {
+      console.log(value)
+    }
+  },
   mounted() {
     axios.get("test/get/all").then((res) => {
-      this.tests = res.data;
+      this.tests = res.data.data;
       axios.get("polls/get/all").then((res) => {
-        this.polls = res.data;
+        console.log(res)
+        this.polls = res.data.data;
         if (this.polls.length == 0 && this.tests.length == 0) {
           this.$router.push({ name: "Options" });
         }
@@ -75,5 +116,12 @@ export default {
 <style lang="scss" scoped>
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/list.scss";
+
+.body {
+  margin-bottom: 20px;
+}
 </style>
 
+<style lang="sass">
+@import '@/common.blocks/body/_themes/body_themes-light.scss';
+</style>

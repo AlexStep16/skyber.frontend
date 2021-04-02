@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import store from '../store'
 import Register from '../views/Register.vue'
 import MakeTest from '../views/MakeTest.vue'
-import Options from '../views/Options.vue'
 import List from '../views/List.vue'
 import MakePoll from '../views/MakePoll.vue'
 import Tests from '../views/Tests.vue'
@@ -51,11 +50,6 @@ const routes = [
     path: '/test',
     name: 'MakeTest',
     component: MakeTest
-  },
-  {
-    path: '/options',
-    name: 'Options',
-    component: Options
   },
   {
     path: '/list',
