@@ -22,6 +22,10 @@ li {
   list-style-type: none;
 }
 
+img {
+  border-radius: 1px;
+}
+
 /* ------Common styles end here------ */
 
 
@@ -234,6 +238,10 @@ button, .button {
 
 .flex-justify-center {
   justify-content: center;
+}
+
+.flex-justify-between {
+  justify-content: space-between;
 }
 
 .flex-vertical {

@@ -3,11 +3,15 @@
     <Header />
     <div class="main">
       <div class="test">
-        <div class="test__block bg-white-shadow test__header pt7 pb7">
-          <h1 class="h1-test">{{ testName }}</h1>
-          <span>{{ testDescription }}</span>
-          <div class="test__image" v-if="image.link != null">
-            <img :src="image.link" />
+        <div class="test__block_wraper mt8">
+          <div class="test__block bg-white-shadow test__header pt7 pb7">
+            <h1 class="h1-test">{{ testName }}</h1>
+            <span class="test__description">{{ testDescription }}</span>
+            <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
+            </youtube>
+            <div class="test__image mt5" v-if="image.link != null">
+              <img :src="image.link" />
+            </div>
           </div>
         </div>
         <div
@@ -87,6 +91,7 @@ export default {
         data: null,
         link: null,
       },
+      testVideoLink: '',
     };
   },
   components: {
@@ -107,35 +112,26 @@ export default {
     sendTest() {
       let stop = false;
       this.questions.forEach((elem) => {
-        if(!Array.isArray(elem.checked)) elem.checked = [`${elem.checked}`]
-        switch (elem.typeAnswer) {
-          case "Один из списка":
-            if (!elem.checked) {
-              alert("Вы ответили не на все вопросы");
-              stop = true;
-            }
-            break;
-          case "Ввод текста":
-            if (!elem.checked) {
-              alert("Вы ответили не на все вопросы");
-              stop = true;
-            }
-            break;
-          case "Несколько из списка":
-            if (!elem.checked) {
-              alert("Вы ответили не на все вопросы");
-              stop = true;
-            }
-            break;
+        if(elem.checked) elem.checked = elem.checked.split('_')[0]
+        if(elem.isRequire && !elem.checked) {
+          stop = true;
         }
       });
-      if (stop) return;
+      if (stop) {
+        alert("Вы ответили не на все вопросы");
+        return;
+      }
       for(let key in this.questions) {
+        if(!this.questions[key]['checked']) {
+          this.questions[key]['checked'] = []
+        }
         if(!Array.isArray(this.questions[key]['checked'])) {
           this.questions[key]['checked'] = [this.questions[key]['checked']]
         }
       }
-
+      this.questions = this.questions.filter((question) => {
+        return question.checked.length > 0
+      })
       axios
         .post("answers/send", {
           questions: this.questions,
@@ -145,7 +141,7 @@ export default {
           alert("Тест успешно отправлен");
           console.log(this.questions)
           this.$router.push({ name: "List" });
-        });
+        }); 
     },
   },
   mounted() {
@@ -154,6 +150,7 @@ export default {
 
       this.testId = res.id;
       this.testName = res.testName;
+      this.testVideoLink = res.videoLink;
       this.testDescription = res.description;
       this.image.link = res.imageLink;
     });
@@ -163,13 +160,13 @@ export default {
       .then((res) => {
         res.data.forEach((element) => {
           let variants = JSON.parse(element.variants);
-
           this.questions.push({
             id: element.id,
             name: element.question,
             focused: false,
             variants: variants,
             typeAnswer: element.typeAnswer,
+            isRequire: element.isRequire,
             image: {
               data: null,
               link: element.imageLink,

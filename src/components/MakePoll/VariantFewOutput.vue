@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt7">
     <div
       class="checkbox mt5"
       v-for="(variant, key) in variants"

@@ -2,7 +2,7 @@
   <div>
     <div class="list-item" v-for="(test, key) in postTests" :key="test.id">
       <span>Тест</span>
-      <h2 @click="goCreateTest(test)" class="mt6 mb6">{{ test.testName }}</h2>
+      <h2 @click="goCreateTest(test)" class="mt6 mb6 pointer">{{ test.testName }}</h2>
       <p class="list-item__description mb7">{{ test.description }}</p>
       <span>Количество отправлений: {{ test.countSub }}</span>
       <div class="list-item__panel mt8">
@@ -62,7 +62,7 @@ export default {
     DeleteModal
   },
   methods: {
-    ...mapMutations(["SET_TEST"]),
+    ...mapMutations(["SET_TEST", "CLEAR_TEST"]),
 
     goCreateTest(test) {
       this.SET_TEST({id: test.id, name: test.name});
@@ -72,6 +72,9 @@ export default {
     testDelete(id, key) {
       axios.get("test/delete/" + id).then(() => {
         this.postTests.splice(key, 1);
+        if(this.$store.state.testStore.id == id) {
+          this.CLEAR_TEST();
+        }
       });
     },
 

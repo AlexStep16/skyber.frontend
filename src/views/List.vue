@@ -68,30 +68,16 @@ export default {
     PollsList,
   },
   methods: {
-    ...mapMutations(["SET_TEST", "SET_POLL"]),
+    ...mapMutations(["CLEAR_TEST", "CLEAR_POLL"]),
 
     makeTest() {
-      axios
-        .post("test/create", this.form)
-        .then((res) => {
-          this.SET_TEST({id: res.data.data.id});
-          this.$router.push({ name: "MakeTest" });
-        })
-        .catch(() => {
-          this.$router.push({ name: "Home" });
-        });
+      this.CLEAR_TEST();
+      this.$router.push({ name: "MakeTest" });
     },
 
     makePoll() {
-      axios
-        .post("poll/create", this.form)
-        .then((res) => {
-          this.SET_POLL({id: res.data.data.id});
-          this.$router.push({ name: "MakePoll" });
-        })
-        .catch(() => {
-          this.$router.push({ name: "Home" });
-        });
+      this.CLEAR_POLL();
+      this.$router.push({ name: "MakePoll" });
     },
 
     deleteMessage(value) {

@@ -2,8 +2,8 @@
   <div>
     <div class="list-item" v-for="(poll, key) in postPolls" :key="poll.id">
       <span>Опрос</span>
-      <h2 @click="goCreatePoll(poll)">{{ poll.pollName }}</h2>
-      <p>{{ poll.pollDescription }}</p>
+      <h2 @click="goCreatePoll(poll)" class="mt6 mb6 pointer">{{ poll.pollName }}</h2>
+      <p class="list-item__description mb7">{{ poll.pollDescription }}</p>
       <span>Количество отправлений: {{ poll.countSub }}</span
       >
       <div class="list-item__panel mt8">

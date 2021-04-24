@@ -4,7 +4,7 @@
     <div class="main">
       <div>
         <div class="test inline-block">
-          <div class="test__block_wraper mt8">
+          <div class="test__block_wraper">
             <div class="side-panel inline-block">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
                 <div class="pointer text-center" @click="addQuestion">
@@ -13,7 +13,7 @@
                 <div class="pointer mt6 text-center" @click="clickImage">
                   <img src="/pictures/image.svg" width="32px">
                 </div>
-                <div class="mt6 text-center">
+                <div class="pointer mt6 text-center" @click="hideVideoBox = !hideVideoBox">
                   <img src="/pictures/video.svg" width="32px">
                 </div>
               </div>
@@ -40,6 +40,14 @@
                     v-model="testDescription"
                   />
                 </div>
+                <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
+                </youtube>
+                <div class="test-add-video-block flex flex-center" v-if="!hideVideoBox">
+                  <div class="test-add-video-block__modal flex flex-column">
+                    <input type="text" class="input" ref="linkInput" placeholder="Введите ссылку на YouTube видео">
+                    <button class="button button-theme-blue" @click.prevent="saveLink">Добавить</button>
+                  </div>
+                </div>
                 <input
                   type="file"
                   name="image"
@@ -48,14 +56,10 @@
                   hidden
                   v-if="image.link == null"
                 />
-                <button
-                  class="button button_type-question button_theme-red"
-                  @click.prevent="deleteImage"
-                  v-if="image.link != null"
-                >
-                  Удалить изображение
-                </button>
                 <div class="test__image" v-if="image.link != null">
+                  <div class="modal modal50 pointer flex flex-center">
+                    <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+                  </div>
                   <img :src="image.link" />
                 </div>
               </form>
@@ -99,11 +103,14 @@
                       />
                       <div class="flex flex-center">
                         <span>
+                          <img src="/pictures/move.svg" width="26px" class="drag pointer mr5" />
+                        </span>
+                        <span @click="copyQuestion(question)" class="pointer">
                           <img src="/pictures/copy.svg" width="21px" />
                         </span>
                         <span
                           @click="deleteQuestion(key, question.id)"
-                          class="ml5"
+                          class="pointer ml5"
                         >
                           <img src="/pictures/trash.svg" width="21px" />
                         </span>
@@ -117,14 +124,10 @@
                       @change="questionImage($event, question)"
                       v-if="question.image.link == null"
                     />
-                    <button
-                      class="button button_type-question button_theme-red"
-                      @click.prevent="questionImageDelete(question)"
-                      v-if="question.image.link != null"
-                    >
-                      Удалить изображение
-                    </button>
                     <div class="test__image" v-if="question.image.link != null">
+                      <div class="modal modal50 pointer flex flex-center">
+                        <img src="/pictures/trash.svg" width="65px" @click="questionImageDelete(question)" />
+                      </div>
                       <img :src="question.image.link" />
                     </div>
 
@@ -168,7 +171,7 @@
                     >
                       {{ question.name }}
                     </div>
-                    <div class="test__image mt5" v-if="question.image.link != null">
+                    <div class="test__image mt5 mb7" v-if="question.image.link != null">
                       <img :src="question.image.link" />
                     </div>
                     <VariantOneOutput
@@ -205,13 +208,17 @@
         </div>
       </div>
     </div>
-    <MakeFooter :link="testLink" />
+    <MakeFooter :link="testLink" @saveTest="saveTest" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import store from "../store";
+import { mapMutations } from "vuex";
+
 import Multiselect from "vue-multiselect";
+import { getIdFromUrl } from 'vue-youtube'
 
 import Header from "@/components/Header.vue";
 
@@ -255,7 +262,9 @@ export default {
       sidebar: {
         position: 0
       },
-      testFocused: true
+      testFocused: true,
+      testVideoLink: '',
+      hideVideoBox: true
     };
   },
   components: {
@@ -273,6 +282,7 @@ export default {
   },
   computed: {},
   methods: {
+    ...mapMutations(["SET_TEST", "SET_POLL", "CLEAR_TEST"]),
     addQuestion() {
       let name = null;
       let standartVariants = [{ id: 0, name: "Вариант 1" }]; //Стартовое количество вариантов
@@ -287,11 +297,12 @@ export default {
       axios.post("test/question", questionToPost).then((res) => {
         let question = {
           id: res.data,
-          name: name,
+          name: name || 'Без названия',
           focused: false,
           typeAnswer: "Один из списка",
           standartVariants: standartVariants,
           index: this.questions.length,
+          isRequire: false,
           image: {
             data: null,
             link: null,
@@ -338,6 +349,7 @@ export default {
       let test = {
         questions: this.questions,
         testName: this.testName || 'Без названия',
+        videoLink: this.testVideoLink || '',
         testDescription: this.testDescription,
         testId: this.testId,
       };
@@ -368,7 +380,12 @@ export default {
     },
 
     clickQuestionImage(id) {
-      this.$refs['question' + id][1].click()
+      if(this.$refs['question' + id][0].localName == 'div') {
+        this.$refs['question' + id][1].click()
+      }
+      else {
+        this.$refs['question' + id][0].click()
+      }
     },
     questionImage(event, question) {
       let fd = new FormData();
@@ -395,21 +412,36 @@ export default {
         console.log(question)
       })
     },
+    saveLink() {
+      this.testVideoLink = getIdFromUrl(this.$refs.linkInput.value)
+      this.hideVideoBox = true
+    },
     //Mounted methods
-    getTest() {
-      axios.get("test/" + this.testId).then((res) => {
+    getTest(id) {
+      axios.get("test/" + id).then((res) => {
+        if(!res) {
+          this.CLEAR_TEST()
+          location.reload()
+        }
         res = res.data.data;
+        
         this.testName = res.testName;
+        this.testVideoLink = res.videoLink;
         this.testDescription = res.description;
         this.testLink = "https://skyber.ru/test/" + res.hash;
         this.image.link = res.imageLink;
+      }).catch((error) => {
+        if(error.response.status == 404) {
+          this.CLEAR_TEST()
+          location.reload()
+        }
       });
     },
     getTestQuestions() {
       axios
         .get("test/questions/" + this.testId)
         .then((res) => {
-          res.data.forEach((element) => {
+          res.data.data.forEach((element) => {
             let selectedVariants = JSON.parse(element.variants);
             let standartVariants = [{ id: 0, name: "Вариант 1" }];
 
@@ -423,7 +455,6 @@ export default {
 
               standartVariants = selectedVariants;
             }
-
             this.questions.push({
               id: element.id,
               name: element.question,
@@ -431,6 +462,7 @@ export default {
               standartVariants: standartVariants,
               typeAnswer: element.typeAnswer,
               index: element.index,
+              isRequire: element.isRequire,
               image: {
                 data: null,
                 link: element.imageLink,
@@ -454,18 +486,86 @@ export default {
         this.questions[key].focused = false
       })
       this.testFocused = true;
+    },
+
+    copyQuestion(question) {
+      let name = question.name;
+      let standartVariants = question.standartVariants; //Стартовое количество вариантов
+      let questionToPost = {
+        testId: this.testId,
+        variants: standartVariants,
+        name: name,
+        index: this.questions.length,
+        typeAnswer: question.typeAnswer,
+        isRequire: question.isRequire
+      };
+
+      axios.post("test/question", questionToPost).then((res) => {
+        let Question = {
+          id: res.data,
+          name: name || 'Без названия',
+          focused: false,
+          typeAnswer: question.typeAnswer,
+          standartVariants: standartVariants,
+          index: questionToPost.index,
+          isRequire: question.isRequire,
+          image: {
+            data: null,
+            link: null,
+          },
+        };
+
+        this.questions.push(Question);
+        this.questionFocus(Question);
+      });
     }
   },
 
   mounted() {
-    if (!this.$store.state.testStore.id) {
-      this.$router.push({ name: "Options" });
+    if (!store.getters['auth/authenticated'] && !this.$store.state.testStore.id) {
+      axios
+        .post("test/create", this.form)
+        .then((res) => {
+          this.testId = res.data.data.id;
+          this.SET_TEST({id: res.data.data.id});
+          this.getTest(res.data.data.id);
+          this.getTestQuestions()
+        })
     }
-
-    this.testId = this.$store.state.testStore.id;
-
-    this.getTest();
-    this.getTestQuestions();
+    else if (!store.getters['auth/authenticated'] && this.$store.state.testStore.id) {
+      axios.post("test/checkIp", {test_id: this.$store.state.testStore.id, }).then((res) => {
+        if(res.data) {
+          this.testId = this.$store.state.testStore.id;
+          this.getTest(this.testId);
+          this.getTestQuestions();
+        }
+        else {
+          axios
+          .post("test/create", this.form)
+          .then((res) => {
+            this.testId = res.data.data.id;
+            this.SET_TEST({id: res.data.data.id});
+            this.getTest(res.data.data.id);
+            this.getTestQuestions()
+          })
+        }
+      });
+    }
+    else if (store.getters['auth/authenticated'] && this.$store.state.testStore.id) {
+      this.testId = this.$store.state.testStore.id;
+      this.getTest(this.testId);
+      this.getTestQuestions()
+    }
+    else if (store.getters['auth/authenticated'] && !this.$store.state.testStore.id) {
+      axios
+        .post("test/create", this.form)
+        .then((res) => {
+          this.testId = res.data.data.id;
+          this.SET_TEST({id: res.data.data.id});
+          this.getTest(res.data.data.id);
+          this.getTestQuestions()
+        })
+    }
   },
 };
 </script>

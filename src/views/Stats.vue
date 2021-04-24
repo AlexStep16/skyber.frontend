@@ -2,9 +2,9 @@
   <div class="container body">
     <Header />
     <div class="main">
-      <div class="stats">
+      <div class="stats bg-white-shadow">
         <h1 class="h1-default">{{ name }}</h1>
-        <span>Количество отправлений: {{ countSub }}</span>
+        <span class="stats__count">Количество отправлений: {{ countSub }}</span>
         <hr />
         <TestStatOutput :postQuestions="this.questions" v-if="type == 'test'" />
         <PollStatOutput
@@ -149,6 +149,7 @@ export default {
     variantsTypeFew(answersArray, question) {
       let simpleAnswersArr = [];
       let countedAnsArr = [];
+
       answersArray.forEach((answer) => {
         answer.checked.forEach((elem) => {
           let index = simpleAnswersArr.indexOf(elem);
@@ -201,7 +202,9 @@ export default {
         }
       })
       .catch((e) => {
-        console.log(e);
+        if(e.response.status == 401) {
+          this.$router.push({name: 'MakePoll'})
+        }
       });
   },
 };

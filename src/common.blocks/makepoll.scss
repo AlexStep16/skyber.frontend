@@ -16,12 +16,24 @@
   padding: 34px;
 }
 
+.poll__block_wraper {
+  display: flex;
+  width: 550px;
+  position: relative;
+}
+
 .poll-tag {
   font-size: 1.7em;
   color: #444444;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   margin: 0;
+}
+
+.poll-description {
+  font-size: 1em;
+  color: #444444;
+  font-family: 'Roboto', sans-serif;
 }
 
 .poll-name {

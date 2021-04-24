@@ -10,7 +10,7 @@
         type="checkbox"
         :id="`variant${key}`"
         :name="`variant${key}`"
-        :value="variant.name"
+        :value="variant.name + '_' + key"
         v-model="newSelected"
         @change="ready"
       />

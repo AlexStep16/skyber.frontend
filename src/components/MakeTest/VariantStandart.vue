@@ -1,43 +1,43 @@
 <template>
   <div style="width: 100%">
-    <draggable
-      v-model="postQuestion.standartVariants"
-      group="standartVariants"
-      @start="drag = true"
-      @end="drag = false"
+    <div
+      class="test__question mt5"
+      v-for="(variant, index) in postQuestion.standartVariants"
+      :key="`${variant.id}${index}`"
     >
-      <div
-        class="test__question mt5"
-        v-for="(variant, index) in postQuestion.standartVariants"
-        :key="`${variant.id}${index}`"
-      >
-        <input
-          type="text"
-          class="input input_type-test-small"
-          placeholder="Напишите здесь вариант ответа"
-          v-model="variant.name"
-          @focusout="checkIsEmpty(variant, index)"
-        />
-        <span @click="deleteVariant(index)">
-          <img src="/pictures/trash.svg" width="19px" />
-        </span>
+      <input
+        type="text"
+        class="input input_type-test-small"
+        placeholder="Напишите здесь вариант ответа"
+        v-model="variant.name"
+        @focusout="checkIsEmpty(variant, index)"
+      />
+      <span @click="deleteVariant(index)">
+        <img src="/pictures/trash.svg" width="19px" />
+      </span>
+    </div><hr />
+    <div class="flex flex-justify-between mt5">
+      <div class="test__add-variant pointer" @click="addVariant(postQuestion)">
+        Добавить вариант
       </div>
-    </draggable>
-    <div class="test__add-variant pointer mt7" @click="addVariant(postQuestion)">
-      Добавить вариант
+      <div class="test-require flex flex-align-center">
+        <label class="slider ml8">
+          <input type="checkbox" v-model="postQuestion.isRequire">
+          <span class="slider__circle slider__round"></span>
+        </label>
+        <span class="test-require__text ml5">Обязательный вопрос</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 //import axios from 'axios'
-import draggable from 'vuedraggable'
 
 export default {
   name: "VariantStandart",
   props: ["postQuestion"],
   components: {
-    draggable
   },
   data() {
     return {};
@@ -77,4 +77,5 @@ export default {
 
 <style scoped lang="scss">
 @import "@/common.blocks/maketest.scss";
+@import "@/common.blocks/form-slider_type-main.scss";
 </style>

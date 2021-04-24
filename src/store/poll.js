@@ -6,6 +6,9 @@ export const pollStore =  {
   mutations: {
     SET_POLL(state, pollObj) {
       state.id = pollObj.id
+    },
+    CLEAR_POLL(state) {
+      state.id = null
     }
   },
 

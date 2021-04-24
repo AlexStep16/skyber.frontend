@@ -4,6 +4,9 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import VueYoutube from 'vue-youtube'
+
+Vue.use(VueYoutube)
 
 require('@/store/subscriber')
 

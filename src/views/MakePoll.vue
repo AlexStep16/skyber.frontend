@@ -3,12 +3,24 @@
     <Header />
     <div class="main">
       <div class="poll">
+        <div class="poll__block_wraper" v-if="!isPreview">
+          <div class="side-panel inline-block">
+            <div class="side-panel-inner pb6 flex flex-center flex-vertical">
+              <div class="pointer mt6 text-center" @click="clickImage">
+                <img src="/pictures/image.svg" width="32px">
+              </div>
+              <div class="mt6 text-center">
+                <img src="/pictures/video.svg" width="32px">
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="poll__block bg-white-shadow">
           <template v-if="isPreview">
             <h1 class="poll-tag">Опрос</h1>
             <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
-            <span>{{ pollDescription }}</span>
-            <div class="test__image mt5" v-if="image.link != null">
+            <span class="poll-description">{{ pollDescription }}</span>
+            <div class="test__image mt5 mb7" v-if="image.link != null">
               <img :src="image.link" />
             </div>
             <VariantFewOutput
@@ -28,7 +40,7 @@
           </template>
 
           <template v-else>
-            <h2>Опрос</h2>
+            <h2 class="poll-tag">Опрос</h2>
             <input
               type="text"
               class="input input_type-test"
@@ -45,16 +57,14 @@
               type="file"
               name="image"
               @change="uploadImage"
+              ref="imageInput"
+              hidden
               v-if="image.link == null"
             />
-            <button
-              class="button button_type-question button_theme-red"
-              @click.prevent="deleteImage"
-              v-if="image.link != null"
-            >
-              Удалить изображение
-            </button>
-            <div class="test__image" v-if="image.link != null">
+            <div class="test__image mt5 mb5" v-if="image.link != null">
+              <div class="modal modal50 pointer flex flex-center">
+                <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+              </div>
               <img :src="image.link" />
             </div>
             <multiselect
@@ -107,6 +117,9 @@
 // @ is an alias to /src
 //import RegisterForm from '@/components/RegisterForm.vue';
 import axios from "axios";
+import store from "../store";
+import { mapMutations } from "vuex";
+
 import Header from "@/components/Header.vue";
 import Multiselect from "vue-multiselect";
 import VariantFewOutput from "@/components/MakePoll/VariantFewOutput.vue";
@@ -126,7 +139,7 @@ export default {
       image: {
         data: null,
         link: null
-      }
+      },
     };
   },
   components: {
@@ -136,6 +149,7 @@ export default {
     VariantOneOutput,
   },
   methods: {
+    ...mapMutations(["SET_POLL", "CLEAR_POLL"]),
     addVariant() {
       let variants = this.variants;
       let length = variants.length;
@@ -197,27 +211,72 @@ export default {
       });
     },
 
+    clickImage() {
+      this.$refs.imageInput.click();
+    },
+
     //Mounted methods
     getPoll() {
       axios.get("poll/" + this.pollId).then((res) => {
+        if(!res) {
+          this.CLEAR_TEST()
+          location.reload()
+        }
         res = res.data.data;
-
+  
         this.pollName = res.pollName;
         this.pollDescription = res.pollDescription;
         this.variants = JSON.parse(res.variants);
         this.typeVariants = res.typeVariants
         this.image.link = res.imageLink
+      }).catch((error) => {
+        if(error.response.status == 404) {
+          this.CLEAR_TEST()
+          location.reload()
+        }
       });
     }
   },
   mounted() {
-    if (!this.$store.state.pollStore.id) {
-      this.$router.push({ name: "Options" });
+    if (!store.getters['auth/authenticated'] && !this.$store.state.pollStore.id) {
+      axios
+        .post("poll/create", this.form)
+        .then((res) => {
+          this.pollId = res.data.data.id;
+          this.SET_POLL({id: res.data.data.id});
+          this.getPoll(res.data.data.id);
+        })
     }
-
-    this.pollId = this.$store.state.pollStore.id;
-
-    this.getPoll();
+    else if (!store.getters['auth/authenticated'] && this.$store.state.pollStore.id) {
+      axios.post("poll/checkIp", {poll_id: this.$store.state.pollStore.id, }).then((res) => {
+        if(res.data) {
+          this.pollId = this.$store.state.pollStore.id;
+          this.getPoll(this.pollId);
+        }
+        else {
+          axios
+          .post("poll/create", this.form)
+          .then((res) => {
+            this.pollId = res.data.data.id;
+            this.SET_POLL({id: res.data.data.id});
+            this.getPoll(res.data.data.id);
+          })
+        }
+      });
+    }
+    else if (store.getters['auth/authenticated'] && this.$store.state.pollStore.id) {
+      this.pollId = this.$store.state.pollStore.id;
+      this.getPoll(this.pollId);
+    }
+    else if (store.getters['auth/authenticated'] && !this.$store.state.pollStore.id) {
+      axios
+      .post("poll/create", this.form)
+      .then((res) => {
+        this.pollId = res.data.data.id;
+        this.SET_POLL({id: res.data.data.id});
+        this.getPoll(res.data.data.id);
+      })
+    }
   },
 };
 </script>

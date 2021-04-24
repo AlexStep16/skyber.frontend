@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import store from '../store'
 import Register from '../views/Register.vue'
+import Login from '../views/Login.vue'
 import MakeTest from '../views/MakeTest.vue'
 import List from '../views/List.vue'
 import MakePoll from '../views/MakePoll.vue'
@@ -16,7 +16,23 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    beforeEnter: (to, from, next) => {
+      if (store.getters['auth/authenticated']) {
+        return next({
+          name: 'List'
+        })
+      }
+      else {
+        return next({
+          name: 'MakeTest'
+        })
+      }
+    },
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
     beforeEnter: (to, from, next) => {
       if (store.getters['auth/authenticated']) {
         return next({
@@ -24,13 +40,6 @@ const routes = [
         })
       }
       next();
-    },
-    
-  },
-  {
-    path: '/login',
-    redirect: { 
-      name: 'Home' 
     },
   },
   {

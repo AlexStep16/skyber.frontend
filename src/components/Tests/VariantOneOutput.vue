@@ -9,7 +9,7 @@
         :id="`radio${postQuestion.id}${variant.id}`"
         type="radio"
         :name="`radio${postQuestion.id}${variant.id}`"
-        :value="variant.name"
+        :value="variant.name + '_' + postQuestion.id + variant.id"
         v-model="postQuestion.checked"
       />
       <label 
