@@ -1,12 +1,9 @@
-.container {
-  align-items: flex-start;
-  padding-bottom: 70px;
-}
-
 .main {
   align-items: flex-start;
   flex-direction: column;
-  margin-top: 100px;
+  padding-top: 60px;
+  margin-bottom: 80px;
+  width: 500px;
 }
 
 .list {
@@ -47,6 +44,7 @@
   width: 100%;
   height: auto;
   display: flex;
+  flex: none;
   border: 1px solid #6e71ff;
   border-radius: 20px;
   overflow: hidden;

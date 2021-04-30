@@ -1,14 +1,14 @@
 export const pollStore =  {
   state: {
-    id: null,
+    draftHash: null,
   },
 
   mutations: {
-    SET_POLL(state, pollObj) {
-      state.id = pollObj.id
+    SET_POLL_DRAFT(state, hash) {
+      state.draftHash = hash
     },
-    CLEAR_POLL(state) {
-      state.id = null
+    CLEAR_POLL_DRAFT(state) {
+      state.draftHash = null
     }
   },
 

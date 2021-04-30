@@ -1,6 +1,6 @@
 <template>
-  <div class="container body">
-    <Header />
+  <div class="container flex flex-justify-center">
+    <Header type="test" />
     <div class="main">
       <div>
         <div class="test inline-block">
@@ -42,7 +42,7 @@
                 </div>
                 <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
                 </youtube>
-                <div class="test-add-video-block flex flex-center" v-if="!hideVideoBox">
+                <div class="test-add-video-block flex flex-center mt5" v-if="!hideVideoBox">
                   <div class="test-add-video-block__modal flex flex-column">
                     <input type="text" class="input" ref="linkInput" placeholder="Введите ссылку на YouTube видео">
                     <button class="button button-theme-blue" @click.prevent="saveLink">Добавить</button>
@@ -167,7 +167,7 @@
                     v-if="question.name != null"
                   >
                     <div
-                      class="test__question-name mb7"
+                      class="test__question-name mb5"
                     >
                       {{ question.name }}
                     </div>
@@ -197,7 +197,7 @@
                       v-if="question.typeAnswer == 'Время'"
                     />
                   </div>
-                  <div v-else>Пустой вопрос</div>
+                  <div class="test__question-empty" v-else>Пустой вопрос</div>
                 </div>
               </template>
             </div>
@@ -208,13 +208,12 @@
         </div>
       </div>
     </div>
-    <MakeFooter :link="testLink" @saveTest="saveTest" />
+    <MakeFooter type="test" :link="testLink" @save="saveTest" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import store from "../store";
 import { mapMutations } from "vuex";
 
 import Multiselect from "vue-multiselect";
@@ -247,13 +246,15 @@ import AddSVG from '../../public/Vectors/add32.svg'
 
 export default {
   name: "MakeTest",
+  props: ['hash'],
   data() {
     return {
       questions: [],
-      testId: "",
+      testId: null,
       testName: "",
       testDescription: "",
       testLink: "",
+      testHash: this.hash,
       options: ["Один из списка", "Ввод текста", "Несколько из списка", "Выпадающий список", "Дата", "Время"],
       image: {
         data: null,
@@ -264,7 +265,8 @@ export default {
       },
       testFocused: true,
       testVideoLink: '',
-      hideVideoBox: true
+      hideVideoBox: true,
+      fingerprint: window.VISITOR_ID
     };
   },
   components: {
@@ -282,7 +284,8 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapMutations(["SET_TEST", "SET_POLL", "CLEAR_TEST"]),
+    ...mapMutations(["SET_TEST_DRAFT", "CLEAR_TEST_DRAFT"]),
+
     addQuestion() {
       let name = null;
       let standartVariants = [{ id: 0, name: "Вариант 1" }]; //Стартовое количество вариантов
@@ -292,6 +295,7 @@ export default {
         name: name,
         index: this.questions.length,
         typeAnswer: "Один из списка",
+        isRequire: false,
       };
 
       axios.post("test/question", questionToPost).then((res) => {
@@ -352,9 +356,11 @@ export default {
         videoLink: this.testVideoLink || '',
         testDescription: this.testDescription,
         testId: this.testId,
+        fingerprint: this.fingerprint
       };
       if(!stop) axios.post("test/save", test).then(() => {
-        this.$router.push({ name: "List" });
+        if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
+        this.$router.push('/tests/' + this.testHash);
       });
     },
 
@@ -364,7 +370,7 @@ export default {
       this.image.data != undefined
         ? fd.append("testImage", this.image.data)
         : "";
-      fd.append("id", this.testId);
+      fd.append("id", this.testHash);
 
       if (!this.image.data) return;
 
@@ -374,7 +380,7 @@ export default {
     },
 
     deleteImage() {
-      axios.post("test/upload/delete", { id: this.testId }).then(() => {
+      axios.post("test/upload/delete", { hash: this.testHash }).then(() => {
         this.image.link = null;
       });
     },
@@ -417,29 +423,30 @@ export default {
       this.hideVideoBox = true
     },
     //Mounted methods
-    getTest(id) {
-      axios.get("test/" + id).then((res) => {
+    getTest(hash) {
+      axios.post("test/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
-          this.CLEAR_TEST()
-          location.reload()
+          this.$router.push('/test/create')
         }
         res = res.data.data;
         
+        this.testId = res.id
         this.testName = res.testName;
         this.testVideoLink = res.videoLink;
         this.testDescription = res.description;
-        this.testLink = "https://skyber.ru/test/" + res.hash;
+        this.testLink = "https://skyber.ru/tests/" + res.hash;
         this.image.link = res.imageLink;
-      }).catch((error) => {
-        if(error.response.status == 404) {
-          this.CLEAR_TEST()
-          location.reload()
+      }).catch(() => {
+        let hashStore = this.$store.state.testStore.draftHash
+        if(hashStore != null && hash == hashStore) {
+          this.CLEAR_TEST_DRAFT()
         }
+        this.$router.replace('/404');
       });
     },
     getTestQuestions() {
       axios
-        .get("test/questions/" + this.testId)
+        .get("test/questions/" + this.testHash)
         .then((res) => {
           res.data.data.forEach((element) => {
             let selectedVariants = JSON.parse(element.variants);
@@ -492,7 +499,7 @@ export default {
       let name = question.name;
       let standartVariants = question.standartVariants; //Стартовое количество вариантов
       let questionToPost = {
-        testId: this.testId,
+        testHash: this.testHash,
         variants: standartVariants,
         name: name,
         index: this.questions.length,
@@ -518,53 +525,13 @@ export default {
         this.questions.push(Question);
         this.questionFocus(Question);
       });
-    }
+    },
   },
 
   mounted() {
-    if (!store.getters['auth/authenticated'] && !this.$store.state.testStore.id) {
-      axios
-        .post("test/create", this.form)
-        .then((res) => {
-          this.testId = res.data.data.id;
-          this.SET_TEST({id: res.data.data.id});
-          this.getTest(res.data.data.id);
-          this.getTestQuestions()
-        })
-    }
-    else if (!store.getters['auth/authenticated'] && this.$store.state.testStore.id) {
-      axios.post("test/checkIp", {test_id: this.$store.state.testStore.id, }).then((res) => {
-        if(res.data) {
-          this.testId = this.$store.state.testStore.id;
-          this.getTest(this.testId);
-          this.getTestQuestions();
-        }
-        else {
-          axios
-          .post("test/create", this.form)
-          .then((res) => {
-            this.testId = res.data.data.id;
-            this.SET_TEST({id: res.data.data.id});
-            this.getTest(res.data.data.id);
-            this.getTestQuestions()
-          })
-        }
-      });
-    }
-    else if (store.getters['auth/authenticated'] && this.$store.state.testStore.id) {
-      this.testId = this.$store.state.testStore.id;
-      this.getTest(this.testId);
+    if (this.testHash && this.testHash !== '') {
+      this.getTest(this.testHash);
       this.getTestQuestions()
-    }
-    else if (store.getters['auth/authenticated'] && !this.$store.state.testStore.id) {
-      axios
-        .post("test/create", this.form)
-        .then((res) => {
-          this.testId = res.data.data.id;
-          this.SET_TEST({id: res.data.data.id});
-          this.getTest(res.data.data.id);
-          this.getTestQuestions()
-        })
     }
   },
 };

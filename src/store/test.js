@@ -1,14 +1,14 @@
 export const testStore =  {
   state: {
-    id: null,
+    draftHash: null,
   },
 
   mutations: {
-    SET_TEST(state, testObj) {
-      state.id = testObj.id
+    SET_TEST_DRAFT(state, hash) {
+      state.draftHash = hash
     },
-    CLEAR_TEST(state) {
-      state.id = null
+    CLEAR_TEST_DRAFT(state) {
+      state.draftHash = null
     }
   },
 

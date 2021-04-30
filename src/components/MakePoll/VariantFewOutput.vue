@@ -12,7 +12,7 @@
         :name="`variant${key}`"
         :value="variant.name"
       />
-      <label :for="`variant${key}`">{{ variant.name }}</label>
+      <label class="poll__question-answer" :for="`variant${key}`">{{ variant.name }}</label>
     </div>
   </div>
 </template>

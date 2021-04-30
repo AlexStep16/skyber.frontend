@@ -12,7 +12,7 @@
         v-model="variant.name"
         @focusout="checkIsEmpty(variant, index)"
       />
-      <span @click="deleteVariant(index)">
+      <span class="pointer" @click="deleteVariant(index)">
         <img src="/pictures/trash.svg" width="19px" />
       </span>
     </div><hr />

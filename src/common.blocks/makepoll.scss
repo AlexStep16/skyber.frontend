@@ -1,15 +1,15 @@
 .container {
-  align-items: flex-start;
-  padding-top: 144px;
+  padding: 70px 0;
 }
 
 .main {
   width: auto;
   align-items: flex-start;
+  padding: 60px 0;
 }
 
 .poll__block {
-  width: 550px;
+  width: 630px;
   //min-height: 650px;
   height: auto;
   border-radius: 20px;
@@ -23,7 +23,7 @@
 }
 
 .poll-tag {
-  font-size: 1.7em;
+  font-size: 1.3em;
   color: #444444;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;

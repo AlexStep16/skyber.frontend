@@ -1,5 +1,5 @@
 <template>
-  <div class="container body">
+  <div class="container flex flex-justify-center">
     <Header />
     <div class="main">
       <div class="stats bg-white-shadow">
@@ -106,7 +106,7 @@ export default {
 
     getTestAnswers() {
       axios.get("answer/" + this.id).then((res) => {
-        res = res.data;
+        res = res.data.data;
         this.answers = res;
 
         this.questions.forEach((question) => {
@@ -185,7 +185,7 @@ export default {
 
   mounted() {
     axios
-      .get("stats/" + this.$route.params.hash)
+      .post("stats/", {hash: this.$route.params.hash, fingerprint: window.VISITOR_ID})
       .then((res) => {
         res = res.data.data;
         let name = res.testName ? res.testName : res.pollName;
@@ -203,7 +203,7 @@ export default {
       })
       .catch((e) => {
         if(e.response.status == 401) {
-          this.$router.push({name: 'MakePoll'})
+          this.$router.replace('/404')
         }
       });
   },

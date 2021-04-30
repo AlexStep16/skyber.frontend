@@ -44,7 +44,6 @@
 <script>
 import axios from "axios";
 import DeleteModal from "@/components/DeleteModal.vue";
-import { mapMutations } from "vuex";
 
 export default {
   name: "TestList",
@@ -62,19 +61,13 @@ export default {
     DeleteModal
   },
   methods: {
-    ...mapMutations(["SET_TEST", "CLEAR_TEST"]),
-
     goCreateTest(test) {
-      this.SET_TEST({id: test.id, name: test.name});
-      this.$router.push({ name: "MakeTest" });
+      this.$router.push({ name: "MakeTest", params: {hash: test.hash} });
     },
 
     testDelete(id, key) {
-      axios.get("test/delete/" + id).then(() => {
+      axios.post("test/delete/",{id: id, fingerprint: window.VISITOR_ID}).then(() => {
         this.postTests.splice(key, 1);
-        if(this.$store.state.testStore.id == id) {
-          this.CLEAR_TEST();
-        }
       });
     },
 

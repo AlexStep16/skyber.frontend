@@ -1,11 +1,11 @@
 <template>
-  <div class="container body">
-    <Header />
+  <div class="container flex flex-justify-center">
+    <Header type='test' />
     <div class="main">
       <div class="test">
-        <div class="test__block_wraper mt8">
+        <div class="test__block_wraper mt7">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
-            <h1 class="h1-test">{{ testName }}</h1>
+            <h1 class="h1-test mt0">{{ testName }}</h1>
             <span class="test__description">{{ testDescription }}</span>
             <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
             </youtube>
@@ -20,7 +20,7 @@
           :key="question.id"
         >
           <div style="display: flex; flex-direction: column; width: 100%">
-            <div class="test__question-name mb7">
+            <div class="test__question-name mb5">
               {{ question.name }}
             </div>
             <div class="test__image mt5" v-if="question.image.link != null">
@@ -64,6 +64,7 @@
         </button>
       </div>
     </div>
+    <InfoModal :message="infoMessage" />
   </div>
 </template>
 
@@ -77,6 +78,7 @@ import VariantUnfoldOutput from "@/components/Tests/VariantUnfoldOutput.vue";
 import VariantDateOutput from "@/components/Tests/VariantDateOutput.vue";
 import VariantTimeOutput from "@/components/Tests/VariantTimeOutput.vue";
 import Header from "@/components/Header.vue";
+import InfoModal from "@/components/InfoModal.vue";
 
 export default {
   name: "Tests",
@@ -87,6 +89,7 @@ export default {
       testName: "",
       testDescription: "",
       selected: [],
+      infoMessage: {},
       image: {
         data: null,
         link: null,
@@ -100,7 +103,7 @@ export default {
     VariantFewOutput,
     VariantUnfoldOutput,
     VariantDateOutput, VariantTimeOutput,
-    Header,
+    Header, InfoModal
   },
   methods: {
     getRadioArray(variant) {
@@ -112,13 +115,18 @@ export default {
     sendTest() {
       let stop = false;
       this.questions.forEach((elem) => {
-        if(elem.checked) elem.checked = elem.checked.split('_')[0]
+        if(elem.checked && typeof elem.checked == 'string') elem.checked = elem.checked.split('_')[0]
+        if(elem.checked && (elem.checked instanceof Array)) {
+          Object.keys(elem.checked).forEach((key) => {
+            elem.checked[key] = elem.checked[key].split('_')[0]
+          })
+        }
         if(elem.isRequire && !elem.checked) {
           stop = true;
         }
       });
       if (stop) {
-        alert("Вы ответили не на все вопросы");
+        this.infoMessage = {body: 'Вы ответили не на все вопросы', type: 'danger'}
         return;
       }
       for(let key in this.questions) {
@@ -139,8 +147,7 @@ export default {
         })
         .then(() => {
           alert("Тест успешно отправлен");
-          console.log(this.questions)
-          this.$router.push({ name: "List" });
+          this.$router.push({ name: "Home" });
         }); 
     },
   },

@@ -1,6 +1,6 @@
 <template>
-  <div class="container body">
-    <Header />
+  <div class="container flex flex-justify-center">
+    <Header type="poll" />
     <div class="main">
       <div class="poll">
         <div class="poll__block_wraper" v-if="!isPreview">
@@ -9,17 +9,20 @@
               <div class="pointer mt6 text-center" @click="clickImage">
                 <img src="/pictures/image.svg" width="32px">
               </div>
-              <div class="mt6 text-center">
-                <img src="/pictures/video.svg" width="32px">
+              <div class="mt6 text-center pointer">
+                <img src="/pictures/video.svg" width="32px" @click="hideVideoBox = !hideVideoBox">
               </div>
             </div>
           </div>
         </div>
         <div class="poll__block bg-white-shadow">
           <template v-if="isPreview">
-            <h1 class="poll-tag">Опрос</h1>
             <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
             <span class="poll-description">{{ pollDescription }}</span>
+            <div :class="!pollVideoLink ? 'd-none' : 'test-video mt6 mb6'">
+              <youtube :video-id="pollVideoLink">
+              </youtube>
+            </div>
             <div class="test__image mt5 mb7" v-if="image.link != null">
               <img :src="image.link" />
             </div>
@@ -32,7 +35,7 @@
               v-if="typeVariants == 'Один из списка'"
             />
             <button
-              class="button button_type-index button_theme-blue mt6"
+              class="test__add-variant pointer mt6"
               @click="isPreview = false"
             >
               Редактировать
@@ -40,7 +43,6 @@
           </template>
 
           <template v-else>
-            <h2 class="poll-tag">Опрос</h2>
             <input
               type="text"
               class="input input_type-test"
@@ -53,6 +55,16 @@
               v-model="pollDescription"
               placeholder="Описание опроса"
             />
+            <div :class="!pollVideoLink ? 'd-none' : 'test-video mt6 mb6'">
+              <youtube :video-id="pollVideoLink">
+              </youtube>
+            </div>
+            <div class="test-add-video-block flex flex-center mt5" v-if="!hideVideoBox">
+              <div class="test-add-video-block__modal flex flex-column">
+                <input type="text" class="input" ref="linkInput" placeholder="Введите ссылку на YouTube видео">
+                <button class="button button-theme-blue" @click.prevent="saveLink">Добавить</button>
+              </div>
+            </div>
             <input
               type="file"
               name="image"
@@ -92,24 +104,19 @@
                   v-model="variant.name"
                   @focusout="checkIsEmpty(variant, index)"
                 />
-                <span @click="deleteVariant(index)">
+                <span class="pointer" @click="deleteVariant(index)">
                   <img src="/pictures/trash.svg" width="19px" />
                 </span>
               </div>
               <div class="test__add-variant pointer mt5" @click="addVariant()">
                 Добавить вариант
               </div>
-              <button
-                class="button button_type-index button_theme-blue mt6"
-                @click="savePoll"
-              >
-                Предпросмотр
-              </button>
             </div>
           </template>
         </div>
       </div>
     </div>
+    <MakeFooter type="poll" :link="pollLink" @save="savePoll" @preview="isPreview = !isPreview" />
   </div>
 </template>
 
@@ -117,21 +124,27 @@
 // @ is an alias to /src
 //import RegisterForm from '@/components/RegisterForm.vue';
 import axios from "axios";
-import store from "../store";
 import { mapMutations } from "vuex";
+import { getIdFromUrl } from 'vue-youtube'
 
 import Header from "@/components/Header.vue";
 import Multiselect from "vue-multiselect";
 import VariantFewOutput from "@/components/MakePoll/VariantFewOutput.vue";
 import VariantOneOutput from "@/components/MakePoll/VariantOneOutput.vue";
 
+import MakeFooter from "@/components/MakeFooter.vue";
+
 export default {
   name: "MakePoll",
+  props: ['hash'],
   data() {
     return {
-      pollId: "",
+      pollId: null,
       pollName: "",
       pollDescription: "",
+      pollLink: "",
+      pollVideoLink: '',
+      hideVideoBox: true,
       variants: [],
       isPreview: false,
       typeVariants: "",
@@ -140,6 +153,8 @@ export default {
         data: null,
         link: null
       },
+      pollHash: this.hash,
+      fingerprint: window.VISITOR_ID
     };
   },
   components: {
@@ -147,9 +162,10 @@ export default {
     Multiselect,
     VariantFewOutput,
     VariantOneOutput,
+    MakeFooter
   },
   methods: {
-    ...mapMutations(["SET_POLL", "CLEAR_POLL"]),
+    ...mapMutations(["CLEAR_POLL_DRAFT"]),
     addVariant() {
       let variants = this.variants;
       let length = variants.length;
@@ -180,9 +196,13 @@ export default {
         pollDescription: this.pollDescription,
         variants: this.variants,
         typeVariants: this.typeVariants,
+        videoLink: this.pollVideoLink,
+        fingerprint: this.fingerprint,
       };
+      console.log(poll)
       axios.post("poll/save", poll).then(() => {
-        this.isPreview = true;
+        if(this.pollHash == this.$store.state.pollStore.draftHash) this.CLEAR_POLL_DRAFT()
+        this.$router.push('/polls/' + this.pollHash);
       });
     },
 
@@ -214,68 +234,40 @@ export default {
     clickImage() {
       this.$refs.imageInput.click();
     },
+    saveLink() {
+      this.pollVideoLink = getIdFromUrl(this.$refs.linkInput.value)
+      this.hideVideoBox = true
+    },
 
     //Mounted methods
-    getPoll() {
-      axios.get("poll/" + this.pollId).then((res) => {
+    getPoll(hash) {
+      axios.post("poll/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
-          this.CLEAR_TEST()
-          location.reload()
+          if(this.$store.state.pollStore.draftHash != null) this.CLEAR_POLL_DRAFT()
+          this.$router.push('/poll/create')
         }
         res = res.data.data;
   
+        this.pollId = res.id;
         this.pollName = res.pollName;
         this.pollDescription = res.pollDescription;
-        this.variants = JSON.parse(res.variants);
+        this.variants = JSON.parse(res.variants) || [];
         this.typeVariants = res.typeVariants
         this.image.link = res.imageLink
-      }).catch((error) => {
-        if(error.response.status == 404) {
-          this.CLEAR_TEST()
-          location.reload()
+        this.pollVideoLink = res.videoLink
+        this.pollLink = "https://skyber.ru/polls/" + res.hash;
+      }).catch(() => {
+        let hashStore = this.$store.state.pollStore.draftHash
+        if(hashStore != null && hash == hashStore) {
+          this.CLEAR_POLL_DRAFT()
         }
+        this.$router.replace('/404')
       });
     }
   },
   mounted() {
-    if (!store.getters['auth/authenticated'] && !this.$store.state.pollStore.id) {
-      axios
-        .post("poll/create", this.form)
-        .then((res) => {
-          this.pollId = res.data.data.id;
-          this.SET_POLL({id: res.data.data.id});
-          this.getPoll(res.data.data.id);
-        })
-    }
-    else if (!store.getters['auth/authenticated'] && this.$store.state.pollStore.id) {
-      axios.post("poll/checkIp", {poll_id: this.$store.state.pollStore.id, }).then((res) => {
-        if(res.data) {
-          this.pollId = this.$store.state.pollStore.id;
-          this.getPoll(this.pollId);
-        }
-        else {
-          axios
-          .post("poll/create", this.form)
-          .then((res) => {
-            this.pollId = res.data.data.id;
-            this.SET_POLL({id: res.data.data.id});
-            this.getPoll(res.data.data.id);
-          })
-        }
-      });
-    }
-    else if (store.getters['auth/authenticated'] && this.$store.state.pollStore.id) {
-      this.pollId = this.$store.state.pollStore.id;
-      this.getPoll(this.pollId);
-    }
-    else if (store.getters['auth/authenticated'] && !this.$store.state.pollStore.id) {
-      axios
-      .post("poll/create", this.form)
-      .then((res) => {
-        this.pollId = res.data.data.id;
-        this.SET_POLL({id: res.data.data.id});
-        this.getPoll(res.data.data.id);
-      })
+    if (this.pollHash && this.pollHash != '') {
+      this.getPoll(this.pollHash);
     }
   },
 };
@@ -284,8 +276,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/common.blocks/body/_themes/body_themes-light.scss';
 @import "@/common.blocks/index.scss";
-@import "@/common.blocks/makepoll.scss";
 @import "@/common.blocks/maketest.scss";
+@import "@/common.blocks/makepoll.scss";
 @import "@/common.blocks/form-checkbox_type-main.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
 </style>

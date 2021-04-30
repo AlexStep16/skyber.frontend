@@ -3,7 +3,7 @@
   height: 70px;
   background-color: #FFF;
   border-top: 1px solid rgba(64, 64, 64, 0.15);
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   justify-content: space-between;
@@ -23,8 +23,13 @@
   font-size: 0.9em;
   font-family: "Roboto", sans-serif;
   color: #444444;
+  max-width: 480px!important;
 }
 
 .make-footer__save {
   font-size: 15px;
+}
+
+.preview-eye {
+  //
 }

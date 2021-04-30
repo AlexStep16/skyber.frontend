@@ -4,6 +4,8 @@ import store from '../store'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import MakeTest from '../views/MakeTest.vue'
+import TestCreator from '../views/TestCreator.vue'
+import PollCreator from '../views/PollCreator.vue'
 import List from '../views/List.vue'
 import MakePoll from '../views/MakePoll.vue'
 import Tests from '../views/Tests.vue'
@@ -24,7 +26,7 @@ const routes = [
       }
       else {
         return next({
-          name: 'MakeTest'
+          name: 'TestCreator'
         })
       }
     },
@@ -56,9 +58,16 @@ const routes = [
     },
   },
   {
-    path: '/test',
+    path: '/test/edit/:hash',
     name: 'MakeTest',
-    component: MakeTest
+    component: MakeTest,
+    props: true,
+  },
+  {
+    path: '/test/create',
+    name: 'TestCreator',
+    component: TestCreator,
+    props: true,
   },
   {
     path: '/list',
@@ -74,9 +83,16 @@ const routes = [
     },
   },
   {
-    path: '/poll',
+    path: '/poll/create',
+    name: 'PollCreator',
+    component: PollCreator,
+    props: true,
+  },
+  {
+    path: '/poll/edit/:hash',
     name: 'MakePoll',
-    component: MakePoll
+    component: MakePoll,
+    props: true,
   },
   {
     path: '/tests/:hash',

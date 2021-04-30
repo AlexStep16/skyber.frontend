@@ -45,7 +45,6 @@
 <script>
 import axios from "axios";
 import DeleteModal from "@/components/DeleteModal.vue";
-import { mapMutations } from "vuex";
 
 export default {
   name: "PollsList",
@@ -63,15 +62,12 @@ export default {
     DeleteModal
   },
   methods: {
-    ...mapMutations(["SET_POLL"]),
-
     goCreatePoll(poll) {
-      this.SET_POLL({id: poll.id, name: poll.name});
-      this.$router.push({ name: "MakePoll" });
+      this.$router.push({ name: "MakePoll", params: {hash: poll.hash} });
     },
 
-    pollDelete($id, key) {
-      axios.get("poll/delete/" + $id).then(() => {
+    pollDelete(id, key) {
+      axios.post("poll/delete/", {id: id, fingerprint: window.VISITOR_ID}).then(() => {
         this.postPolls.splice(key, 1);
       });
     },

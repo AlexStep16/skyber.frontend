@@ -1,13 +1,13 @@
 <template>
   <div class="header">
-    <h1 class="header-logo">
+    <router-link to="/" class="header-logo">
       SKYBER
-      <span class="header-logo__tag" v-if="path == '/test' || path == '/poll'">
+      <span class="header-logo__tag" v-if="type == 'test' || type == 'poll'">
         <span class="header-logo__dot">•</span>
-        <span v-if="path == '/test'">тесты</span>
-        <span v-else-if="path == '/poll'">опросы</span>
+        <span v-if="type == 'test'">тесты</span>
+        <span v-else-if="type == 'poll'">опросы</span>
       </span>
-    </h1>
+    </router-link>
     <div class="header__links">
       <div class="header-avatar" v-click-outside="hideMenu">
         <div class="header-avatar__image-wrapper">
@@ -25,7 +25,10 @@
               <router-link to="/list" class="flex flex-align-center"><List32 />Мои тесты</router-link>
             </li>
             <li class="header-menu-list__item">
-              <router-link to="/list" class="flex flex-align-center"><Add32 />Создать тест</router-link>
+              <router-link to="/test/create" class="flex flex-align-center"><Add32 />Создать тест</router-link>
+            </li>
+            <li class="header-menu-list__item">
+              <router-link to="/poll/create" class="flex flex-align-center"><Add32 />Создать опрос</router-link>
             </li>
             <li class="header-menu-list__item">
               <a href="#" @click.prevent="logout" class="flex flex-align-center"><Exit32 />Выход</a>
@@ -51,7 +54,6 @@
 <script>
 import store from '../store'
 import { mapActions } from "vuex";
-import { mapMutations } from "vuex";
 
 
 //Add SVG's
@@ -70,9 +72,9 @@ export default {
       userAvatarStyle: {
         backgroundImage: 'url(/pictures/man.png)'
       },
-      path: this.$route.path,
     };
   },
+  props: ['type'],
   components: {
     List32, Add32, Exit32, NewUser32, Login32
   },
@@ -80,13 +82,11 @@ export default {
     ...mapActions({
       signOutAction: "auth/logout",
     }),
-    ...mapMutations(['CLEAR_TEST', 'CLEAR_POLL']),
 
     logout() {
       this.signOutAction().then(() => {
-        this.CLEAR_TEST()
-        this.CLEAR_POLL()
-        this.$router.push({ name: "Home" });
+        if(this.$route.name == 'MakeTest') location.reload()
+        else this.$router.push({ name: "Login" });
       });
     },
 

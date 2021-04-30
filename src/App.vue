@@ -22,12 +22,7 @@ html {
 }
 
 body {
-  overflow: hidden;
-}
-
-.body {
-  overflow: auto;
-  padding-bottom: 100px;
+  overflow-y: auto;
 }
 
 </style>

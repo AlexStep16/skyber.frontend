@@ -1,11 +1,12 @@
 .container {
   align-items: flex-start;
-  padding-top: 144px;
+  padding: 70px 0;
 }
 
 .main {
   width: auto;
   align-items: flex-start;
+  padding: 60px 0;
 }
 
 .test {
@@ -31,7 +32,7 @@
 
 .test__block_wraper {
   display: flex;
-  width: 700px;
+  min-width: 700px;
   position: relative;
 }
 
@@ -52,7 +53,7 @@
   align-items: flex-start;
 }
 
-.test__empty {
+.test__empty, .test__question-empty {
   font-family: "Roboto", sans-serif;
   font-size: 1em;
   color: #686669;
@@ -161,4 +162,8 @@ hr {
     font-size: 0.95em;
     color: #444;
   }
+}
+
+.test-video {
+  position: relative;
 }

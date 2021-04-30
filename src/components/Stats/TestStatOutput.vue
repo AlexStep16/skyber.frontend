@@ -80,8 +80,10 @@ export default {
       let chartData = {
         datasets: [
           {
+            label: 'Количество ответов',
             grouped: false,
             data: dataArr,
+            skipNull: true,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(255, 159, 64, 0.2)',
@@ -95,7 +97,19 @@ export default {
         ],
         labels: labelsArr,
       };
-      
+      if(type == 'few') {
+        chartData.datasets[0].backgroundColor = [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+        ]
+      }
       return chartData;
     },
 

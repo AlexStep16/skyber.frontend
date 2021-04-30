@@ -1,5 +1,5 @@
 <template>
-  <div class="container body">
+  <div class="container flex flex-justify-center">
     <Header />
     <div class="main">
       <div class="pollOrTest">
@@ -45,7 +45,6 @@ import axios from "axios";
 import Header from "@/components/Header.vue";
 import TestsList from "@/components/List/TestsList.vue";
 import PollsList from "@/components/List/PollsList.vue";
-import { mapMutations } from "vuex";
 
 export default {
   name: "List",
@@ -68,16 +67,12 @@ export default {
     PollsList,
   },
   methods: {
-    ...mapMutations(["CLEAR_TEST", "CLEAR_POLL"]),
-
     makeTest() {
-      this.CLEAR_TEST();
-      this.$router.push({ name: "MakeTest" });
+      this.$router.push({ name: "TestCreator" });
     },
 
     makePoll() {
-      this.CLEAR_POLL();
-      this.$router.push({ name: "MakePoll" });
+      this.$router.push({ name: "PollCreator" });
     },
 
     deleteMessage(value) {
@@ -85,13 +80,13 @@ export default {
     }
   },
   mounted() {
-    axios.get("test/get/all").then((res) => {
+    axios.post("test/get/all", {fingerprint: window.VISITOR_ID}).then((res) => {
       this.tests = res.data.data;
       axios.get("polls/get/all").then((res) => {
         console.log(res)
         this.polls = res.data.data;
         if (this.polls.length == 0 && this.tests.length == 0) {
-          this.$router.push({ name: "Options" });
+          this.$router.push('/test/create');
         }
       });
     });
@@ -102,10 +97,6 @@ export default {
 <style lang="scss" scoped>
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/list.scss";
-
-.body {
-  margin-bottom: 20px;
-}
 </style>
 
 <style lang="sass">

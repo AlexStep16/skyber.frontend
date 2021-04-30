@@ -14,7 +14,7 @@
         v-model="newSelected"
         @change="ready"
       />
-      <label :for="`variant${key}`">{{ variant.name }}</label>
+      <label class="test__question-answer" :for="`variant${key}`">{{ variant.name }}</label>
     </div>
   </div>
 </template>
@@ -45,5 +45,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-checkbox_type-main.scss";
 </style>

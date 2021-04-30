@@ -7,7 +7,7 @@ export default {
   name: 'BarChart',
   extends: Bar,
   mixins: [reactiveProp],
-  props: ['options'],
+  props: ['options', 'chartData'],
   mounted() {
     this.renderChart(this.chartData, this.options);
   },
