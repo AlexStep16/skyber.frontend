@@ -19,8 +19,6 @@
         <div>
           <input
             type="password"
-            name="password"
-            id="password"
             placeholder="Введите пароль"
             class="input input_type-index mt4"
             v-model="form.password"
@@ -29,8 +27,6 @@
         <div>
           <input
             type="password"
-            name="password"
-            id="password"
             placeholder="Введите пароль ещё раз"
             class="input input_type-index mt4"
             v-model="form.confirmPassword"
@@ -43,7 +39,6 @@
               class="checkbox"
               id="remember"
               name="remember"
-              v-model="rememberMe"
             />
             <label for="remember" class="checkbox-label">Запомнить меня?</label>
           </div>
@@ -56,7 +51,7 @@
         />
         <div class="register mt7">
           У вас уже аккаунт?
-          <router-link to="/register" class="register-link"
+          <router-link to="/login" class="register-link"
             >Войти</router-link
           >
         </div>

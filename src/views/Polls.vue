@@ -7,7 +7,7 @@
           <h1 class="poll-tag">Опрос</h1>
           <template>
             <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
-            <span class="poll-description">{{ pollDescription }}</span>
+            <div class="poll-description">{{ pollDescription }}</div>
             <youtube v-if="pollVideoLink" :video-id="pollVideoLink" class="test-video">
             </youtube>
             <div class="test__image mt5" v-if="image.link != null">
@@ -36,6 +36,7 @@
       </div>
     </div>
     <InfoModal :message="infoMessage" />
+    <SuccessModal v-if="showSuccess" :message="successMessage" />
   </div>
 </template>
 
@@ -45,6 +46,7 @@ import Header from "@/components/Header.vue"
 import VariantFewOutput from "@/components/Polls/VariantFewOutput.vue";
 import VariantOneOutput from "@/components/Polls/VariantOneOutput.vue";
 import InfoModal from "@/components/InfoModal.vue";
+import SuccessModal from "@/components/SuccessModal.vue";
 
 export default {
   name: "MakePoll",
@@ -62,17 +64,25 @@ export default {
         data: null,
         link: null,
       },
+      showSuccess: false,
+      successMessage: '',
+      isMine: true,
+      isAlreadySent: true,
     };
   },
   components: {
     Header,
     VariantOneOutput,
-    VariantFewOutput, InfoModal
+    VariantFewOutput, InfoModal,
+    SuccessModal
   },
   methods: {
     sendPoll() {
       if(this.selected.length == 0) {
-        this.infoMessage = {body: 'Вы не выбрали ни одного варианта', type: 'warning'}
+        this.infoMessage = {
+          body: 'Вы не выбрали ни одного варианта',
+          type: 'warning'
+        }
         return
       }
       if(!Array.isArray(this.selected)) {
@@ -82,14 +92,19 @@ export default {
         .post("pollAnswers/send", {
           selected: this.selected,
           pollId: this.pollId,
+          fingerprint: window.VISITOR_ID
         })
         .then(() => {
-          alert("Опрос успешно отправлен");
-          this.$router.push({name: 'List'})
+          this.successMessage = "Успешно отправлено"
+          this.showSuccess = true
+          setTimeout(() => {
+            this.showSuccess = false
+          }, 2000)
         });
     },
   },
   mounted() {
+    this.$store.commit('SHOW_LOADER')
     axios.get("poll/getByHash/" + this.$route.params.hash).then((res) => {
       res = res.data.data;
       this.pollId = res.id;
@@ -99,6 +114,23 @@ export default {
       this.variants = JSON.parse(res.variants);
       this.type = res.typeVariants;
       this.image.link = res.imageLink
+
+      if(res.fingerprint == window.VISITOR_ID) this.isMine = true
+      else this.isMine = false
+
+      axios.post('test/dispatch/check', {
+        pollId: this.pollId,
+        fingerprint: window.VISITOR_ID,
+      }).then((res) => {
+        if(!res.data) {
+          this.isAlreadySent = false
+        }
+        else {
+          this.isAlreadySent = true
+        }
+      })
+    }).finally(() => {
+      this.$store.commit('HIDE_LOADER')
     });
   },
 };

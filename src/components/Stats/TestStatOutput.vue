@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="question in postQuestions" :key="question.id">
-      <span class="test-stats__question">{{ question.question }}: </span><br />
+      <div class="stats__question">{{ question.question }}: </div>
       <div
         v-if="
           question.typeAnswer == 'Один из списка' ||
@@ -13,6 +13,7 @@
           :chartData="getChartData(question.variants)"
           :options="getOptions()"
           :styles="{ position: 'relative', height: '300px', justifyContent: 'left' }"
+          class="mt6"
         />
       </div>
 
@@ -26,6 +27,7 @@
           :chartData="getChartData(question.answers, 'few')"
           :options="getOptions2()"
           :styles="{ position: 'relative', height: 'auto', justifyContent: 'left' }"
+          class="mt6"
         />
       </div>
       <div
@@ -34,8 +36,9 @@
           question.typeAnswer == 'Дата' ||
           question.typeAnswer == 'Время'
         "
+        class="mt5 mb5"
       >
-        <div v-for="(answer, key) in question.answers" :key="key" class="test-stats__simple-answer mr5 mt5">
+        <div v-for="(answer, key) in question.answers" :key="key" class="test-stats__simple-answer mr5">
           {{ answer.name }} - {{ answer.count }}
         </div>
       </div>
@@ -85,13 +88,14 @@ export default {
             data: dataArr,
             skipNull: true,
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 205, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(201, 203, 207, 0.2)'
+              'rgba(2, 142, 155, 0.65)',
+              'rgba(255, 65, 0, 0.65)',
+              'rgba(255, 183, 0, 0.65)',
+              'rgba(0, 187, 63, 0.65)',
+              'rgba(102, 105, 251, 0.65)',
+              'rgba(203, 0, 119, 0.65)',
+              'rgba(73, 213, 219, 0.65)',
+              'rgba(201, 203, 207, 0.65)'
             ],
           },
         ],
@@ -99,15 +103,14 @@ export default {
       };
       if(type == 'few') {
         chartData.datasets[0].backgroundColor = [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
+          'rgba(2, 142, 155, 0.65)',
+          'rgba(255, 65, 0, 0.65)',
+          'rgba(255, 183, 0, 0.65)',
+          'rgba(0, 187, 63, 0.65)',
+          'rgba(102, 105, 251, 0.65)',
+          'rgba(203, 0, 119, 0.65)',
+          'rgba(73, 213, 219, 0.65)',
+          'rgba(201, 203, 207, 0.65)'
         ]
       }
       return chartData;

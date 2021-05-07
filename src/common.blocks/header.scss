@@ -7,7 +7,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 100px;
+  padding: 0 10%;
   background-color: #ffffff;
   border-bottom: 1px solid rgba(64, 64, 64, 0.15);
   z-index: 1;
@@ -111,3 +111,6 @@
     top: 1px;
   }
 }
+
+
+// Media styles

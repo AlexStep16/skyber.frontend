@@ -68,6 +68,7 @@ export default {
     testDelete(id, key) {
       axios.post("test/delete/",{id: id, fingerprint: window.VISITOR_ID}).then(() => {
         this.postTests.splice(key, 1);
+        this.$store.commit('CLEAR_TEST_DRAFT')
       });
     },
 

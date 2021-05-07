@@ -5,11 +5,12 @@
       <div class="test">
         <div class="test__block_wraper mt7">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
-            <h1 class="h1-test mt0">{{ testName }}</h1>
-            <span class="test__description">{{ testDescription }}</span>
+            <h1 class="h1-test mt0 mb0">{{ testName }}</h1>
+            {{testDescription}}
+            <div class="test__description mt6" v-if="testDescription">{{ testDescription }}</div>
             <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
             </youtube>
-            <div class="test__image mt5" v-if="image.link != null">
+            <div class="test__image mt6" v-if="image.link != null">
               <img :src="image.link" />
             </div>
           </div>
@@ -56,15 +57,11 @@
             />
           </div>
         </div>
-        <button
-          class="button button_type-index button_theme-blue mt6"
-          @click="sendTest"
-        >
-          Отправить
-        </button>
       </div>
     </div>
     <InfoModal :message="infoMessage" />
+    <SuccessModal v-if="showSuccess" :message="successMessage" />
+    <SendFooter :link="hash" :isMine="isMine" :isAlreadySent="isAlreadySent" @send="sendTest" />
   </div>
 </template>
 
@@ -79,6 +76,8 @@ import VariantDateOutput from "@/components/Tests/VariantDateOutput.vue";
 import VariantTimeOutput from "@/components/Tests/VariantTimeOutput.vue";
 import Header from "@/components/Header.vue";
 import InfoModal from "@/components/InfoModal.vue";
+import SuccessModal from "@/components/SuccessModal.vue";
+import SendFooter from "@/components/SendFooter.vue";
 
 export default {
   name: "Tests",
@@ -95,6 +94,11 @@ export default {
         link: null,
       },
       testVideoLink: '',
+      showSuccess: false,
+      successMessage: '',
+      isMine: true,
+      isAlreadySent: true,
+      hash: this.$route.params.hash
     };
   },
   components: {
@@ -103,7 +107,8 @@ export default {
     VariantFewOutput,
     VariantUnfoldOutput,
     VariantDateOutput, VariantTimeOutput,
-    Header, InfoModal
+    Header, InfoModal, SuccessModal,
+    SendFooter
   },
   methods: {
     getRadioArray(variant) {
@@ -144,15 +149,21 @@ export default {
         .post("answers/send", {
           questions: this.questions,
           testId: this.testId,
+          fingerprint: window.VISITOR_ID
         })
         .then(() => {
-          alert("Тест успешно отправлен");
-          this.$router.push({ name: "Home" });
+          this.successMessage = "Успешно сохранено"
+          this.showSuccess = true
+          setTimeout(() => {
+            this.showSuccess = false
+            location.reload()
+          }, 2000)
         }); 
     },
   },
   mounted() {
-    axios.get("test/getByHash/" + this.$route.params.hash).then((res) => {
+    this.$store.commit('SHOW_LOADER')
+    axios.get("test/getByHash/" + this.hash).then((res) => {
       res = res.data.data;
 
       this.testId = res.id;
@@ -160,12 +171,27 @@ export default {
       this.testVideoLink = res.videoLink;
       this.testDescription = res.description;
       this.image.link = res.imageLink;
+
+      if(res.fingerprint == window.VISITOR_ID) this.isMine = true
+      else this.isMine = false
+
+      axios.post('test/dispatch/check', {
+        testId: this.testId,
+        fingerprint: window.VISITOR_ID,
+      }).then((res) => {
+        if(!res.data) {
+          this.isAlreadySent = false
+        }
+        else {
+          this.isAlreadySent = true
+        }
+      })
     });
 
     axios
-      .get("test/questions/getByHash/" + this.$route.params.hash)
+      .get("test/questions/getByHash/" + this.hash)
       .then((res) => {
-        res.data.forEach((element) => {
+        res.data.data.forEach((element) => {
           let variants = JSON.parse(element.variants);
           this.questions.push({
             id: element.id,
@@ -181,8 +207,10 @@ export default {
           });
         });
       })
-      .catch(() => {
-        this.$router.push({ name: "Options" });
+      .catch((e) => {
+        console.log(e)
+      }).finally(() => {
+        this.$store.commit('HIDE_LOADER')
       });
   },
 };

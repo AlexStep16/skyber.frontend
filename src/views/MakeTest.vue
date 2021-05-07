@@ -5,6 +5,7 @@
       <div>
         <div class="test inline-block">
           <div class="test__block_wraper">
+
             <div class="side-panel inline-block">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
                 <div class="pointer text-center" @click="addQuestion">
@@ -18,6 +19,7 @@
                 </div>
               </div>
             </div>
+            
             <div class="test__block bg-white-shadow test__header" @click="testFocuse">
               <form class="form form_type-test">
                 <div>
@@ -209,6 +211,7 @@
       </div>
     </div>
     <MakeFooter type="test" :link="testLink" @save="saveTest" />
+    <SuccessModal v-if="showSuccess" :message="successMessage" />
   </div>
 </template>
 
@@ -239,6 +242,7 @@ import VariantTime from "@/components/MakeTest/VariantTime.vue";
 import VariantTimeOutput from "@/components/MakeTest/VariantTimeOutput.vue";
 
 import MakeFooter from "@/components/MakeFooter.vue";
+import SuccessModal from "@/components/SuccessModal.vue";
 
 import draggable from 'vuedraggable'
 
@@ -266,7 +270,9 @@ export default {
       testFocused: true,
       testVideoLink: '',
       hideVideoBox: true,
-      fingerprint: window.VISITOR_ID
+      fingerprint: window.VISITOR_ID,
+      showSuccess: false,
+      successMessage: ''
     };
   },
   components: {
@@ -280,7 +286,7 @@ export default {
     VariantDateOutput, VariantDate,
     VariantTime, VariantTimeOutput,
     draggable,  Header, AddSVG,
-    MakeFooter
+    MakeFooter, SuccessModal
   },
   computed: {},
   methods: {
@@ -360,7 +366,11 @@ export default {
       };
       if(!stop) axios.post("test/save", test).then(() => {
         if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
-        this.$router.push('/tests/' + this.testHash);
+        this.successMessage = "Успешно сохранено"
+        this.showSuccess = true
+        setTimeout(() => {
+          this.$router.push('/tests/' + this.testHash);
+        }, 2000)
       });
     },
 
@@ -442,6 +452,8 @@ export default {
           this.CLEAR_TEST_DRAFT()
         }
         this.$router.replace('/404');
+      }).finally(() => {
+        this.$store.commit('HIDE_LOADER')
       });
     },
     getTestQuestions() {
@@ -478,7 +490,6 @@ export default {
           });
         })
         .catch((e) => {
-          //this.$router.push({name: 'Options'})
           console.log(e);
         });
     },
@@ -529,6 +540,7 @@ export default {
   },
 
   mounted() {
+    this.$store.commit('SHOW_LOADER')
     if (this.testHash && this.testHash !== '') {
       this.getTest(this.testHash);
       this.getTestQuestions()

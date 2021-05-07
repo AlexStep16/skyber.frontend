@@ -1,6 +1,6 @@
 <template>
   <div class="make-footer flex flex-center">
-    <div class="make-footer__link-wrapper">
+    <div class="make-footer__link-wrapper mr5">
       <span v-if="type == 'test'">Ссылка на тест:</span> 
       <span v-else>Ссылка на опрос:</span> 
       <input 

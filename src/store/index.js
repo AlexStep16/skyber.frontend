@@ -13,8 +13,20 @@ const testState = createPersistedState({
 
 export default new Vuex.Store({
   state: {
+    showLoader: false,
+  },
+  getters: {
+    loaderState(state) {
+      return state.showLoader
+    },
   },
   mutations: {
+    SHOW_LOADER(state) {
+      state.showLoader = true
+    }, 
+    HIDE_LOADER(state) {
+      state.showLoader = false
+    }
   },
   actions: {
   },

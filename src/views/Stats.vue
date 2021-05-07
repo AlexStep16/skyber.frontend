@@ -3,15 +3,18 @@
     <Header />
     <div class="main">
       <div class="stats bg-white-shadow">
-        <h1 class="h1-default">{{ name }}</h1>
-        <span class="stats__count">Количество отправлений: {{ countSub }}</span>
-        <hr />
-        <TestStatOutput :postQuestions="this.questions" v-if="type == 'test'" />
-        <PollStatOutput
-          :postPollAnswers="this.pollAnswers"
-          :postCountPollAnswers="this.countPollAnswers"
-          v-else-if="type == 'poll'"
-        />
+        <div class="stats-header flex flex-align-center">
+          <div class="stats-header__name h1-default mr5">{{ name }}</div>
+          <span class="stats__count">Количество отправлений: {{ countSub }}</span>
+        </div>
+        <div class="stats-body">
+          <TestStatOutput :postQuestions="this.questions" v-if="type == 'test'" />
+          <PollStatOutput
+            :postPollAnswers="this.pollAnswers"
+            :postCountPollAnswers="this.countPollAnswers"
+            v-else-if="type == 'poll'"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -52,7 +55,7 @@ export default {
       axios
         .get("test/questions/getByHash/" + this.$route.params.hash)
         .then((res) => {
-          this.questions = res.data;
+          this.questions = res.data.data;
           this.questions.forEach((elem) => {
             let variants = JSON.parse(elem.variants);
             elem.answers = [];
@@ -108,7 +111,6 @@ export default {
       axios.get("answer/" + this.id).then((res) => {
         res = res.data.data;
         this.answers = res;
-
         this.questions.forEach((question) => {
           let answersArray = res.filter((answer) => {
             return answer.questionId == question.id;
@@ -184,6 +186,7 @@ export default {
   },
 
   mounted() {
+    this.$store.commit('SHOW_LOADER')
     axios
       .post("stats/", {hash: this.$route.params.hash, fingerprint: window.VISITOR_ID})
       .then((res) => {
@@ -205,6 +208,8 @@ export default {
         if(e.response.status == 401) {
           this.$router.replace('/404')
         }
+      }).finally(() => {
+        this.$store.commit('HIDE_LOADER')
       });
   },
 };

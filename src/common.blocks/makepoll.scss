@@ -18,7 +18,7 @@
 
 .poll__block_wraper {
   display: flex;
-  width: 550px;
+  width: 630px;
   position: relative;
 }
 
@@ -47,4 +47,19 @@
   font-family: "Montserrat", sans-serif;
   font-size: 1em;
   color: #686669;
+}
+
+// Media styles
+@media (max-width: 825px) {
+  .poll__block {
+    width: 500px;
+  }
+  
+  .poll__block_wraper {
+    width: 500px;
+  }
+}
+
+@media (max-width: 720px) {
+  
 }

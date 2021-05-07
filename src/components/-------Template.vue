@@ -6,7 +6,7 @@
 
 
 export default {
-  name: 'TestList',
+  name: '',
   components: {
     
   },

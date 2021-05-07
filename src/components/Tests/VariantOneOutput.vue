@@ -1,7 +1,7 @@
 <template>
   <div class="form_type-radio mt5">
     <div
-      class="form_radio mb6"
+      class="form_radio"
       v-for="variant in getRadioArray(postQuestion.variants)"
       :key="variant.id"
     >

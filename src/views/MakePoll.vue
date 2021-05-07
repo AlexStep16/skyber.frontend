@@ -17,6 +17,7 @@
         </div>
         <div class="poll__block bg-white-shadow">
           <template v-if="isPreview">
+            <h1 class="poll-tag">Опрос</h1>
             <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
             <span class="poll-description">{{ pollDescription }}</span>
             <div :class="!pollVideoLink ? 'd-none' : 'test-video mt6 mb6'">
@@ -117,6 +118,7 @@
       </div>
     </div>
     <MakeFooter type="poll" :link="pollLink" @save="savePoll" @preview="isPreview = !isPreview" />
+    <SuccessModal v-if="showSuccess" :message="successMessage" />
   </div>
 </template>
 
@@ -131,6 +133,7 @@ import Header from "@/components/Header.vue";
 import Multiselect from "vue-multiselect";
 import VariantFewOutput from "@/components/MakePoll/VariantFewOutput.vue";
 import VariantOneOutput from "@/components/MakePoll/VariantOneOutput.vue";
+import SuccessModal from "@/components/SuccessModal.vue";
 
 import MakeFooter from "@/components/MakeFooter.vue";
 
@@ -154,7 +157,9 @@ export default {
         link: null
       },
       pollHash: this.hash,
-      fingerprint: window.VISITOR_ID
+      fingerprint: window.VISITOR_ID,
+      showSuccess: false,
+      successMessage: ''
     };
   },
   components: {
@@ -162,7 +167,7 @@ export default {
     Multiselect,
     VariantFewOutput,
     VariantOneOutput,
-    MakeFooter
+    MakeFooter, SuccessModal
   },
   methods: {
     ...mapMutations(["CLEAR_POLL_DRAFT"]),
@@ -199,10 +204,13 @@ export default {
         videoLink: this.pollVideoLink,
         fingerprint: this.fingerprint,
       };
-      console.log(poll)
       axios.post("poll/save", poll).then(() => {
         if(this.pollHash == this.$store.state.pollStore.draftHash) this.CLEAR_POLL_DRAFT()
-        this.$router.push('/polls/' + this.pollHash);
+        this.successMessage = "Успешно сохранено"
+        this.showSuccess = true
+        setTimeout(() => {
+          this.$router.push('/polls/' + this.pollHash);
+        }, 2000)
       });
     },
 
@@ -262,10 +270,13 @@ export default {
           this.CLEAR_POLL_DRAFT()
         }
         this.$router.replace('/404')
+      }).finally(() => {
+        this.$store.commit('HIDE_LOADER')
       });
     }
   },
   mounted() {
+    this.$store.commit('SHOW_LOADER')
     if (this.pollHash && this.pollHash != '') {
       this.getPoll(this.pollHash);
     }

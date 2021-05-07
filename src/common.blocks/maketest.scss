@@ -102,6 +102,11 @@
   font-size: 0.8em;
 }
 
+.test-send {
+  @extend .test__add-variant;
+  font-size: 0.9em;
+}
+
 .test__description {
   font-family: 'Roboto', sans-serif;
   font-size: 1.05em;
@@ -130,8 +135,8 @@
 
 
 .h1-test {
-  font-size: 1.32em;
-  color: #444444;
+  font-size: 1.2em;
+  color: #565656;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -166,4 +171,13 @@ hr {
 
 .test-video {
   position: relative;
+}
+
+
+// Media styles
+
+@media (max-width: 875px) {
+  .test__block_wraper {
+    min-width: 500px;
+  }
 }

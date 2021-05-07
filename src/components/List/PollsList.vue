@@ -69,6 +69,7 @@ export default {
     pollDelete(id, key) {
       axios.post("poll/delete/", {id: id, fingerprint: window.VISITOR_ID}).then(() => {
         this.postPolls.splice(key, 1);
+        this.$store.commit('CLEAR_POLL_DRAFT')
       });
     },
 
