@@ -1,0 +1,64 @@
+.make-footer__link {
+  background-color: rgb(233, 233, 233);
+  padding: 0.5em;
+  border-radius: 5px;
+  font-size: 0.9em;
+  font-family: "Roboto", sans-serif;
+  color: #444444;
+  max-width: 480px!important;
+  flex: auto;
+}
+
+.popup-success {
+  border-radius: 20px;
+  padding: 21px;
+  width: 500px;
+  &__message {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25em;
+    &-success{
+      color: #444;
+      -webkit-animation: fadeOut 1s;
+      animation: fadeOut 1s;
+      animation-fill-mode: forwards;
+      > svg {
+        margin-right: 13px;
+      }
+    }
+  }
+
+  &__link {
+    width: 100%;
+  }
+
+  &__copy-link {
+    display: inline-block;
+    font-family: "Roboto", sans-serif;
+    font-size: 0.9em;
+    color: rgb(48, 111, 247);
+  }
+
+  &__link-span {
+    font-family: "Roboto", sans-serif;
+    font-size: 0.9em;
+    color: #444;
+    text-align: left;
+  }
+}
+
+.popup-success__social {
+  font-family: "Roboto", sans-serif;
+  font-size: 1em;
+  color: #444;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.popup-success__social-block {
+  > a:not(:first-child) {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+}

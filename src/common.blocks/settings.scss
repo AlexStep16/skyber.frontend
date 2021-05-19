@@ -1,0 +1,47 @@
+.settings {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+
+  &__main {
+    padding: 21px;
+  }
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__link {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9em;
+    color: rgb(172, 172, 172);
+  }
+
+  &__text {
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.95em;
+    color: #444;
+    position: relative;
+  }
+
+  &__before-right::before {
+    position: absolute;
+    right: 0;
+  }
+}
+
+.settings-header {
+  padding: 15px 21px;
+  background-color: #6669fb;
+  color: #fff;
+  
+  &__h2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.1em;
+    margin: 0;
+  }
+}

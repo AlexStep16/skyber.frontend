@@ -63,3 +63,26 @@
 @media (max-width: 720px) {
   
 }
+
+@media (max-width: 540px) {
+  .poll__block_wraper {
+    width: 100%;
+  }
+
+  .poll__block {
+    width: 100%;
+  }
+
+  .main {
+    padding: 0;
+  }
+
+  .poll__block {
+    border-radius: 0;
+  }
+
+  .container {
+    padding: 60px 0 70px 0;
+    height: 100%;
+  }
+}

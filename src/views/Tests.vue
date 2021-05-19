@@ -6,12 +6,19 @@
         <div class="test__block_wraper mt7">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
             <h1 class="h1-test mt0 mb0">{{ testName }}</h1>
-            {{testDescription}}
             <div class="test__description mt6" v-if="testDescription">{{ testDescription }}</div>
-            <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
-            </youtube>
+            <div class="test-video-wraper mt6" v-if="testVideoLink">
+              <div class="modal modal_white absolute" v-if="!videoLoadDone">
+                <Loader />
+              </div>
+              <youtube id="youtube" ref="youtube" :video-id="testVideoLink" class="test-video">
+              </youtube>
+            </div>
             <div class="test__image mt6" v-if="image.link != null">
               <img :src="image.link" />
+              <div class="modal modal_white absolute" v-if="imageLoading">
+                <Loader />
+              </div>
             </div>
           </div>
         </div>
@@ -61,7 +68,14 @@
     </div>
     <InfoModal :message="infoMessage" />
     <SuccessModal v-if="showSuccess" :message="successMessage" />
-    <SendFooter :link="hash" :isMine="isMine" :isAlreadySent="isAlreadySent" @send="sendTest" />
+    <SendFooter 
+      :link="hash"
+      type="test"
+      :testName="testName"
+      :isMine="isMine"
+      :isAlreadySent="isAlreadySent"
+      @send="sendTest"
+    />
   </div>
 </template>
 
@@ -78,6 +92,7 @@ import Header from "@/components/Header.vue";
 import InfoModal from "@/components/InfoModal.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import SendFooter from "@/components/SendFooter.vue";
+import Loader from "@/components/Loader.vue";
 
 export default {
   name: "Tests",
@@ -98,7 +113,9 @@ export default {
       successMessage: '',
       isMine: true,
       isAlreadySent: true,
-      hash: this.$route.params.hash
+      hash: this.$route.params.hash,
+      videoLoadDone: false,
+      imageLoading: false,
     };
   },
   components: {
@@ -108,7 +125,7 @@ export default {
     VariantUnfoldOutput,
     VariantDateOutput, VariantTimeOutput,
     Header, InfoModal, SuccessModal,
-    SendFooter
+    SendFooter, Loader
   },
   methods: {
     getRadioArray(variant) {
@@ -212,6 +229,21 @@ export default {
       }).finally(() => {
         this.$store.commit('HIDE_LOADER')
       });
+
+      this.$nextTick(function() {
+      if(this.$refs.youtube) {
+        this.videoLoadDone = true
+      }
+      else {
+        let th = this
+        let intervalID = setInterval(function() {
+          if(th.$refs.youtube) {
+            th.videoLoadDone = true
+          }
+        }, 1000)
+        if(this.videoLoadDone == true) clearInterval(intervalID)
+      }
+    })
   },
 };
 </script>

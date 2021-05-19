@@ -5,6 +5,13 @@
       <p>
         Зарегистрируйтесь или войдите в свой аккаунт, чтобы создать тест или опрос
       </p>
+      <div class="login-errors">
+        <ul class="login-errors__list" v-if="showErrors">
+          <li v-for="(error, key) in loginErrors" :key="key" class="login-errors__item">
+            <span>{{ error }}</span>
+          </li>
+        </ul>
+      </div>
       <form action="api/login" class="form form_type-main mr8">
         <div>
           <input
@@ -74,6 +81,8 @@ export default {
         password: "",
         email: "",
       },
+      showErrors: false,
+      loginErrors: []
     };
   },
   methods: {
@@ -84,12 +93,14 @@ export default {
     submit() {
       this.login(this.form)
         .then(() => {
+          this.showErrors = false
           this.$router.push({
             name: "List",
           });
         })
         .catch(() => {
-          console.log("You enter wrong password or email");
+          this.loginErrors = ['Вы ввели неверный E-Mail или пароль']
+          this.showErrors = true
         });
     },
   },

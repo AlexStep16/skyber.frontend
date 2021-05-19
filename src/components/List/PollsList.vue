@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="list-main-wraper">
     <div class="list-item" v-for="(poll, key) in postPolls" :key="poll.id">
-      <span>Опрос</span>
+      <span class="list-item__tag">Опрос</span>
       <h2 @click="goCreatePoll(poll)" class="mt6 mb6 pointer">{{ poll.pollName }}</h2>
       <p class="list-item__description mb7">{{ poll.pollDescription }}</p>
       <span>Количество отправлений: {{ poll.countSub }}</span
@@ -16,6 +16,12 @@
           </router-link>
         </div>
         <div class="flex flex-center">
+          <router-link
+            :to="`/test/edit/${poll.hash}`"
+            title="Редактировать"
+          >
+            <img src="/Vectors/pen32.svg" width="30px">
+          </router-link>
           <router-link
             :to="`/stats/${poll.hash}`"
             class=""
@@ -67,9 +73,11 @@ export default {
     },
 
     pollDelete(id, key) {
+      this.$store.commit('SHOW_LOADER')
       axios.post("poll/delete/", {id: id, fingerprint: window.VISITOR_ID}).then(() => {
         this.postPolls.splice(key, 1);
         this.$store.commit('CLEAR_POLL_DRAFT')
+        this.$store.commit('HIDE_LOADER')
       });
     },
 

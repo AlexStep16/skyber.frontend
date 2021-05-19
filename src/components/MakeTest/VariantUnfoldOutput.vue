@@ -45,4 +45,10 @@ export default {
   .test__multiselect-output {
     min-width: 300px;
   }
+
+  @media (max-width: 540px) {
+    .test__multiselect-output {
+      min-width: 100%;
+    }
+  }
 </style>

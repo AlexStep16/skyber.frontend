@@ -1,7 +1,7 @@
 <template>
   <div class="make-footer flex flex-center">
-    <div class="make-footer__link-wrapper mr5">
-      <span>Поделиться в соцсетях:</span>
+    <div class="make-footer__share-wrapper flex flex-center mr5">
+      
     </div>
     <div class="make-footer__save flex">
       <button
@@ -14,7 +14,7 @@
       <router-link
         class="test-send"
         style="display: inline-block"
-        :to="'/test/edit/' + this.hash"
+        :to="'/test/edit/' + link"
         v-if="isMine"
       >
         Редактировать
@@ -27,14 +27,23 @@
 
 export default {
   name: 'SendFooter',
-  props: ["link", "isAlreadySent", "isMine"],
+  props: ["link", "type", "name", "isAlreadySent", "isMine"],
+  data() {
+    return {
+      url: '',
+      title: '',
+    }
+  },
   components: {
-    
   },
   methods: {
     send() {
       this.$emit('send')
     },
+  },
+  mounted() {
+    this.url = this.type == 'test' ? 'https://skyber.ru/tests/' + this.link : 'https://skyber.ru/polls/' + this.link
+    this.title = this.type == 'test' ? 'Я создал тест на платформе Skyber' : 'Я создал опрос на платформе Skyber'
   }
 }
 

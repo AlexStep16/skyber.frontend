@@ -52,6 +52,20 @@
   color: #6b696a;
 }
 
+.login-errors {
+  &__item {
+    list-style-type: disc;
+    list-style-position: inside;
+    font-family: 'Roboto', sans-serif;
+    color: #FF5551;
+    margin-top: 8px;
+    > span {
+      position: relative;
+      right: 6px;
+    }
+  }
+}
+
 
 .checkbox {
   position: absolute;

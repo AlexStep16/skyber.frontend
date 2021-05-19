@@ -114,3 +114,14 @@
 
 
 // Media styles
+@media (max-width: 540px) {
+  .header {
+    padding: 0 6%;
+    font-size: 13px;
+    height: 60px;
+  }
+  .header-avatar__image-wrapper[data-v-61dd7a3d] {
+    width: 35px;
+    height: 35px;
+  }
+}

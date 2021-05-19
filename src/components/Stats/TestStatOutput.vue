@@ -13,7 +13,7 @@
           :chartData="getChartData(question.variants)"
           :options="getOptions()"
           :styles="{ position: 'relative', height: '300px', justifyContent: 'left' }"
-          class="mt6"
+          class="chart-wraper mt6"
         />
       </div>
 
@@ -27,7 +27,7 @@
           :chartData="getChartData(question.answers, 'few')"
           :options="getOptions2()"
           :styles="{ position: 'relative', height: 'auto', justifyContent: 'left' }"
-          class="mt6"
+          class="chart-wraper mt6"
         />
       </div>
       <div
@@ -121,6 +121,8 @@ export default {
     },
     getOptions2() {
       return {
+      responsive: true,
+      maintainAspectRatio: false,
        scales: {
         yAxes: [{
           display: true,

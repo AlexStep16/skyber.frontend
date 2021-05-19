@@ -1,5 +1,5 @@
 <template>
-  <div class="form_type-checkbox mt5">
+  <div class="form_type-checkbox mt6">
     <div
       class="checkbox mt5"
       v-for="(variant, key) in getRadioArray(postQuestion.standartVariants)"

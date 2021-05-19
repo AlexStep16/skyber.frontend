@@ -21,12 +21,23 @@
   z-index: 1000;
 
   &_black {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.9s);
   }
 
   &_white {
-    background-color: rgba(250, 250, 250, 0.8);
+    background-color: rgba(250, 250, 250, 0.9);
   }
+}
+
+.modal-inner {
+  @extend .modal;
+  position: absolute;
+  z-index: 0;
+}
+
+.modal-container {
+  margin: 0 14px;
+  text-align: center;
 }
 
 .modal-confirm-block {
@@ -34,15 +45,6 @@
     font-family: 'Montserrat', sans-serif;
     font-size: 1.45em;
     color: white;
-    &-success{
-      color: #444;
-      -webkit-animation: fadeOut 1s;
-      animation: fadeOut 1s;
-      animation-fill-mode: forwards;
-      > svg {
-        margin-right: 13px;
-      }
-    }
   }
 }
 
@@ -50,4 +52,18 @@
   0% { opacity: 0;}
   99% { opacity: 0.99;}
   100% { opacity: 1;}
+}
+
+@media (max-width: 540px) {
+  .container {
+    padding-top: 60px;
+  }
+}
+
+@media (max-width: 570px) {
+
+
+  .modal-confirm-block {
+    font-size: 14px;
+  }
 }

@@ -8,8 +8,13 @@
           <template>
             <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
             <div class="poll-description">{{ pollDescription }}</div>
-            <youtube v-if="pollVideoLink" :video-id="pollVideoLink" class="test-video">
-            </youtube>
+            <div class="test-video-wraper mt6" v-if="pollVideoLink">
+              <div class="modal modal_white absolute" v-if="!videoLoadDone">
+                <Loader />
+              </div>
+              <youtube id="youtube" ref="youtube" :video-id="pollVideoLink" class="test-video">
+              </youtube>
+            </div>
             <div class="test__image mt5" v-if="image.link != null">
               <img :src="image.link" />
             </div>
@@ -25,18 +30,20 @@
               @ready="selected = $event"
               v-if="type == 'Один из списка'"
             />
-            <button
-              class="button button_type-index button_theme-blue mt6"
-              @click="sendPoll"
-            >
-              Отправить
-            </button>
           </template>
         </div>
       </div>
     </div>
     <InfoModal :message="infoMessage" />
     <SuccessModal v-if="showSuccess" :message="successMessage" />
+    <SendFooter 
+      :link="hash"
+      type="poll"
+      :name="pollName"
+      :isMine="isMine"
+      :isAlreadySent="isAlreadySent"
+      @send="sendPoll"
+    />
   </div>
 </template>
 
@@ -47,9 +54,10 @@ import VariantFewOutput from "@/components/Polls/VariantFewOutput.vue";
 import VariantOneOutput from "@/components/Polls/VariantOneOutput.vue";
 import InfoModal from "@/components/InfoModal.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
+import SendFooter from "@/components/SendFooter.vue";
 
 export default {
-  name: "MakePoll",
+  name: "Polls",
   data() {
     return {
       pollId: "",
@@ -68,13 +76,16 @@ export default {
       successMessage: '',
       isMine: true,
       isAlreadySent: true,
+      hash: this.$route.params.hash,
+      videoLoadDone: false,
     };
   },
   components: {
     Header,
     VariantOneOutput,
     VariantFewOutput, InfoModal,
-    SuccessModal
+    SuccessModal,
+    SendFooter
   },
   methods: {
     sendPoll() {
@@ -104,6 +115,9 @@ export default {
     },
   },
   mounted() {
+    this.showImagePreloader = true
+    this.imageLoading = true
+
     this.$store.commit('SHOW_LOADER')
     axios.get("poll/getByHash/" + this.$route.params.hash).then((res) => {
       res = res.data.data;
@@ -114,7 +128,12 @@ export default {
       this.variants = JSON.parse(res.variants);
       this.type = res.typeVariants;
       this.image.link = res.imageLink
-
+      if(this.image.link != null) {
+        this.imageLoading = false
+      }
+      else {
+        this.showImagePreloader = false
+      }
       if(res.fingerprint == window.VISITOR_ID) this.isMine = true
       else this.isMine = false
 
@@ -132,6 +151,21 @@ export default {
     }).finally(() => {
       this.$store.commit('HIDE_LOADER')
     });
+
+    this.$nextTick(function() {
+      if(this.$refs.youtube) {
+        this.videoLoadDone = true
+      }
+      else {
+        let th = this
+        let intervalID = setInterval(function() {
+          if(th.$refs.youtube) {
+            th.videoLoadDone = true
+          }
+        }, 1000)
+        if(this.videoLoadDone == true) clearInterval(intervalID)
+      }
+    })
   },
 };
 </script>

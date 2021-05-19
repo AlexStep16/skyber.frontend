@@ -56,3 +56,35 @@
 .stats-body {
   padding: 13px;
 }
+
+
+//Media styles
+
+@media (max-width: 635px) {
+  .stats {
+    width: 500px;
+  }
+}
+
+@media (max-width: 530px) {
+  .stats {
+    width: 100%;
+  }
+
+  .main {
+    width: 100%;
+    padding: 0;
+  }
+
+  .stats-header {
+    font-size: 14px;
+  }
+
+  .stats-body {
+    font-size: 14px;
+  }
+
+  .stats__question {
+    padding: 9px 15px;
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-  <div :class="`info-modal info-modal-${message.type} ${show ? 'info-modal-show' : ''}`">
+  <div :class="`info-modal info-modal-${message.type} ${show ? 'info-modal-show' : ''} pointer`" @click="specialFalse">
     {{ message.body }}
   </div>
 </template>
@@ -12,21 +12,29 @@ export default {
   props: ['message'],
   data() {
     return {
-      show: false
+      show: false,
+      timeoutId: null,
     }
   },
   components: {
     
   },
   methods: {
-    
+    specialFalse() {
+      this.show = false
+      clearTimeout(this.timeoutId)
+      this.timeoutId = null
+    }
   },
   watch: {
     message: function() {
       this.show = true
-      setTimeout(() => {
-        this.show = false
-      }, 4000)
+      if(this.timeoutId == null) {
+        this.timeoutId = setTimeout(() => {
+          this.show = false
+          this.timeoutId = null
+        }, 10000)
+      }
     }
   }
 }

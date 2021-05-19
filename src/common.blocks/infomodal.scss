@@ -7,7 +7,7 @@
   right: 27px;
   bottom: 0;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 13px;
   color: #ffffff;
   font-weight: bold;
@@ -18,15 +18,13 @@
 
 .info-modal-danger {
   background-color: #ff5555;
-  border: 1px solid #fd3939;
 }
 
 .info-modal-warning {
   background-color: #fa993e;
-  border: 1px solid #ff810a;
 }
 
 .info-modal-show {
   opacity: 1;
-  bottom: 27px;
+  bottom: 97px;
 }

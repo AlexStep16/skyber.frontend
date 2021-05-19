@@ -19,6 +19,16 @@
   overflow: hidden;
 }
 
+.make-footer__share-wrapper {
+  font-size: 0.95em;
+  font-family: "Roboto", sans-serif;
+  color: #444444;
+  svg {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+}
+
 .make-footer__link {
   background-color: rgb(233, 233, 233);
   padding: 0.5em;
@@ -45,5 +55,23 @@
 @media (max-width: 800px) {
   .make-footer__link {
     width: 100%!important;
+  }
+}
+
+@media (max-width: 480px) {
+  .make-footer__link-wrapper {
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 14px!important;
+  }
+
+  .make-footer__link {
+    margin-left: 0!important;
+    margin-top: 2px;
+  }
+
+  .make-footer__save {
+    font-size: 14px;
   }
 }

@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="list-main-wraper">
     <div class="list-item" v-for="(test, key) in postTests" :key="test.id">
-      <span>Тест</span>
+      <span class="list-item__tag">Тест</span>
       <h2 @click="goCreateTest(test)" class="mt6 mb6 pointer">{{ test.testName }}</h2>
       <p class="list-item__description mb7">{{ test.description }}</p>
       <span>Количество отправлений: {{ test.countSub }}</span>
@@ -16,14 +16,21 @@
         </div>
         <div class="flex flex-center">
           <router-link
+            :to="`/test/edit/${test.hash}`"
+            title="Редактировать"
+          >
+            <img src="/Vectors/pen32.svg" width="30px">
+          </router-link>
+          <router-link
             :to="`/stats/${test.hash}`"
-            class=""
+            title="Статистика"
           >
             <img src="/pictures/circle.svg" width="30px">
           </router-link>
           <span
             @click="showModal(test.id, key)"
             class="ml5"
+            title="Удалить"
           >
             <img src="/pictures/trash.svg" class="pointer" width="22px">
           </span>
@@ -44,6 +51,9 @@
 <script>
 import axios from "axios";
 import DeleteModal from "@/components/DeleteModal.vue";
+
+/* import Circle32 from "../../public/pictures/circle.svg";
+import Trash32 from "../../public/pictures/trash.svg"; */
 
 export default {
   name: "TestList",
@@ -66,9 +76,11 @@ export default {
     },
 
     testDelete(id, key) {
+      this.$store.commit('SHOW_LOADER')
       axios.post("test/delete/",{id: id, fingerprint: window.VISITOR_ID}).then(() => {
         this.postTests.splice(key, 1);
         this.$store.commit('CLEAR_TEST_DRAFT')
+        this.$store.commit('HIDE_LOADER')
       });
     },
 

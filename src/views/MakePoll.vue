@@ -56,8 +56,14 @@
               v-model="pollDescription"
               placeholder="Описание опроса"
             />
-            <div :class="!pollVideoLink ? 'd-none' : 'test-video mt6 mb6'">
-              <youtube :video-id="pollVideoLink">
+            <div class="test-video-wraper mt6" v-if="pollVideoLink">
+              <div class="modal modal_white absolute" v-if="!videoLoadDone">
+                <Loader />
+              </div>
+              <div class="test-video-menu pointer flex-center bg-white-shadow" @click="deleteVideo">
+                <img src="/pictures/trash.svg" width="21px" />
+              </div>
+              <youtube id="youtube" ref="youtube" :video-id="pollVideoLink" class="test-video">
               </youtube>
             </div>
             <div class="test-add-video-block flex flex-center mt5" v-if="!hideVideoBox">
@@ -74,11 +80,14 @@
               hidden
               v-if="image.link == null"
             />
-            <div class="test__image mt5 mb5" v-if="image.link != null">
-              <div class="modal modal50 pointer flex flex-center">
+            <div class="test__image mt5 mb5" v-if="showImagePreloader">
+              <div class="modal-inner modal50 pointer flex flex-center">
                 <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
               </div>
               <img :src="image.link" />
+              <div class="modal modal_white absolute" v-if="imageLoading">
+                <Loader />
+              </div>
             </div>
             <multiselect
               v-model="typeVariants"
@@ -118,7 +127,7 @@
       </div>
     </div>
     <MakeFooter type="poll" :link="pollLink" @save="savePoll" @preview="isPreview = !isPreview" />
-    <SuccessModal v-if="showSuccess" :message="successMessage" />
+    <SuccessModal v-if="showSuccess" :message="successMessage" :link="pollHash" type="poll" />
   </div>
 </template>
 
@@ -128,6 +137,7 @@
 import axios from "axios";
 import { mapMutations } from "vuex";
 import { getIdFromUrl } from 'vue-youtube'
+import Loader from "@/components/Loader.vue";
 
 import Header from "@/components/Header.vue";
 import Multiselect from "vue-multiselect";
@@ -159,7 +169,10 @@ export default {
       pollHash: this.hash,
       fingerprint: window.VISITOR_ID,
       showSuccess: false,
-      successMessage: ''
+      successMessage: '',
+      videoLoadDone: false,
+      imageLoading: false,
+      showImagePreloader: false,
     };
   },
   components: {
@@ -167,7 +180,8 @@ export default {
     Multiselect,
     VariantFewOutput,
     VariantOneOutput,
-    MakeFooter, SuccessModal
+    MakeFooter, SuccessModal,
+    Loader
   },
   methods: {
     ...mapMutations(["CLEAR_POLL_DRAFT"]),
@@ -208,9 +222,6 @@ export default {
         if(this.pollHash == this.$store.state.pollStore.draftHash) this.CLEAR_POLL_DRAFT()
         this.successMessage = "Успешно сохранено"
         this.showSuccess = true
-        setTimeout(() => {
-          this.$router.push('/polls/' + this.pollHash);
-        }, 2000)
       });
     },
 
@@ -219,23 +230,31 @@ export default {
     },
 
     uploadImage(event) {
+      this.showImagePreloader = true
+      this.imageLoading = true
+
       this.image.data = event.target.files[0];
       const fd = new FormData();
       this.image.data != undefined
         ? fd.append("pollImage", this.image.data)
         : "";
-      fd.append("id", this.pollId);
+      fd.append("pollHash", this.pollHash);
 
       if (!this.image.data) return;
 
       axios.post("poll/upload", fd).then((res) => {
+        this.imageLoading = false
         this.image.link = res.data.image;
+      })
+      .catch(() => {
+        this.showImagePreloader = false
       });
     },
 
     deleteImage() {
-      axios.post("poll/upload/delete", { id: this.pollId }).then(() => {
+      axios.post("poll/upload/delete", { pollHash: this.pollHash }).then(() => {
         this.image.link = null;
+        this.showImagePreloader = false
       });
     },
 
@@ -246,9 +265,14 @@ export default {
       this.pollVideoLink = getIdFromUrl(this.$refs.linkInput.value)
       this.hideVideoBox = true
     },
-
+    deleteVideo() {
+      this.pollVideoLink = null
+    },
     //Mounted methods
     getPoll(hash) {
+      this.showImagePreloader = true
+      this.imageLoading = true
+
       axios.post("poll/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
           if(this.$store.state.pollStore.draftHash != null) this.CLEAR_POLL_DRAFT()
@@ -262,6 +286,12 @@ export default {
         this.variants = JSON.parse(res.variants) || [];
         this.typeVariants = res.typeVariants
         this.image.link = res.imageLink
+        if(this.image.link != null) {
+          this.imageLoading = false
+        }
+        else {
+          this.showImagePreloader = false
+        }
         this.pollVideoLink = res.videoLink
         this.pollLink = "https://skyber.ru/polls/" + res.hash;
       }).catch(() => {
@@ -280,6 +310,21 @@ export default {
     if (this.pollHash && this.pollHash != '') {
       this.getPoll(this.pollHash);
     }
+
+    this.$nextTick(function() {
+      if(this.$refs.youtube) {
+        this.videoLoadDone = true
+      }
+      else {
+        let th = this
+        let intervalID = setInterval(function() {
+          if(th.$refs.youtube) {
+            th.videoLoadDone = true
+          }
+        }, 1000)
+        if(this.videoLoadDone == true) clearInterval(intervalID)
+      }
+    })
   },
 };
 </script>

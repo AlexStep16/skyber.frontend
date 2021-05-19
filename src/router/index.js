@@ -4,6 +4,9 @@ import store from '../store'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import MakeTest from '../views/MakeTest.vue'
+import Scenario from '../views/Scenario.vue'
+import MakeScenario from '../components/Scenarios/MakeScenario.vue'
+import ScenariosMenu from '../components/Scenarios/ScenariosMenu.vue'
 import TestCreator from '../views/TestCreator.vue'
 import PollCreator from '../views/PollCreator.vue'
 import List from '../views/List.vue'
@@ -62,6 +65,26 @@ const routes = [
     name: 'MakeTest',
     component: MakeTest,
     props: true,
+  },
+  {
+    path: '/test/scenario/',
+    name: 'Scenario',
+    component: Scenario,
+    props: true,
+    children: [
+      {
+        path: 'add/:hash',
+        component: MakeScenario
+      },
+      {
+        path: 'menu/:hash',
+        component: ScenariosMenu
+      },
+      /* {
+        path: '',
+        component: MakeScenario
+      }, */
+    ]
   },
   {
     path: '/test/create',

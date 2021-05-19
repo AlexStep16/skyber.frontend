@@ -2,8 +2,10 @@
   <div class="container flex flex-justify-center">
     <Header type="test" />
     <div class="main">
-      <div>
-        <div class="test inline-block">
+      <div class="test-wrapper">
+        <Settings :hash="testHash" @showScenarios="showScenariosMenu = 1" />
+
+        <div class="test inline-block mt7">
           <div class="test__block_wraper">
 
             <div class="side-panel inline-block">
@@ -14,7 +16,7 @@
                 <div class="pointer mt6 text-center" @click="clickImage">
                   <img src="/pictures/image.svg" width="32px">
                 </div>
-                <div class="pointer mt6 text-center" @click="hideVideoBox = !hideVideoBox">
+                <div class="pointer mt6 text-center" @click="hideVideoBox = testVideoLink == null ? !hideVideoBox : hideVideoBox">
                   <img src="/pictures/video.svg" width="32px">
                 </div>
               </div>
@@ -42,8 +44,16 @@
                     v-model="testDescription"
                   />
                 </div>
-                <youtube v-if="testVideoLink" :video-id="testVideoLink" class="test-video mt6">
-                </youtube>
+                <div class="test-video-wraper mt6" v-if="testVideoLink">
+                  <div class="modal modal_white absolute" v-if="!videoLoadDone">
+                    <Loader />
+                  </div>
+                  <div class="test-video-menu pointer flex-center bg-white-shadow" @click="deleteVideo">
+                    <img src="/pictures/trash.svg" width="21px" />
+                  </div>
+                  <youtube id="youtube" ref="youtube" :video-id="testVideoLink" class="test-video">
+                  </youtube>
+                </div>
                 <div class="test-add-video-block flex flex-center mt5" v-if="!hideVideoBox">
                   <div class="test-add-video-block__modal flex flex-column">
                     <input type="text" class="input" ref="linkInput" placeholder="Введите ссылку на YouTube видео">
@@ -58,11 +68,14 @@
                   hidden
                   v-if="image.link == null"
                 />
-                <div class="test__image" v-if="image.link != null">
-                  <div class="modal modal50 pointer flex flex-center">
+                <div class="test__image mt6" v-if="showImagePreloader">
+                  <div class="modal-inner modal50 pointer flex flex-center">
                     <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
                   </div>
                   <img :src="image.link" />
+                  <div class="modal modal_white absolute" v-if="imageLoading">
+                    <Loader />
+                  </div>
                 </div>
               </form>
             </div>
@@ -126,11 +139,14 @@
                       @change="questionImage($event, question)"
                       v-if="question.image.link == null"
                     />
-                    <div class="test__image" v-if="question.image.link != null">
-                      <div class="modal modal50 pointer flex flex-center">
+                    <div class="test__image" v-if="question.image.link != null || question.image.isLoading">
+                      <div class="modal-inner modal50 pointer flex flex-center">
                         <img src="/pictures/trash.svg" width="65px" @click="questionImageDelete(question)" />
                       </div>
                       <img :src="question.image.link" />
+                      <div class="modal modal_white absolute" v-if="question.image.isLoading">
+                        <Loader />
+                      </div>
                     </div>
 
                     <multiselect
@@ -165,7 +181,7 @@
               <template v-else>
                 <div class="test__block test__item bg-white-shadow">
                   <div
-                    style="display: flex; flex-direction: column"
+                    class="test__block-inner-div"
                     v-if="question.name != null"
                   >
                     <div
@@ -211,13 +227,14 @@
       </div>
     </div>
     <MakeFooter type="test" :link="testLink" @save="saveTest" />
-    <SuccessModal v-if="showSuccess" :message="successMessage" />
+    <SuccessModal v-if="showSuccess" :message="successMessage" :link="testHash" type="test" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { mapMutations } from "vuex";
+import Loader from "@/components/Loader.vue";
 
 import Multiselect from "vue-multiselect";
 import { getIdFromUrl } from 'vue-youtube'
@@ -244,6 +261,8 @@ import VariantTimeOutput from "@/components/MakeTest/VariantTimeOutput.vue";
 import MakeFooter from "@/components/MakeFooter.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 
+import Settings from "@/components/Settings.vue";
+
 import draggable from 'vuedraggable'
 
 import AddSVG from '../../public/Vectors/add32.svg'
@@ -263,6 +282,7 @@ export default {
       image: {
         data: null,
         link: null,
+        isLoading: false
       },
       sidebar: {
         position: 0
@@ -272,7 +292,11 @@ export default {
       hideVideoBox: true,
       fingerprint: window.VISITOR_ID,
       showSuccess: false,
-      successMessage: ''
+      successMessage: 'Успешно сохранено',
+      videoLoadDone: false,
+      imageLoading: false,
+      showImagePreloader: false,
+      showScenariosMenu: false,
     };
   },
   components: {
@@ -286,9 +310,12 @@ export default {
     VariantDateOutput, VariantDate,
     VariantTime, VariantTimeOutput,
     draggable,  Header, AddSVG,
-    MakeFooter, SuccessModal
+    MakeFooter, SuccessModal,
+    Loader,
+    Settings
   },
-  computed: {},
+  computed: {
+  },
   methods: {
     ...mapMutations(["SET_TEST_DRAFT", "CLEAR_TEST_DRAFT"]),
 
@@ -316,6 +343,7 @@ export default {
           image: {
             data: null,
             link: null,
+            isLoading: false
           },
         };
 
@@ -368,30 +396,35 @@ export default {
         if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
         this.successMessage = "Успешно сохранено"
         this.showSuccess = true
-        setTimeout(() => {
-          this.$router.push('/tests/' + this.testHash);
-        }, 2000)
       });
     },
 
     uploadImage(event) {
+      this.showImagePreloader = true
+      this.imageLoading = true
+      
       this.image.data = event.target.files[0];
       const fd = new FormData();
       this.image.data != undefined
         ? fd.append("testImage", this.image.data)
         : "";
-      fd.append("id", this.testHash);
+      fd.append("testHash", this.testHash);
 
       if (!this.image.data) return;
 
       axios.post("test/upload", fd).then((res) => {
+        this.imageLoading = false
         this.image.link = res.data.image;
+      })
+      .catch(() => {
+        this.showImagePreloader = false
       });
     },
 
     deleteImage() {
-      axios.post("test/upload/delete", { hash: this.testHash }).then(() => {
+      axios.post("test/upload/delete", { testHash: this.testHash }).then(() => {
         this.image.link = null;
+        this.showImagePreloader = false
       });
     },
 
@@ -404,6 +437,7 @@ export default {
       }
     },
     questionImage(event, question) {
+      question.image.isLoading = true
       let fd = new FormData();
       fd.append("questionImage", event.target.files[0]);
       fd.append("id", question.id);
@@ -411,6 +445,7 @@ export default {
       axios.post("test/question/upload", fd).then(() => {
         question.image.data = event.target.files[0];
         question.image.link = URL.createObjectURL(event.target.files[0]);
+        question.image.isLoading = false
       });
     },
 
@@ -432,20 +467,30 @@ export default {
       this.testVideoLink = getIdFromUrl(this.$refs.linkInput.value)
       this.hideVideoBox = true
     },
+    deleteVideo() {
+      this.testVideoLink = null
+    },
     //Mounted methods
     getTest(hash) {
+      this.showImagePreloader = true
+      this.imageLoading = true
       axios.post("test/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
           this.$router.push('/test/create')
         }
         res = res.data.data;
-        
         this.testId = res.id
         this.testName = res.testName;
         this.testVideoLink = res.videoLink;
         this.testDescription = res.description;
         this.testLink = "https://skyber.ru/tests/" + res.hash;
         this.image.link = res.imageLink;
+        if(this.image.link != null) {
+          this.imageLoading = false
+        }
+        else {
+          this.showImagePreloader = false
+        }
       }).catch(() => {
         let hashStore = this.$store.state.testStore.draftHash
         if(hashStore != null && hash == hashStore) {
@@ -485,6 +530,7 @@ export default {
               image: {
                 data: null,
                 link: element.imageLink,
+                isLoading: false
               },
             });
           });
@@ -530,6 +576,7 @@ export default {
           image: {
             data: null,
             link: null,
+            isLoading: false
           },
         };
 
@@ -545,6 +592,21 @@ export default {
       this.getTest(this.testHash);
       this.getTestQuestions()
     }
+
+    this.$nextTick(function() {
+      if(this.$refs.youtube) {
+        this.videoLoadDone = true
+      }
+      else {
+        let th = this
+        let intervalID = setInterval(function() {
+          if(th.$refs.youtube) {
+            th.videoLoadDone = true
+          }
+        }, 1000)
+        if(this.videoLoadDone == true) clearInterval(intervalID)
+      }
+    })
   },
 };
 </script>

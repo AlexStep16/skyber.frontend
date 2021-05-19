@@ -19,10 +19,10 @@
         >
           <ul class="header-menu-list" v-if="isAuthorized">
             <div class="header-menu-list__header flex flex-align-center">
-              <h3>@alexander2000</h3>
+              <h3>@{{$store.state.auth.user.login}}</h3>
             </div>
             <li class="header-menu-list__item">
-              <router-link to="/list" class="flex flex-align-center"><List32 />Мои тесты</router-link>
+              <router-link to="/list" class="flex flex-align-center"><Home32 />Мои тесты</router-link>
             </li>
             <li class="header-menu-list__item">
               <router-link to="/test/create" class="flex flex-align-center"><Add32 />Создать тест</router-link>
@@ -38,6 +38,12 @@
             <div class="header-menu-list__header flex flex-align-center">
               <h3>@guess13358</h3>
             </div>
+            <li class="header-menu-list__item">
+              <router-link to="/test/create" class="flex flex-align-center"><Add32 />Создать тест</router-link>
+            </li>
+            <li class="header-menu-list__item">
+              <router-link to="/poll/create" class="flex flex-align-center"><Add32 />Создать опрос</router-link>
+            </li>
             <li class="header-menu-list__item">
               <router-link to="/register" class="flex flex-align-center"><NewUser32 />Зарегистрироваться</router-link>
             </li>
@@ -57,7 +63,7 @@ import { mapActions } from "vuex";
 
 
 //Add SVG's
-import List32 from '../../public/Vectors/list32.svg'
+import Home32 from '../../public/Vectors/home32.svg'
 import Add32 from '../../public/Vectors/add32_new.svg'
 import Exit32 from '../../public/Vectors/exit32.svg'
 import Login32 from '../../public/Vectors/login32.svg'
@@ -76,7 +82,7 @@ export default {
   },
   props: ['type'],
   components: {
-    List32, Add32, Exit32, NewUser32, Login32
+    Home32, Add32, Exit32, NewUser32, Login32
   },
   methods: {
     ...mapActions({
