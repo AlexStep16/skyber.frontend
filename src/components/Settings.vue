@@ -8,13 +8,13 @@
     <div :class="showSettings ? 'settings__main' : 'none'">
       <div class="settings-item">
         <span class="settings-item__text">Управление сценариями</span>
-        <div
-          @click="showScenariosMenu"
+        <router-link
+          :to="'/test/scenario/menu/' + hash"
           class="settings-item__link pointer flex flex-center"
         >
           <span class="mr3">Меню управления</span>
           <img src="/pictures/link.svg">
-        </div>
+        </router-link>
       </div>
       
       <div class="settings-item mt6">
@@ -62,9 +62,7 @@ export default {
     
   },
   methods: {
-    showScenariosMenu() {
-      this.$emit('showScenarios')
-    }
+
   },
   mounted() {
   }

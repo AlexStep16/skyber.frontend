@@ -69,7 +69,7 @@ export default {
         : "";
       formData.append("scenario", JSON.stringify(this.scenario))
       console.log(formData)
-      axios.post('scenario/create', formData).then((res) => {
+      axios.post('scenarios/create', formData).then((res) => {
         console.log(res)
       })
     },

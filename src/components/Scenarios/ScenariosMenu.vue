@@ -94,23 +94,43 @@ export default {
       axios.get("scenarios/" + this.hash).then((res) => {
         this.scenarios = res.data.data;
         this.scenarios.forEach((scenario) => {
+          let conditions = scenario.conditions;
           scenario.conditions = {};
           this.$set(scenario.conditions, "first", {
+            condition: 'BT',
             checked: false,
             scores: null,
             questionId: null,
           });
           this.$set(scenario.conditions, "second", {
+            condition: 'LT',
             checked: false,
             scores: null,
             questionId: null,
           });
           this.$set(scenario.conditions, "third", {
+            condition: 'QE',
             checked: false,
             scores: null,
             questionId: null,
           });
+
+          conditions.forEach((condition) => {
+            if(condition.condition == 'BT') {
+              scenario.conditions.first.checked = true
+              scenario.conditions.first.scores = condition.scores
+            }
+            if(condition.condition == 'LT') {
+              scenario.conditions.second.checked = true
+              scenario.conditions.second.scores = condition.scores
+            }
+            if(condition.condition == 'QE') {
+              scenario.conditions.third.checked = true
+              scenario.conditions.third.questionId = condition.question_id
+            }
+          })
         });
+
       });
     },
     hideMenu() {

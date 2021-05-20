@@ -3,7 +3,7 @@
     <Header type="test" />
     <div class="main">
       <div class="test-wrapper">
-        <Settings :hash="testHash" @showScenarios="showScenariosMenu = 1" />
+        <Settings :hash="testHash" />
 
         <div class="test inline-block mt7">
           <div class="test__block_wraper">
@@ -296,7 +296,6 @@ export default {
       videoLoadDone: false,
       imageLoading: false,
       showImagePreloader: false,
-      showScenariosMenu: false,
     };
   },
   components: {
