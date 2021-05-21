@@ -11,8 +11,9 @@ export default {
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
-    if(this.$store.state.testStore.draftHash != null) {
-      this.$router.push('/test/edit/' + this.$store.state.testStore.draftHash)
+    let draftHash = this.$store.state.testStore.draftHash;
+    if(draftHash != null && draftHash != "") {
+      this.$router.replace('/test/edit/' + this.$store.state.testStore.draftHash)
     }
     else {
       axios
@@ -20,10 +21,10 @@ export default {
         .then((res) => {
           this.SET_TEST_DRAFT(res.data.data.hash)
           this.$store.commit('HIDE_LOADER')
-          this.$router.push({ name: "MakeTest", params: {hash: res.data.data.hash} });
+          this.$router.replace({ name: "MakeTest", params: {hash: res.data.data.hash} });
         })
         .catch(() => {
-          this.$router.push({ name: "Home" });
+          this.$router.replace({ name: "Home" });
         })
     }
   }

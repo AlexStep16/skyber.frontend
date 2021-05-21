@@ -48,3 +48,18 @@ body {
 <style lang="scss" scoped>
 @import '@/common.blocks/index.scss';
 </style>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style>
+
+.multiselect__option--selected.multiselect__option--highlight, .multiselect__option--highlight {
+    background: #6699ff;
+}
+
+.multiselect__option--selected {
+    background: #ffffff;
+    color: #6699ff;
+    font-weight: 700;
+}
+</style>

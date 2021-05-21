@@ -11,8 +11,9 @@ export default {
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
-    if(this.$store.state.pollStore.draftHash != null) {
-      this.$router.push('/poll/edit/' + this.$store.state.pollStore.draftHash)
+    let draftHash = this.$store.state.pollStore.draftHash
+    if(draftHash != null && draftHash != "") {
+      this.$router.replace('/poll/edit/' + this.$store.state.pollStore.draftHash)
     }
     else {
       axios
@@ -20,10 +21,10 @@ export default {
         .then((res) => {
           this.SET_POLL_DRAFT(res.data.data.hash)
           this.$store.commit('HIDE_LOADER')
-          this.$router.push({ name: "MakePoll", params: {hash: res.data.data.hash} });
+          this.$router.replace({ name: "MakePoll", params: {hash: res.data.data.hash} });
         })
         .catch(() => {
-          this.$router.push({ name: "Home" });
+          this.$router.replace({ name: "Home" });
         })
     }
   }

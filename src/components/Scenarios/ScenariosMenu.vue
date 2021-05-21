@@ -31,11 +31,11 @@
             <input
               class="custom-checkbox"
               type="checkbox"
-              id="option-1"
+              :id="'option-1' + scenario.id"
               name="option-1"
               v-model="scenario.conditions.first.checked"
             />
-            <label class="scenarios-menu-item__option mt4" for="option-1">
+            <label class="scenarios-menu-item__option mt4" :for="'option-1' + scenario.id">
               <span>Пользователь набрал больше </span
               ><input
                 class="scenarios-menu-item__input ml5 mr5"
@@ -47,11 +47,11 @@
             <input
               class="custom-checkbox"
               type="checkbox"
-              id="option-2"
+              :id="'option-2' + scenario.id"
               name="option-2"
               v-model="scenario.conditions.second.checked"
             />
-            <label class="scenarios-menu-item__option mt4" for="option-2">
+            <label class="scenarios-menu-item__option mt4" :for="'option-2' + scenario.id">
               <span>Пользователь набрал меньше </span
               ><input
                 class="scenarios-menu-item__input ml5 mr5"
@@ -63,13 +63,24 @@
             <input
               class="custom-checkbox"
               type="checkbox"
-              id="option-3"
+              :id="'option-3' + scenario.id"
               name="option-3"
               v-model="scenario.conditions.third.checked"
             />
-            <label class="scenarios-menu-item__option mt6" for="option-3">
+            <label class="scenarios-menu-item__option mt6" :for="'option-3' + scenario.id">
               <span>Пользователь ответил на вопрос</span>
             </label>
+            <multiselect
+                v-model="scenario.question"
+                :options="options"
+                label="question"
+                :placeholder="'Выберите вопрос'"
+                class="mt5 mb5"
+                :multiple="false"
+                selectLabel=""
+                selectedLabel=""
+                deselectLabel=""
+              ></multiselect>
           </div>
         </div>
       </div>
@@ -79,16 +90,20 @@
 
 <script>
 import axios from "axios";
+import Multiselect from "vue-multiselect";
 
 export default {
   name: "ScenariosMenu",
   data() {
     return {
       hash: this.$route.params.hash,
-      scenarios: {},
+      scenarios: [],
+      options: [],
     };
   },
-  components: {},
+  components: {
+    Multiselect
+  },
   methods: {
     getScenarios() {
       axios.get("scenarios/" + this.hash).then((res) => {
@@ -133,10 +148,21 @@ export default {
 
       });
     },
+    getQuestions() {
+      axios.get('test/questions/getByHash/' + this.hash).then(res => {
+        res = res.data.data
+        this.options = res;
+      })
+    },
     hideMenu() {
       this.$emit("hideMenu");
     },
     save() {
+      this.scenarios.forEach((scenario) => {
+        if(scenario.conditions.third.questionId != null && scenario.question) {
+          scenario.conditions.third.questionId = scenario.question.id
+        }
+      })
       axios.post('scenarios/conditions/save', {
         scenarios: this.scenarios,
       }).then((res) => {
@@ -146,6 +172,7 @@ export default {
   },
   mounted() {
     this.getScenarios();
+    this.getQuestions()
   },
 };
 </script>
