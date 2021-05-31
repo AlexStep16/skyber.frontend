@@ -3,6 +3,7 @@
     <div class="scenarios-menu bg-white-shadow">
       <h3 class="scenarios-menu__h3 h3-default">Управление сценариями</h3>
       <button @click="save">Сохранить</button>
+      <router-link :to="'/test/scenario/add/' + this.hash">Добавить сценарий</router-link>
       <div class="scenarios-menu__main">
         <div
           class="scenarios-menu-item"

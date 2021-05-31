@@ -23,47 +23,95 @@
             </div>
           </div>
         </div>
-        <div
-          class="test__block test__block_wraper bg-white-shadow test__item mt6"
-          v-for="question in questions"
-          :key="question.id"
-        >
-          <div style="display: flex; flex-direction: column; width: 100%">
-            <div class="test__question-name mb5">
-              {{ question.name }}
+        <div v-if="this.settings.is_list">
+          <div
+            class="test__block test__block_wraper bg-white-shadow test__item mt6"
+            v-for="question in questions"
+            :key="question.id"
+          >
+            <div style="display: flex; flex-direction: column; width: 100%">
+              <div class="test__question-name mb6">
+                {{ question.name }}
+              </div>
+              <div class="test__image mt5" v-if="question.image.link != null">
+                <img :src="question.image.link" />
+              </div>
+              <VariantOneOutput
+                v-if="question.typeAnswer == 'Один из списка'"
+                :postQuestion="question"
+              />
+              <VariantInputOutput
+                v-if="question.typeAnswer == 'Ввод текста'"
+                :postQuestion="question"
+              />
+              <VariantFewOutput
+                v-if="question.typeAnswer == 'Несколько из списка'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
+              />
+              <VariantUnfoldOutput
+                v-if="question.typeAnswer == 'Выпадающий список'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
+              />
+              <VariantDateOutput
+                v-if="question.typeAnswer == 'Дата'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
+              />
+              <VariantTimeOutput
+                v-if="question.typeAnswer == 'Время'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
+              />
             </div>
-            <div class="test__image mt5" v-if="question.image.link != null">
-              <img :src="question.image.link" />
-            </div>
-            <VariantOneOutput
-              v-if="question.typeAnswer == 'Один из списка'"
-              :postQuestion="question"
-            />
-            <VariantInputOutput
-              v-if="question.typeAnswer == 'Ввод текста'"
-              :postQuestion="question"
-            />
-            <VariantFewOutput
-              v-if="question.typeAnswer == 'Несколько из списка'"
-              :postQuestion="question"
-              @ready="question.checked = $event"
-            />
-            <VariantUnfoldOutput
-              v-if="question.typeAnswer == 'Выпадающий список'"
-              :postQuestion="question"
-              @ready="question.checked = $event"
-            />
-            <VariantDateOutput
-              v-if="question.typeAnswer == 'Дата'"
-              :postQuestion="question"
-              @ready="question.checked = $event"
-            />
-            <VariantTimeOutput
-              v-if="question.typeAnswer == 'Время'"
-              :postQuestion="question"
-              @ready="question.checked = $event"
-            />
           </div>
+        </div>
+
+
+        <div v-if="!this.settings.is_list">
+          <div
+            class="test__block test__block_wraper bg-white-shadow test__item mt6"
+          >
+            <div style="display: flex; flex-direction: column; width: 100%">
+              <div class="test__question-name mb6">
+                {{ currentQuestion.name }}
+              </div>
+              <div class="test__image mt5" v-if="currentQuestion.image.link != null">
+                <img :src="currentQuestion.image.link" />
+              </div>
+              <VariantOneOutput
+                v-if="currentQuestion.typeAnswer == 'Один из списка'"
+                :postQuestion="currentQuestion"
+              />
+              <VariantInputOutput
+                v-if="currentQuestion.typeAnswer == 'Ввод текста'"
+                :postQuestion="currentQuestion"
+              />
+              <VariantFewOutput
+                v-if="currentQuestion.typeAnswer == 'Несколько из списка'"
+                :postQuestion="currentQuestion"
+                @ready="currentQuestion.checked = $event"
+              />
+              <VariantUnfoldOutput
+                v-if="currentQuestion.typeAnswer == 'Выпадающий список'"
+                :postQuestion="currentQuestion"
+                @ready="currentQuestion.checked = $event"
+              />
+              <VariantDateOutput
+                v-if="currentQuestion.typeAnswer == 'Дата'"
+                :postQuestion="currentQuestion"
+                @ready="currentQuestion.checked = $event"
+              />
+              <VariantTimeOutput
+                v-if="currentQuestion.typeAnswer == 'Время'"
+                :postQuestion="currentQuestion"
+                @ready="currentQuestion.checked = $event"
+              />
+            </div>
+          </div>
+          <button class="button button_type-index button_theme-purple mt7" @click="nextQuestion">Дальше</button>
+    <button class="button button_type-index button_theme-purple mt7" @click="backQuestion">Назад</button>
         </div>
       </div>
     </div>
@@ -119,6 +167,20 @@ export default {
       videoLoadDone: false,
       imageLoading: false,
       totalScores: null,
+      settings: {},
+      questionCounter: 0,
+      currentQuestion: {
+        id: null,
+        name: null,
+        focused: false,
+        variants: null,
+        typeAnswer: null,
+        isRequire: null,
+        image: {
+          data: null,
+          link: null,
+        },
+      },
     };
   },
   components: {
@@ -141,8 +203,15 @@ export default {
       let totalScores = 0
       this.questions.forEach((elem) => {
         elem.variants.forEach((variant) => {
-          let checked = elem.checked ? elem.checked.split('_')[0] : ''
-          if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
+          if (elem.checked && Array.isArray(elem.checked)) {
+            elem.checked.forEach((el) => {
+              let checked = el ? el.split('_')[0] : ''
+              if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
+            })
+          } else if (elem.checked) {
+            let checked = elem.checked ? elem.checked.split('_')[0] : ''
+            if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
+          }
         })
         
       })
@@ -193,11 +262,20 @@ export default {
           }, 2000)
         });  */
     },
+    nextQuestion() {
+      if (this.questions.length - 1 > this.questionCounter) this.questionCounter++
+      this.$set(this, 'currentQuestion', this.questions[this.questionCounter])
+    },
+    backQuestion() {
+      if (this.questionCounter > 0) this.questionCounter--
+      this.$set(this, 'currentQuestion', this.questions[this.questionCounter])
+    },
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
     axios.get("test/getByHash/" + this.hash).then((res) => {
       res = res.data.data;
+      this.settings = res.settings[0]
 
       this.testId = res.id;
       this.testName = res.testName;
@@ -239,6 +317,7 @@ export default {
             },
           });
         });
+        this.currentQuestion = this.questions[0]
       })
       .catch((e) => {
         console.log(e)

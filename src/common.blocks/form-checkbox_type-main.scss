@@ -5,6 +5,10 @@
   opacity: 0;
 }
 
+.checkbox:not(:last-child) {
+  margin-bottom: 8px;
+}
+
 /* для элемента label, связанного с .custom-checkbox */
 .custom-checkbox+label {
   display: inline-flex;

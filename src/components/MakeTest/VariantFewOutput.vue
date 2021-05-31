@@ -1,7 +1,7 @@
 <template>
-  <div class="form_type-checkbox mt6">
+  <div class="form_type-checkbox">
     <div
-      class="checkbox mt5"
+      class="checkbox"
       v-for="(variant, key) in getRadioArray(postQuestion.standartVariants)"
       :key="variant.id"
     >

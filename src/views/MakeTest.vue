@@ -30,7 +30,7 @@
                     name="name"
                     id="name"
                     placeholder="Название теста"
-                    class="input input_type-test input_type-test-header"
+                    class="input input_type-test input_type-test-header pb4 pt0"
                     v-model="testName"
                   />
                 </div>
@@ -185,7 +185,7 @@
                     v-if="question.name != null"
                   >
                     <div
-                      class="test__question-name mb5"
+                      class="test__question-name mb6"
                     >
                       {{ question.name }}
                     </div>
@@ -308,6 +308,7 @@ export default {
         password_access: false,
         is_list: true,
         is_right_questions: false,
+        is_resend: false,
         password: '',
       },
     };
@@ -406,7 +407,9 @@ export default {
         fingerprint: this.fingerprint,
         settings: this.settings
       };
-      if(!stop) axios.post("test/save", test).then(() => {
+      if(!stop) axios.post("test/save", test).then((res) => {
+
+        console.log(res)
         if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
         this.successMessage = "Успешно сохранено"
         this.showSuccess = true

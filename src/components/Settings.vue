@@ -49,6 +49,14 @@
         </label>
       </div>
 
+      <div class="settings-item mt6">
+        <span class="settings-item__text">Перепрохождение теста</span>
+        <label class="slider">
+          <input type="checkbox" v-model="settings.is_resend" class="none">
+          <span class="slider__circle slider__round"></span>
+        </label>
+      </div>
+
       <!-- <div
         class="settings-item mt6"
       >
