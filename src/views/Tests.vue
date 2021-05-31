@@ -3,6 +3,7 @@
     <Header type='test' />
     <div class="main">
       <div class="test">
+        <TestAnswer :totalScores="totalScores" :hash="hash" v-if="totalScores !== null" />
         <div class="test__block_wraper mt7">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
             <h1 class="h1-test mt0 mb0">{{ testName }}</h1>
@@ -93,6 +94,7 @@ import InfoModal from "@/components/InfoModal.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import SendFooter from "@/components/SendFooter.vue";
 import Loader from "@/components/Loader.vue";
+import TestAnswer from "@/components/Scenarios/TestAnswer.vue";
 
 export default {
   name: "Tests",
@@ -116,6 +118,7 @@ export default {
       hash: this.$route.params.hash,
       videoLoadDone: false,
       imageLoading: false,
+      totalScores: null,
     };
   },
   components: {
@@ -125,7 +128,8 @@ export default {
     VariantUnfoldOutput,
     VariantDateOutput, VariantTimeOutput,
     Header, InfoModal, SuccessModal,
-    SendFooter, Loader
+    SendFooter, Loader,
+    TestAnswer
   },
   methods: {
     getRadioArray(variant) {
@@ -133,9 +137,21 @@ export default {
         return elem.name != null;
       });
     },
+    scoresCounter() {
+      let totalScores = 0
+      this.questions.forEach((elem) => {
+        elem.variants.forEach((variant) => {
+          let checked = elem.checked ? elem.checked.split('_')[0] : ''
+          if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
+        })
+        
+      })
+      this.totalScores = totalScores;
+    },
 
     sendTest() {
-      let stop = false;
+      this.scoresCounter()
+      /* let stop = false;
       this.questions.forEach((elem) => {
         if(elem.checked && typeof elem.checked == 'string') elem.checked = elem.checked.split('_')[0]
         if(elem.checked && (elem.checked instanceof Array)) {
@@ -175,7 +191,7 @@ export default {
             this.showSuccess = false
             location.reload()
           }, 2000)
-        }); 
+        });  */
     },
   },
   mounted() {

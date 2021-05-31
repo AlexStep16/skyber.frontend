@@ -74,16 +74,22 @@ const routes = [
     children: [
       {
         path: 'add/:hash',
-        component: MakeScenario
+        component: MakeScenario,
+        props: {
+          isEdit: false
+        }
       },
       {
         path: 'menu/:hash',
         component: ScenariosMenu
       },
-      /* {
-        path: '',
-        component: MakeScenario
-      }, */
+      {
+        path: 'edit/:id',
+        component: MakeScenario,
+        props: {
+          isEdit: true
+        }
+      },
     ]
   },
   {

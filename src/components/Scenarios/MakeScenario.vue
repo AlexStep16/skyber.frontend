@@ -3,7 +3,7 @@
     <Header type="test" />
     <div class="main">
       <div class="scenario bg-white-shadow">
-        <h2 class="scenario__h2 h2-default">Добавление сценария</h2>
+        <h2 class="scenario__h2 h2-default">{{ isEdit ? 'Редактирование' : 'Добавление' }} сценария</h2>
         <input
           type="text"
           name="scen-name"
@@ -29,7 +29,7 @@
         <h2 class="h2-default">Предпросмотр</h2>
         <h1 class="scenario__header-preview">{{ scenario.header }}</h1>
         <div class="scenario__description mt0" v-html="scenario.description"></div>
-        <img :src="scenario.imageSrc">
+        <img class="scenario__image" :src="scenario.imageSrc">
       </div>
     </div>
     <MakeFooter type="scenario" @save="saveScenario" />
@@ -44,6 +44,7 @@ import Tiptap from '@/components/TipTap.vue'
 
 export default {
   name: "MakeScenario",
+  props: ['isEdit'],
   data() {
     return {
       scenario: {
@@ -68,9 +69,24 @@ export default {
         ? formData.append("scenaImage", this.scenario.image)
         : "";
       formData.append("scenario", JSON.stringify(this.scenario))
-      console.log(formData)
-      axios.post('scenarios/create', formData).then((res) => {
-        console.log(res)
+      if(!this.isEdit) {
+        axios.post('scenarios/create', formData).then((res) => {
+          console.log(res)
+        })
+      } else {
+        axios.post('scenario/edit/' + this.$route.params.id, formData).then((res) => {
+          console.log(res)
+        })
+      }
+    },
+    getScenario() {
+      axios.get('scenario/' + this.$route.params.id).then(res => {
+        res = res.data.data
+        this.scenario.id = res.id
+        this.scenario.description = res.description
+        this.scenario.header = res.header
+        this.scenario.name = res.name
+        this.scenario.imageSrc = res.imageLink
       })
     },
     uploadImage(event) {
@@ -81,7 +97,9 @@ export default {
     },
   },
   mounted() {
-    //
+    if(this.isEdit) {
+      this.getScenario()
+    }
   }
 };
 </script>

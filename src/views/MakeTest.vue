@@ -3,7 +3,7 @@
     <Header type="test" />
     <div class="main">
       <div class="test-wrapper">
-        <Settings :hash="testHash" />
+        <Settings :hash="testHash" :settings="settings" />
 
         <div class="test inline-block mt7">
           <div class="test__block_wraper">
@@ -227,7 +227,13 @@
       </div>
     </div>
     <MakeFooter type="test" :link="testLink" @save="saveTest" />
-    <SuccessModal v-if="showSuccess" :message="successMessage" :link="testHash" type="test" />
+    <SuccessModal 
+      v-if="showSuccess" 
+      :message="successMessage" 
+      :link="testHash" 
+      type="test" 
+      @closeModal="showSuccess = false" 
+    />
   </div>
 </template>
 
@@ -296,6 +302,14 @@ export default {
       videoLoadDone: false,
       imageLoading: false,
       showImagePreloader: false,
+      settings: {
+        test_id: null,
+        access_for_all: false,
+        password_access: false,
+        is_list: true,
+        is_right_questions: false,
+        password: '',
+      },
     };
   },
   components: {
@@ -389,7 +403,8 @@ export default {
         videoLink: this.testVideoLink || '',
         testDescription: this.testDescription,
         testId: this.testId,
-        fingerprint: this.fingerprint
+        fingerprint: this.fingerprint,
+        settings: this.settings
       };
       if(!stop) axios.post("test/save", test).then(() => {
         if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
@@ -478,6 +493,8 @@ export default {
           this.$router.push('/test/create')
         }
         res = res.data.data;
+        this.settings = res.settings[0]
+
         this.testId = res.id
         this.testName = res.testName;
         this.testVideoLink = res.videoLink;

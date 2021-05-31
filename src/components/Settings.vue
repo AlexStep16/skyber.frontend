@@ -20,7 +20,7 @@
       <div class="settings-item mt6">
         <span class="settings-item__text">Открыть доступ по ссылке для всех</span>
         <label class="slider">
-          <input type="checkbox" class="none">
+          <input type="checkbox" v-model="settings.access_for_all" class="none">
           <span class="slider__circle slider__round"></span>
         </label>
       </div>
@@ -28,12 +28,28 @@
       <div class="settings-item mt6">
         <span class="settings-item__text">Доступ по паролю</span>
         <label class="slider">
-          <input type="checkbox" class="none">
+          <input type="checkbox" v-model="settings.password_access" class="none">
           <span class="slider__circle slider__round"></span>
         </label>
       </div>
 
-      <div
+      <div class="settings-item mt6">
+        <span class="settings-item__text">Показывать вопросы списком</span>
+        <label class="slider">
+          <input type="checkbox" v-model="settings.is_list" class="none">
+          <span class="slider__circle slider__round"></span>
+        </label>
+      </div>
+
+      <div class="settings-item mt6">
+        <span class="settings-item__text">Показывать правильные вопросы</span>
+        <label class="slider">
+          <input type="checkbox" v-model="settings.is_right_questions" class="none">
+          <span class="slider__circle slider__round"></span>
+        </label>
+      </div>
+
+      <!-- <div
         class="settings-item mt6"
       >
         <input
@@ -43,7 +59,7 @@
           name="setting-2"
         />
         <label class="settings-item__text settings-item__before-right" for="setting-2">Выбрать ответы для теста</label>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -52,7 +68,7 @@
 
 export default {
   name: 'Settings',
-  props: ['hash'],
+  props: ['hash', 'settings'],
   data() {
     return {
       showSettings: false,

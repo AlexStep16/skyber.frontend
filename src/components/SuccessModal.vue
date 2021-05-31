@@ -102,6 +102,11 @@ export default {
       this.type == "test"
         ? "Я создал тест на платформе Skyber"
         : "Я создал опрос на платформе Skyber";
+    document.addEventListener('keyup', (e) => {
+      if(e.key == 'Escape') {
+        this.$emit('closeModal')
+      }
+    })
   },
 };
 </script>

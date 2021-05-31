@@ -6,7 +6,7 @@
       <div class="scenarios-menu__main">
         <div
           class="scenarios-menu-item"
-          v-for="scenario in scenarios"
+          v-for="(scenario, index) in scenarios"
           :key="scenario.id"
         >
           <div class="scenarios-menu-item__header flex flex-align-center">
@@ -18,13 +18,20 @@
               <span class="ml6">{{ scenario.name }}</span>
             </div>
             <div>
-              <router-link :to="`/test/edit/${hash}`" title="Редактировать">
+              <router-link :to="`/test/scenario/edit/${scenario.id}`" title="Редактировать">
                 <img
                   style="vertical-align: bottom"
                   src="/Vectors/pen32.svg"
                   width="26px"
                 />
               </router-link>
+              <img
+                class="ml4 pointer"
+                style="vertical-align: bottom"
+                src="/pictures/trash.svg"
+                height="24px"
+                @click="deleteScenario(scenario.id, index)"
+              />
             </div>
           </div>
           <div class="scenarios-menu-item__options flex flex-vertical">
@@ -71,10 +78,10 @@
               <span>Пользователь ответил на вопрос</span>
             </label>
             <multiselect
-                v-model="scenario.question"
+                v-model="scenario.conditions.third.question"
                 :options="options"
                 label="question"
-                :placeholder="'Выберите вопрос'"
+                placeholder="Выберите вопрос"
                 class="mt5 mb5"
                 :multiple="false"
                 selectLabel=""
@@ -115,19 +122,28 @@ export default {
             condition: 'BT',
             checked: false,
             scores: null,
-            questionId: null,
+            question: {
+              name: null,
+              id: null,
+            },
           });
           this.$set(scenario.conditions, "second", {
             condition: 'LT',
             checked: false,
             scores: null,
-            questionId: null,
+            question: {
+              name: null,
+              id: null,
+            },
           });
           this.$set(scenario.conditions, "third", {
             condition: 'QE',
             checked: false,
             scores: null,
-            questionId: null,
+            question: {
+              name: null,
+              id: null,
+            },
           });
 
           conditions.forEach((condition) => {
@@ -141,7 +157,9 @@ export default {
             }
             if(condition.condition == 'QE') {
               scenario.conditions.third.checked = true
-              scenario.conditions.third.questionId = condition.question_id
+              console.log(condition)
+              scenario.conditions.third.question.id = condition.question_id
+              scenario.conditions.third.question.question = condition.question_name
             }
           })
         });
@@ -157,16 +175,82 @@ export default {
     hideMenu() {
       this.$emit("hideMenu");
     },
-    save() {
+    /* disableException(scenario, typeCondition) {
+      if (
+        (scenario.conditions.first.checked
+        || scenario.conditions.second.checked)
+        && typeCondition == 'third'
+      ) {
+        return true;
+      }
+      else if (
+        scenario.conditions.third.checked
+        && (typeCondition == 'first' || typeCondition == 'second') 
+      ) {
+        return true;
+      }
+      return false;
+    }, */
+    getExtremus(rangesList) {
+      let min = 0;
+      let max = 0;
+      rangesList.forEach((range) => {
+        if(range[0] == 0) min++
+        if(range[1] == 100000) max++
+      })
+      if(min > 1 || max > 1) return false
+      else return true
+    },
+    getRangesList() {
+      let rangesList = []
       this.scenarios.forEach((scenario) => {
-        if(scenario.conditions.third.questionId != null && scenario.question) {
-          scenario.conditions.third.questionId = scenario.question.id
+        let conditions = scenario.conditions
+        if (conditions.first.checked && conditions.second.checked) {
+          if (conditions.second.scores-1 < conditions.first.scores+1) {
+            rangesList.push([0, conditions.second.scores-1], [conditions.first.scores+1, 100000])
+          }
+          else {
+            rangesList.push([conditions.first.scores+1, conditions.second.scores-1])
+          }
+        }
+        else if(conditions.first.checked) {
+          rangesList.push([conditions.first.scores+1, 100000])
+        }
+        else if(conditions.second.checked) {
+          rangesList.push([0, conditions.second.scores-1])
         }
       })
+      return rangesList;
+    },
+    checkedConditions() {
+      let rangesList = this.getRangesList()
+      if(!this.getExtremus(rangesList)) {
+        alert('Пересечение')
+        return false
+      }
+      for (let i = 0; i < rangesList.length; i++) {
+        for (let j = 0; j < rangesList.length; j++) {
+          if (j === i) continue;
+          if (
+            (rangesList[i][0] >= rangesList[j][0] && rangesList[i][0] <= rangesList[j][1])
+            || (rangesList[i][1] >= rangesList[j][0] && rangesList[i][1] <= rangesList[j][1])
+          ) {
+            alert('пересечение')
+          }
+        }
+      }
+    },
+    save() {
+      this.checkedConditions()
       axios.post('scenarios/conditions/save', {
         scenarios: this.scenarios,
-      }).then((res) => {
-        console.log(res)
+      }).then(() => {
+        
+      })
+    },
+    deleteScenario(id, index) {
+      axios.delete('scenario/delete/' + id).then(() => {
+        this.$delete(this.scenarios, index)
       })
     }
   },

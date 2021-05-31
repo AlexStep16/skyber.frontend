@@ -12,6 +12,13 @@
         v-model="variant.name"
         @focusout="checkIsEmpty(variant, index)"
       />
+      <input
+        type="text"
+        class="input input_type-test-small"
+        style="width: 80px;flex-grow:0"
+        placeholder="баллы"
+        v-model="variant.scores"
+      />
       <span class="pointer" @click="deleteVariant(index)">
         <img src="/pictures/trash.svg" width="19px" />
       </span>
