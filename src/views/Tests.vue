@@ -2,7 +2,8 @@
   <div class="container flex flex-justify-center">
     <Header type='test' />
     <div class="main">
-      <div class="test">
+      <LinkClosed v-if="!settings.access_for_all" type="test" />
+      <div class="test" v-else>
         <TestAnswer :totalScores="totalScores" :hash="hash" v-if="totalScores !== null" />
         <div class="test__block_wraper mt7">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
@@ -39,6 +40,7 @@
               <VariantOneOutput
                 v-if="question.typeAnswer == 'Один из списка'"
                 :postQuestion="question"
+                :settings="settings"
               />
               <VariantInputOutput
                 v-if="question.typeAnswer == 'Ввод текста'"
@@ -142,7 +144,7 @@
     <InfoModal :message="infoMessage" />
     <SuccessModal v-if="showSuccess" :message="successMessage" />
     <SendFooter 
-      v-if="this.settings.is_list"
+      v-if="this.settings.is_list && this.settings.access_for_all"
       :link="hash"
       type="test"
       :testName="testName"
@@ -164,6 +166,7 @@ import VariantDateOutput from "@/components/Tests/VariantDateOutput.vue";
 import VariantTimeOutput from "@/components/Tests/VariantTimeOutput.vue";
 import Header from "@/components/Header.vue";
 import InfoModal from "@/components/InfoModal.vue";
+import LinkClosed from "@/components/LinkClosed.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import SendFooter from "@/components/SendFooter.vue";
 import Loader from "@/components/Loader.vue";
@@ -203,7 +206,7 @@ export default {
     VariantUnfoldOutput,
     VariantDateOutput, VariantTimeOutput,
     Header, InfoModal, SuccessModal,
-    SendFooter, Loader,
+    SendFooter, Loader, LinkClosed,
     TestAnswer
   },
   methods: {
@@ -233,15 +236,10 @@ export default {
 
     sendTest() {
       this.scoresCounter()
-      /* let stop = false;
+      let stop = false;
       this.questions.forEach((elem) => {
-        if(elem.checked && typeof elem.checked == 'string') elem.checked = elem.checked.split('_')[0]
-        if(elem.checked && (elem.checked instanceof Array)) {
-          Object.keys(elem.checked).forEach((key) => {
-            elem.checked[key] = elem.checked[key].split('_')[0]
-          })
-        }
-        if(elem.isRequire && !elem.checked) {
+        console.log(elem.checked)
+        if(elem.isRequire && !(elem.checked).toString()) {
           stop = true;
         }
       });
@@ -273,7 +271,7 @@ export default {
             this.showSuccess = false
             location.reload()
           }, 2000)
-        });  */
+        }); 
     },
     nextQuestion() {
       if (this.questions.length - 1 > this.questionCounter) this.questionCounter++

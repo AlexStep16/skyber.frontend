@@ -94,6 +94,8 @@
   font-family: "Montserrat", sans-serif;
   font-size: 1em;
   color: #686669;
+  display: flex;
+  align-items: center;
 }
 
 .test__add-variant {
@@ -210,29 +212,27 @@ hr {
 
 .form_radio-right {
   position: relative;
-}
-
-.form_radio-right label{
-  position: initial!important;
+  top: 1px;
 }
 
 .form_radio-right label::after{
-  left: 7px!important;
-  top: 9px!important;
   background-color: rgb(8, 238, 0)!important;
 }
 
+.form_radio-wrong label::after{
+  background-color: rgb(248, 96, 103)!important;
+}
+
 .form_radio-right label::before{
-  width: 21px!important;
-  height: 21px!important;
-  left: 0px!important;
-  bottom: 4px!important;
-  border: 1px solid #e0e3e8;
+
 }
 
 .form_radio-right input:checked + label::before {
   background-color: rgb(201, 252, 199)!important;
-  border: 1px solid #abffa3;
+}
+
+.form_radio-wrong input:checked + label::before {
+  background-color: rgb(255, 180, 180)!important;
 }
 
 // Media styles

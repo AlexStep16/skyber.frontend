@@ -10,6 +10,7 @@
         <span class="settings-item__text">Управление сценариями</span>
         <router-link
           :to="'/test/scenario/menu/' + hash"
+          target="_blank"
           class="settings-item__link pointer flex flex-center"
         >
           <span class="mr3">Меню управления</span>
