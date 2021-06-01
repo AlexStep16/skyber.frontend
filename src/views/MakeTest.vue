@@ -343,6 +343,7 @@ export default {
         index: this.questions.length,
         typeAnswer: "Один из списка",
         isRequire: false,
+        right_variants: []
       };
 
       axios.post("test/question", questionToPost).then((res) => {
@@ -359,6 +360,7 @@ export default {
             link: null,
             isLoading: false
           },
+          right_variants: []
         };
 
         this.questions.push(question);
@@ -551,6 +553,7 @@ export default {
                 link: element.imageLink,
                 isLoading: false
               },
+              right_variants: element.right_variants
             });
           });
         })
@@ -597,6 +600,7 @@ export default {
             link: null,
             isLoading: false
           },
+          right_variants: [],
         };
 
         this.questions.push(Question);

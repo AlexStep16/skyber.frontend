@@ -5,6 +5,29 @@
       v-for="(variant, index) in postQuestion.standartVariants"
       :key="`${variant.id}${index}`"
     >
+      <div class="flex flex-center" v-if="postQuestion.typeAnswer == 'Несколько из списка'">
+        <input
+          class="custom-checkbox"
+          type="checkbox"
+          :id="`variantSt${postQuestion.id + index}`"
+          :value="variant.name + '_' + postQuestion.id + variant.id"
+          v-model="postQuestion.right_variants"
+        />
+        <label class="test__question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
+      </div>
+      <div class="form_radio form_radio-right flex flex-center mr4" v-if="postQuestion.typeAnswer == 'Один из списка'">
+        <input
+          :id="`radio${postQuestion.id}${variant.id}`"
+          type="radio"
+          :name="`radio${postQuestion.id}`"
+          :value="variant.name + '_' + postQuestion.id + variant.id"
+          v-model="postQuestion.right_variants"
+        />
+        <label 
+          class="test__question-answer"
+          :for="`radio${postQuestion.id}${variant.id}`">
+        </label>
+      </div>
       <input
         type="text"
         class="input input_type-test-small"
@@ -85,4 +108,7 @@ export default {
 <style scoped lang="scss">
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-slider_type-main.scss";
+@import "@/common.blocks/form-checkbox_type-main.scss";
+@import "@/common.blocks/form-radio_type-main.scss";
+
 </style>

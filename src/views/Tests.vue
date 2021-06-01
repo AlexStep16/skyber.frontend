@@ -72,52 +72,77 @@
         <div v-if="!this.settings.is_list">
           <div
             class="test__block test__block_wraper bg-white-shadow test__item mt6"
+            v-for="(question, key) in questions"
+            :key="question.id"
+            v-show="key == questionCounter"
           >
             <div style="display: flex; flex-direction: column; width: 100%">
               <div class="test__question-name mb6">
-                {{ currentQuestion.name }}
+                {{ question.name }}
               </div>
-              <div class="test__image mt5" v-if="currentQuestion.image.link != null">
-                <img :src="currentQuestion.image.link" />
+              <div class="test__image mt5" v-if="question.image.link != null">
+                <img :src="question.image.link" />
               </div>
               <VariantOneOutput
-                v-if="currentQuestion.typeAnswer == 'Один из списка'"
-                :postQuestion="currentQuestion"
+                v-if="question.typeAnswer == 'Один из списка'"
+                :postQuestion="question"
+                :settings="settings"
               />
               <VariantInputOutput
-                v-if="currentQuestion.typeAnswer == 'Ввод текста'"
-                :postQuestion="currentQuestion"
+                v-if="question.typeAnswer == 'Ввод текста'"
+                :postQuestion="question"
               />
               <VariantFewOutput
-                v-if="currentQuestion.typeAnswer == 'Несколько из списка'"
-                :postQuestion="currentQuestion"
-                @ready="currentQuestion.checked = $event"
+                v-if="question.typeAnswer == 'Несколько из списка'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
               />
               <VariantUnfoldOutput
-                v-if="currentQuestion.typeAnswer == 'Выпадающий список'"
-                :postQuestion="currentQuestion"
-                @ready="currentQuestion.checked = $event"
+                v-if="question.typeAnswer == 'Выпадающий список'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
               />
               <VariantDateOutput
-                v-if="currentQuestion.typeAnswer == 'Дата'"
-                :postQuestion="currentQuestion"
-                @ready="currentQuestion.checked = $event"
+                v-if="question.typeAnswer == 'Дата'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
               />
               <VariantTimeOutput
-                v-if="currentQuestion.typeAnswer == 'Время'"
-                :postQuestion="currentQuestion"
-                @ready="currentQuestion.checked = $event"
+                v-if="question.typeAnswer == 'Время'"
+                :postQuestion="question"
+                @ready="question.checked = $event"
               />
             </div>
           </div>
-          <button class="button button_type-index button_theme-purple mt7" @click="nextQuestion">Дальше</button>
-    <button class="button button_type-index button_theme-purple mt7" @click="backQuestion">Назад</button>
+          <div class="flex flex-justify-between">
+            <button
+              class="button button_type-index button_theme-purple mt7" 
+              @click="nextQuestion"
+              v-if="questionCounter !== questions.length-1"
+            >
+            Дальше
+            </button>
+            <button 
+              class="button button_type-index button_theme-purple mt7" 
+              @click="sendTest"
+              v-if="questionCounter === questions.length-1"
+            >
+            Готово
+            </button>
+            <button 
+              class="button button_type-index button_theme-purple mt7" 
+              @click="backQuestion"
+            >
+            Назад
+            </button>
+          </div>
         </div>
       </div>
     </div>
     <InfoModal :message="infoMessage" />
     <SuccessModal v-if="showSuccess" :message="successMessage" />
     <SendFooter 
+      v-if="this.settings.is_list"
       :link="hash"
       type="test"
       :testName="testName"
@@ -169,18 +194,6 @@ export default {
       totalScores: null,
       settings: {},
       questionCounter: 0,
-      currentQuestion: {
-        id: null,
-        name: null,
-        focused: false,
-        variants: null,
-        typeAnswer: null,
-        isRequire: null,
-        image: {
-          data: null,
-          link: null,
-        },
-      },
     };
   },
   components: {
@@ -315,6 +328,7 @@ export default {
               data: null,
               link: element.imageLink,
             },
+            right_variants: element.right_variants
           });
         });
         this.currentQuestion = this.questions[0]

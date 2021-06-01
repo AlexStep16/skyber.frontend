@@ -198,6 +198,42 @@ hr {
   position: relative;
 }
 
+.custom-checkbox + .right-question-checkbox::before {
+  padding: 1px;
+}
+
+.custom-checkbox:checked + .right-question-checkbox::before {
+  border-color: #abffa3;
+  background-color: rgb(201, 252, 199);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2308ee00' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+
+.form_radio-right {
+  position: relative;
+}
+
+.form_radio-right label{
+  position: initial!important;
+}
+
+.form_radio-right label::after{
+  left: 7px!important;
+  top: 9px!important;
+  background-color: rgb(8, 238, 0)!important;
+}
+
+.form_radio-right label::before{
+  width: 21px!important;
+  height: 21px!important;
+  left: 0px!important;
+  bottom: 4px!important;
+  border: 1px solid #e0e3e8;
+}
+
+.form_radio-right input:checked + label::before {
+  background-color: rgb(201, 252, 199)!important;
+  border: 1px solid #abffa3;
+}
 
 // Media styles
 
