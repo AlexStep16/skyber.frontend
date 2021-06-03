@@ -159,6 +159,7 @@
                       deselectLabel=""
                       :placeholder="'Выберите тип ответа'"
                       class="mt5 mb5"
+                      @select="clearRights(question)"
                     ></multiselect>
                     <VariantStandart
                       :postQuestion="question"
@@ -310,6 +311,7 @@ export default {
         is_right_questions: false,
         is_resend: false,
         password: '',
+        password_confirm: false,
       },
     };
   },
@@ -521,6 +523,9 @@ export default {
       }).finally(() => {
         this.$store.commit('HIDE_LOADER')
       });
+    },
+    clearRights(question) {
+      question.right_variants = []
     },
     getTestQuestions() {
       axios

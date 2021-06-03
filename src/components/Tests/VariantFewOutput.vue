@@ -10,11 +10,11 @@
         type="checkbox"
         :id="`variant${key}`"
         :name="`variant${key}`"
-        :value="`${variant.name}`"
+        :value="`${JSON.stringify(variant.name)}`"
         v-model="newSelected"
-        @change="ready"
+        @change="ready();showRightVariant(variant)"
       />
-      <label class="test__question-answer" :for="`variant${key}`">{{ variant.name }}</label>
+      <label :class="showRights ? `test__question-answer ${variant.color}-question-checkbox` : 'test__question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
     </div>
   </div>
 </template>
@@ -24,10 +24,11 @@
 
 export default {
   name: "VariantFewOutput",
-  props: ["postQuestion"],
+  props: ["postQuestion", "settings"],
   data() {
     return {
-      newSelected: []
+      newSelected: [],
+      showRights: false
     };
   },
   methods: {
@@ -39,6 +40,20 @@ export default {
 
     ready() {
       this.$emit('ready', this.newSelected)
+    },
+
+    showRightVariant(variant) {
+      if(this.settings.is_right_questions) {
+        let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
+        variant.color = 'wrong'
+        right_variants.forEach((rightVar) => {
+          if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
+            variant.color = 'right'
+            return true;
+          }
+        })
+        this.showRights = true
+      }
     }
   },
 };

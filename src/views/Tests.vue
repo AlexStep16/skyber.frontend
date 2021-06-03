@@ -2,8 +2,9 @@
   <div class="container flex flex-justify-center">
     <Header type='test' />
     <div class="main">
-      <LinkClosed v-if="!settings.access_for_all" type="test" />
-      <div class="test" v-else>
+      <LinkClosed v-if="!settings.access_for_all" from="test" type="link" />
+      <LinkClosed v-else-if="settings.password_access" from="test" type="password" @openTest="openTest" />
+      <div class="test" v-if="settings.access_for_all && !settings.password_access">
         <TestAnswer :totalScores="totalScores" :hash="hash" v-if="totalScores !== null" />
         <div class="test__block_wraper mt7">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
@@ -49,6 +50,7 @@
               <VariantFewOutput
                 v-if="question.typeAnswer == 'Несколько из списка'"
                 :postQuestion="question"
+                :settings="settings"
                 @ready="question.checked = $event"
               />
               <VariantUnfoldOutput
@@ -97,6 +99,7 @@
               <VariantFewOutput
                 v-if="question.typeAnswer == 'Несколько из списка'"
                 :postQuestion="question"
+                :settings="settings"
                 @ready="question.checked = $event"
               />
               <VariantUnfoldOutput
@@ -144,7 +147,7 @@
     <InfoModal :message="infoMessage" />
     <SuccessModal v-if="showSuccess" :message="successMessage" />
     <SendFooter 
-      v-if="this.settings.is_list && this.settings.access_for_all"
+      v-if="this.settings.is_list && this.settings.access_for_all && !this.settings.password_access"
       :link="hash"
       type="test"
       :testName="testName"
@@ -238,8 +241,7 @@ export default {
       this.scoresCounter()
       let stop = false;
       this.questions.forEach((elem) => {
-        console.log(elem.checked)
-        if(elem.isRequire && !(elem.checked).toString()) {
+        if((elem.isRequire && elem.checked === undefined) || !elem.checked) {
           stop = true;
         }
       });
@@ -271,7 +273,7 @@ export default {
             this.showSuccess = false
             location.reload()
           }, 2000)
-        }); 
+        });
     },
     nextQuestion() {
       if (this.questions.length - 1 > this.questionCounter) this.questionCounter++
@@ -280,6 +282,9 @@ export default {
     backQuestion() {
       if (this.questionCounter > 0) this.questionCounter--
       this.$set(this, 'currentQuestion', this.questions[this.questionCounter])
+    },
+    openTest() {
+      this.settings.password_access = false;
     },
   },
   mounted() {

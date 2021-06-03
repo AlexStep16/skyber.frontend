@@ -201,13 +201,19 @@ hr {
 }
 
 .custom-checkbox + .right-question-checkbox::before {
-  padding: 1px;
+  //padding: 1px;
 }
 
 .custom-checkbox:checked + .right-question-checkbox::before {
   border-color: #abffa3;
   background-color: rgb(201, 252, 199);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2308ee00' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+
+.custom-checkbox:checked + .wrong-question-checkbox::before {
+  border-color: rgb(255, 180, 180);
+  background-color: rgb(255, 180, 180);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23FF0000' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
 }
 
 .form_radio-right {
@@ -221,10 +227,6 @@ hr {
 
 .form_radio-wrong label::after{
   background-color: rgb(248, 96, 103)!important;
-}
-
-.form_radio-right label::before{
-
 }
 
 .form_radio-right input:checked + label::before {

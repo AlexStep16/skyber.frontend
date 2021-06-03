@@ -32,6 +32,17 @@
     position: absolute;
     right: 0;
   }
+
+  &__input {
+    border-radius: 10px;
+    border: 1px solid rgba(150,150,150,0.3);
+  }
+
+  &__password-setted {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9em;
+    color: rgb(10, 233, 140);
+  }
 }
 
 .settings-header {

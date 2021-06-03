@@ -9,7 +9,7 @@
         :id="`radio${postQuestion.id}${variant.id}`"
         type="radio"
         :name="`radio${postQuestion.id}${variant.id}`"
-        :value="`${variant.name}`"
+        :value="`${JSON.stringify(variant.name)}`"
         v-model="postQuestion.checked"
         @change="showRightVariant(variant)"
       />
@@ -40,23 +40,15 @@ export default {
     },
     showRightVariant(variant) {
       if(this.settings.is_right_questions) {
-        if(Array.isArray(this.postQuestion.right_variants)) {
-          this.postQuestion.right_variants.forEach((rightVar) => {
-            if (variant.name == rightVar.split('_')[0]) {
-              variant.color = 'right'
-            } else {
-              variant.color = 'wrong'
-            }
-          })
-        }
-        else {
-          if (variant.name == this.postQuestion.right_variants.split('_')[0]) {
+        let right_variants = JSON.parse(this.postQuestion.right_variants)
+        if(typeof right_variants === 'string') {
+          if (variant.name == right_variants) {
             variant.color = 'right'
           } else {
             variant.color = 'wrong'
           }
+          this.showRights = true
         }
-        this.showRights = true
       }
     }
   },

@@ -34,6 +34,16 @@
         </label>
       </div>
 
+      <div class="settings-item mt6" v-if="settings.password_access">
+        <input 
+          v-model="settings.password" 
+          type="password" 
+          class="input settings-item__input" 
+          :placeholder="settings.password_confirm === true ? 'Введите новый пароль' : 'Введите пароль'"
+        />
+        <span class="settings-item__password-setted" v-if="settings.password_confirm === true">Пароль установлен</span>
+      </div>
+
       <div class="settings-item mt6">
         <span class="settings-item__text">Показывать вопросы списком</span>
         <label class="slider">

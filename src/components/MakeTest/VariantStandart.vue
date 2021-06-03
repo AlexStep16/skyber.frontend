@@ -10,7 +10,7 @@
           class="custom-checkbox"
           type="checkbox"
           :id="`variantSt${postQuestion.id + index}`"
-          :value="variant.name + '_' + postQuestion.id + variant.id"
+          :value="`${JSON.stringify(variant.name)}`"
           v-model="postQuestion.right_variants"
         />
         <label class="test__question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
@@ -20,7 +20,7 @@
           :id="`radio${postQuestion.id}${variant.id}`"
           type="radio"
           :name="`radio${postQuestion.id}`"
-          :value="variant.name + '_' + postQuestion.id + variant.id"
+          :value="`${JSON.stringify(variant.name)}`"
           v-model="postQuestion.right_variants"
         />
         <label 
