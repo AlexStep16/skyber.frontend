@@ -95,7 +95,7 @@
                   <div class="pointer mt6 text-center" @click="clickQuestionImage(question.id)">
                     <img src="/pictures/image.svg" width="32px">
                   </div>
-                  <div class="mt6 text-center">
+                  <div class="mt6 text-center" @click="clickQuestionVideo(question.id)">
                     <img src="/pictures/video.svg" width="32px">
                   </div>
                 </div>
@@ -131,6 +131,26 @@
                         </span>
                       </div>
                     </div>
+                    <!-- Блок с видео -->
+                    <div class="test-video-wraper mt6" v-if="question.videoLink">
+                      <div class="modal modal_white absolute" v-if="!question.videoLoadDone">
+                        <Loader />
+                      </div>
+                      <div class="test-video-menu pointer flex-center bg-white-shadow" @click="questionDeleteVideo(question)">
+                        <img src="/pictures/trash.svg" width="21px" />
+                      </div>
+                      <youtube id="youtube" ref="youtube" :video-id="question.videoLink" class="test-video">
+                      </youtube>
+                    </div>
+                    <div class="test-add-video-block flex flex-center mt5" v-if="!question.hideVideoBox">
+                      <div class="test-add-video-block__modal flex flex-column">
+                        <input type="text" class="input" v-model="question.preparateVideoLink" placeholder="Введите ссылку на YouTube видео">
+                        <button class="button button-theme-blue" @click.prevent="questionSaveLink(question)">Добавить</button>
+                      </div>
+                    </div>
+                    <!-- Конец блока с видео -->
+
+                    <!-- Блок с изображением -->
                     <input
                       type="file"
                       name="imageQuestion"
@@ -148,6 +168,7 @@
                         <Loader />
                       </div>
                     </div>
+                    <!-- Конец блока с изображением -->
 
                     <multiselect
                       :allow-empty="false"
@@ -228,6 +249,7 @@
       </div>
     </div>
     <MakeFooter type="test" :link="testLink" @save="saveTest" />
+    <InfoModal :message="infoMessage" />
     <SuccessModal 
       v-if="showSuccess" 
       :message="successMessage" 
@@ -273,6 +295,7 @@ import Settings from "@/components/Settings.vue";
 import draggable from 'vuedraggable'
 
 import AddSVG from '../../public/Vectors/add32.svg'
+import InfoModal from "@/components/InfoModal.vue";
 
 export default {
   name: "MakeTest",
@@ -313,6 +336,7 @@ export default {
         password: '',
         password_confirm: false,
       },
+      infoMessage: {},
     };
   },
   components: {
@@ -327,7 +351,7 @@ export default {
     VariantTime, VariantTimeOutput,
     draggable,  Header, AddSVG,
     MakeFooter, SuccessModal,
-    Loader,
+    Loader, InfoModal,
     Settings
   },
   computed: {
@@ -345,7 +369,9 @@ export default {
         index: this.questions.length,
         typeAnswer: "Один из списка",
         isRequire: false,
-        right_variants: []
+        right_variants: [],
+        videoLink: '',
+        hideVideoBox: true
       };
 
       axios.post("test/question", questionToPost).then((res) => {
@@ -362,7 +388,9 @@ export default {
             link: null,
             isLoading: false
           },
-          right_variants: []
+          right_variants: [],
+          videoLink: '',
+          hideVideoBox: true
         };
 
         this.questions.push(question);
@@ -388,6 +416,10 @@ export default {
 
     saveTest() {
       let stop = false
+      if(this.settings.password_access && this.settings.password.length < 5) {
+        stop = true
+        this.infoMessage = {body: 'Пароль должен быть больше 4 символов', type: 'danger'}
+      }
       this.questions.forEach((question) => {
         if(!question.name) { 
           stop = true; 
@@ -456,6 +488,14 @@ export default {
       else {
         this.$refs['question' + id][0].click()
       }
+    },
+    clickQuestionVideo(question) {
+      question.hideVideoBox = false
+    },
+    questionSaveLink(question) {
+      question.videoLink = getIdFromUrl(question.preparateVideoLink)
+      question.hideVideoBox = true
+      console.log(question.preparateVideoLink)
     },
     questionImage(event, question) {
       question.image.isLoading = true
@@ -558,7 +598,8 @@ export default {
                 link: element.imageLink,
                 isLoading: false
               },
-              right_variants: element.right_variants
+              right_variants: element.right_variants,
+              videoLink: element.videoLink
             });
           });
         })
