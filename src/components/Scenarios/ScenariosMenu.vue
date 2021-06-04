@@ -1,9 +1,20 @@
 <template>
   <div class="main">
     <div class="scenarios-menu bg-white-shadow">
-      <h3 class="scenarios-menu__h3 h3-default">Управление сценариями</h3>
-      <button @click="save">Сохранить</button>
-      <router-link :to="'/test/scenario/add/' + this.hash">Добавить сценарий</router-link>
+      <h3 class="scenarios-menu__h3 h3-default mb0">Управление сценариями</h3>
+     <!--  <router-link 
+        :to="'/test/scenario/add/' + this.hash"
+        class="
+          button 
+          button-clasic
+          button_theme-roboto_small 
+          button_theme-purple 
+          inline-block
+          mt5
+        "
+      >
+        Добавить сценарий
+      </router-link> -->
       <div class="scenarios-menu__main">
         <div
           class="scenarios-menu-item"
@@ -89,6 +100,14 @@
                 selectedLabel=""
                 deselectLabel=""
               ></multiselect>
+            <div>
+              <button
+               class="button button-clasic button_theme-roboto button_theme-purple" 
+               @click="save(scenario)"
+              >
+               Сохранить
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -237,17 +256,20 @@ export default {
             || (rangesList[i][1] >= rangesList[j][0] && rangesList[i][1] <= rangesList[j][1])
           ) {
             alert('пересечение')
+            return false
           }
         }
       }
+      return true;
     },
     save() {
-      this.checkedConditions()
-      axios.post('scenarios/conditions/save', {
-        scenarios: this.scenarios,
-      }).then(() => {
-        
-      })
+      if(this.checkedConditions()) {
+        axios.post('scenarios/conditions/save', {
+          scenarios: this.scenarios,
+        }).then(() => {
+          
+        })
+      }
     },
     deleteScenario(id, index) {
       axios.delete('scenario/delete/' + id).then(() => {

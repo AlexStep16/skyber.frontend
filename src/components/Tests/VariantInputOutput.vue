@@ -1,7 +1,7 @@
 <template>
   <input
     type="text"
-    class="input input_type-test-small"
+    class="input input_type-test-small mt6"
     v-model="postQuestion.checked"
     placeholder="Введите свой ответ здесь"
   />

@@ -6,6 +6,7 @@
       placeholder="Выберите время"
       format="HH:mm"
       value-type="HH:mm"
+      class="mt6"
     >
     </date-picker>
 </template>

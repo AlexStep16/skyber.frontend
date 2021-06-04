@@ -32,8 +32,15 @@
             :key="question.id"
           >
             <div style="display: flex; flex-direction: column; width: 100%">
-              <div class="test__question-name mb6">
+              <div class="test__question-name mb0">
                 {{ question.name }}
+              </div>
+              <div class="test-video-wraper mt6" v-if="question.videoLink">
+                <!-- <div class="modal modal_white absolute" v-if="!videoLoadDone">
+                  <Loader />
+                </div> -->
+                <youtube id="youtube" ref="youtube" :video-id="question.videoLink" class="test-video">
+                </youtube>
               </div>
               <div class="test__image mt5" v-if="question.image.link != null">
                 <img :src="question.image.link" />
@@ -145,7 +152,15 @@
       </div>
     </div>
     <InfoModal :message="infoMessage" />
-    <SuccessModal v-if="showSuccess" :message="successMessage" />
+    <SuccessModal 
+      v-if="showSuccess" 
+      :message="successMessage" 
+      type="test" 
+      :link="hash"
+      :edit="false"
+      :resend="settings.is_resend"
+      @resend="resend()"
+    />
     <SendFooter 
       v-if="this.settings.is_list && this.settings.access_for_all && !this.settings.password_access"
       :link="hash"
@@ -224,11 +239,11 @@ export default {
         elem.variants.forEach((variant) => {
           if (elem.checked && Array.isArray(elem.checked)) {
             elem.checked.forEach((el) => {
-              let checked = el ? el.split('_')[0] : ''
+              let checked = el ? JSON.parse(el) : ''
               if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
             })
           } else if (elem.checked) {
-            let checked = elem.checked ? elem.checked.split('_')[0] : ''
+            let checked = elem.checked ? JSON.parse(elem.checked) : ''
             if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
           }
         })
@@ -239,7 +254,7 @@ export default {
 
     sendTest() {
       this.scoresCounter()
-      let stop = false;
+      /* let stop = false;
       this.questions.forEach((elem) => {
         if((elem.isRequire && elem.checked === undefined) || !elem.checked) {
           stop = true;
@@ -267,13 +282,9 @@ export default {
           fingerprint: window.VISITOR_ID
         })
         .then(() => {
-          this.successMessage = "Успешно сохранено"
+          this.successMessage = "Успешно отправлено"
           this.showSuccess = true
-          setTimeout(() => {
-            this.showSuccess = false
-            location.reload()
-          }, 2000)
-        });
+        }); */
     },
     nextQuestion() {
       if (this.questions.length - 1 > this.questionCounter) this.questionCounter++
@@ -286,6 +297,9 @@ export default {
     openTest() {
       this.settings.password_access = false;
     },
+    resend() {
+      location.reload()
+    }
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
@@ -331,7 +345,8 @@ export default {
               data: null,
               link: element.imageLink,
             },
-            right_variants: element.right_variants
+            right_variants: element.right_variants,
+            videoLink: element.videoLink,
           });
         });
         this.currentQuestion = this.questions[0]

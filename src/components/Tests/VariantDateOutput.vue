@@ -3,6 +3,7 @@
       v-model="postQuestion.checked" 
       valueType="format"
       placeholder="Выберите дату"
+      class="mt6"
     >
     </date-picker>
 </template>

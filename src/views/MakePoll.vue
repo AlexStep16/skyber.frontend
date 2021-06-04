@@ -16,11 +16,11 @@
           </div>
         </div>
         <div class="poll__block bg-white-shadow">
-          <template v-if="isPreview">
+          <div v-show="isPreview">
             <h1 class="poll-tag">Опрос</h1>
             <h3 class="poll-name mt7 mb7">{{ pollName }}</h3>
             <span class="poll-description">{{ pollDescription }}</span>
-            <div :class="!pollVideoLink ? 'd-none' : 'test-video mt6 mb6'">
+            <div v-if="pollVideoLink" class="test-video mt6 mb6">
               <youtube :video-id="pollVideoLink">
               </youtube>
             </div>
@@ -41,9 +41,9 @@
             >
               Редактировать
             </button>
-          </template>
+          </div>
 
-          <template v-else>
+          <div v-show="!isPreview">
             <input
               type="text"
               class="input input_type-test"
@@ -118,16 +118,17 @@
                   <img src="/pictures/trash.svg" width="19px" />
                 </span>
               </div>
-              <div class="test__add-variant pointer mt5" @click="addVariant()">
-                Добавить вариант
-              </div>
+              
             </div>
-          </template>
+            <div class="test__add-variant pointer mt5" @click="addVariant()">
+              Добавить вариант
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <MakeFooter type="poll" :link="pollLink" @save="savePoll" @preview="isPreview = !isPreview" />
-    <SuccessModal v-if="showSuccess" :message="successMessage" :link="pollHash" type="poll" />
+    <SuccessModal v-if="showSuccess" :edit="true" :message="successMessage" :link="pollHash" type="poll" />
   </div>
 </template>
 

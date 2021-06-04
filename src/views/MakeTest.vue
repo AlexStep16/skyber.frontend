@@ -95,7 +95,7 @@
                   <div class="pointer mt6 text-center" @click="clickQuestionImage(question.id)">
                     <img src="/pictures/image.svg" width="32px">
                   </div>
-                  <div class="mt6 text-center" @click="clickQuestionVideo(question.id)">
+                  <div class="pointer mt6 text-center" @click="clickQuestionVideo(question)">
                     <img src="/pictures/video.svg" width="32px">
                   </div>
                 </div>
@@ -133,9 +133,9 @@
                     </div>
                     <!-- Блок с видео -->
                     <div class="test-video-wraper mt6" v-if="question.videoLink">
-                      <div class="modal modal_white absolute" v-if="!question.videoLoadDone">
+                      <!-- <div class="modal modal_white absolute" v-if="!question.videoLoadDone">
                         <Loader />
-                      </div>
+                      </div> -->
                       <div class="test-video-menu pointer flex-center bg-white-shadow" @click="questionDeleteVideo(question)">
                         <img src="/pictures/trash.svg" width="21px" />
                       </div>
@@ -254,7 +254,8 @@
       v-if="showSuccess" 
       :message="successMessage" 
       :link="testHash" 
-      type="test" 
+      type="test"
+      :edit="true"
       @closeModal="showSuccess = false" 
     />
   </div>
@@ -416,7 +417,7 @@ export default {
 
     saveTest() {
       let stop = false
-      if(this.settings.password_access && this.settings.password.length < 5) {
+      if(this.settings.password_access && this.settings.password.length < 5 && !this.settings.password_confirm) {
         stop = true
         this.infoMessage = {body: 'Пароль должен быть больше 4 символов', type: 'danger'}
       }
@@ -490,12 +491,17 @@ export default {
       }
     },
     clickQuestionVideo(question) {
-      question.hideVideoBox = false
+      if(!question.videoLink) {
+        question.hideVideoBox = !question.hideVideoBox
+      }
     },
     questionSaveLink(question) {
       question.videoLink = getIdFromUrl(question.preparateVideoLink)
       question.hideVideoBox = true
       console.log(question.preparateVideoLink)
+    },
+    questionDeleteVideo(question) {
+      question.videoLink = null
     },
     questionImage(event, question) {
       question.image.isLoading = true
@@ -599,7 +605,8 @@ export default {
                 isLoading: false
               },
               right_variants: element.right_variants,
-              videoLink: element.videoLink
+              videoLink: element.videoLink,
+              hideVideoBox: element.videoLink !== null ? false : true
             });
           });
         })

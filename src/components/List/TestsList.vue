@@ -9,7 +9,7 @@
         <div>
           <router-link
             :to="`/tests/${test.hash}`"
-            class="button button_type-list button_theme-purple"
+            class="button button_type-list button_theme-roboto button_theme-purple"
           >
             Перейти к тесту
           </router-link>

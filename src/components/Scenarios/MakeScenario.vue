@@ -29,7 +29,9 @@
         <h2 class="h2-default">Предпросмотр</h2>
         <h1 class="scenario__header-preview">{{ scenario.header }}</h1>
         <div class="scenario__description mt0" v-html="scenario.description"></div>
-        <img class="scenario__image" :src="scenario.imageSrc">
+        <div class="scenario__image">
+          <img :src="scenario.imageSrc">
+        </div>
       </div>
     </div>
     <MakeFooter type="scenario" @save="saveScenario" />

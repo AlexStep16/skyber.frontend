@@ -57,7 +57,14 @@
               :to="'/tests/' + link"
               class="button button-clasic button_theme-purple"
               style="font-size: 0.85em"
+              v-if="edit"
               >Перейти к {{ type == "test" ? "тесту" : "опросу" }}</router-link
+            >
+            <div
+              @click="$emit('resend')"
+              v-else-if="resend"
+              class="button button-clasic button_theme-purple"
+              >Перепройти {{ type == "test" ? "тест" : "опрос" }}</div
             >
           </div>
         </div>
@@ -74,7 +81,7 @@ import Facebook from "../../public/pictures/facebook36.svg";
 
 export default {
   name: "SuccessModal",
-  props: ["link", "type", "message"],
+  props: ["link", "type", "message", "edit", "resend"],
   data() {
     return {
       url: "",

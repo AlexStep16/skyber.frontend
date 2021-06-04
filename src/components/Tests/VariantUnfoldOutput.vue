@@ -9,6 +9,7 @@
       selectedLabel=""
       deselectLabel=""
       :placeholder="'Выберите ответ из списка'"
+      class="mt6"
     >
     </multiselect>
   </div>

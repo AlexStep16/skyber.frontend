@@ -10,7 +10,7 @@
         <div>
           <router-link
             :to="`/polls/${poll.hash}`"
-            class="button button_type-list button_theme-purple"
+            class="button button_type-list button_theme-roboto button_theme-purple"
           >
             Перейти к опросу
           </router-link>
