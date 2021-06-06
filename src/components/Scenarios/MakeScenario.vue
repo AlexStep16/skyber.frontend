@@ -1,9 +1,8 @@
 <template>
-  <div class="container flex flex-justify-center">
-    <Header type="test" />
+  <div>
     <div class="main">
       <div class="scenario bg-white-shadow">
-        <h2 class="scenario__h2 h2-default">{{ isEdit ? 'Редактирование' : 'Добавление' }} сценария</h2>
+        <h2 class="scenario__h2 h2-default mt0">{{ isEdit ? 'Редактирование' : 'Добавление' }} сценария</h2>
         <input
           type="text"
           name="scen-name"
@@ -17,20 +16,31 @@
           name="scena-header"
           id="scena-header"
           placeholder="Заголовок результата"
-          class="scenario__input input"
+          class="scenario__input input mt5"
           v-model="scenario.header"
         /><br />
         <tiptap 
-          class="tiptap mt5"
+          class="tiptap mt7"
           placeholder="Введите здесь текст который увидит человек после прохождения теста"
           v-model="scenario.description" 
         />
-        <input type="file" @change="uploadImage">
-        <h2 class="h2-default">Предпросмотр</h2>
-        <h1 class="scenario__header-preview">{{ scenario.header }}</h1>
-        <div class="scenario__description mt0" v-html="scenario.description"></div>
-        <div class="scenario__image">
-          <img :src="scenario.imageSrc">
+        <input type="file" @change="uploadImage" ref="scenarioImage" hidden>
+        <div class="scenario__image-slot flex flex-center pointer mt5" v-if="!scenario.imageSrc" @click="clickImage">
+          Добавьте изображение перетащив сюда или нажав на этот блок
+        </div>
+        <h2 class="h2-default mt7 mb0">Предпросмотр</h2>
+        <h1 class="scenario__header-preview" v-if="scenario.header">{{ scenario.header }}</h1>
+        <div class="scenario__description mt0" v-if="scenario.description" v-html="scenario.description"></div>
+        <div class="scenario-image" v-if="scenario.imageSrc">
+          <div class="scenario-image__wraper">
+            <img :src="scenario.imageSrc" />
+            <div class="modal-inner modal50 pointer flex flex-center">
+              <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+            </div>
+          </div>
+          <div class="modal modal_white absolute" v-if="imageLoading">
+            <Loader />
+          </div>
         </div>
       </div>
     </div>
@@ -40,9 +50,9 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 import MakeFooter from "@/components/MakeFooter.vue";
 import Tiptap from '@/components/TipTap.vue'
+import Loader from "@/components/Loader.vue";
 
 export default {
   name: "MakeScenario",
@@ -56,13 +66,13 @@ export default {
         description: '',
         image: null,
         imageSrc: '',
-      }
+      },
+      imageLoading: false,
     }
   },
   components: {
-    Header,
     MakeFooter,
-    Tiptap
+    Tiptap, Loader
   },
   methods: {
     saveScenario() {
@@ -72,12 +82,12 @@ export default {
         : "";
       formData.append("scenario", JSON.stringify(this.scenario))
       if(!this.isEdit) {
-        axios.post('scenarios/create', formData).then((res) => {
-          console.log(res)
+        axios.post('scenarios/create', formData).then(() => {
+          this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
         })
       } else {
-        axios.post('scenario/edit/' + this.$route.params.id, formData).then((res) => {
-          console.log(res)
+        axios.post('scenario/edit/' + this.$route.params.id, formData).then(() => {
+          this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
         })
       }
     },
@@ -89,13 +99,23 @@ export default {
         this.scenario.header = res.header
         this.scenario.name = res.name
         this.scenario.imageSrc = res.imageLink
+        this.scenario.testHash = res.testHash
       })
     },
     uploadImage(event) {
+      this.imageLoading = true
       this.scenario.image = event.target.files[0];
       if (!this.scenario.image) return;
 
       this.scenario.imageSrc = URL.createObjectURL(this.scenario.image);
+      this.imageLoading = false
+    },
+    clickImage() {
+      this.$refs.scenarioImage.click()
+    },
+    deleteImage() {
+      this.scenario.image = null
+      this.scenario.imageSrc = null
     },
   },
   mounted() {
@@ -108,4 +128,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/scenario.scss";
+@import "@/common.blocks/index.scss";
 </style>

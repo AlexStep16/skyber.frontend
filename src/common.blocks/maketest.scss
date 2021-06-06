@@ -68,16 +68,21 @@
   display: flex;
 }
 
-.test__image {
+.test-image {
   width: 100%;
   text-align: left;
   position: relative;
   display: flex;
   min-height: 300px;
-  > img {
+
+  &__wraper {
+    position: relative;
     max-width: 100%;
-    width: auto;
-    height: auto;
+
+    > img {
+      max-width: 100%;
+      display: block;
+    }
   }
 }
 
@@ -145,16 +150,6 @@
   font-size: 1.2em;
   color: #565656;
   font-family: 'Montserrat', sans-serif;
-}
-
-.modal50 {
-  background-color: rgba(0, 0, 0, 0);
-  opacity: 0;
-}
-
-.modal50:hover {
-  background-color: rgba(0, 0, 0, 0.6);
-  opacity: 1;
 }
 
 hr {

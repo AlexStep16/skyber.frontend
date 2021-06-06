@@ -1,20 +1,15 @@
 <template>
   <div class="main">
     <div class="scenarios-menu bg-white-shadow">
-      <h3 class="scenarios-menu__h3 h3-default mb0">Управление сценариями</h3>
-     <!--  <router-link 
-        :to="'/test/scenario/add/' + this.hash"
-        class="
-          button 
-          button-clasic
-          button_theme-roboto_small 
-          button_theme-purple 
-          inline-block
-          mt5
-        "
-      >
-        Добавить сценарий
-      </router-link> -->
+      <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
+        Управление сценариями
+        <router-link 
+          :to="'/test/scenario/add/' + this.hash"
+          class="scenarios-menu__add-scenario"
+        >
+          Добавить сценарий +
+        </router-link>
+      </h3>
       <div class="scenarios-menu__main">
         <div
           class="scenarios-menu-item"
@@ -33,91 +28,110 @@
               <router-link :to="`/test/scenario/edit/${scenario.id}`" title="Редактировать">
                 <img
                   style="vertical-align: bottom"
-                  src="/Vectors/pen32.svg"
+                  src="/Vectors/pen32_white.svg"
                   width="26px"
                 />
               </router-link>
               <img
                 class="ml4 pointer"
                 style="vertical-align: bottom"
-                src="/pictures/trash.svg"
+                src="/pictures/trash_white.svg"
                 height="24px"
                 @click="deleteScenario(scenario.id, index)"
               />
             </div>
           </div>
           <div class="scenarios-menu-item__options flex flex-vertical">
-            <input
-              class="custom-checkbox"
-              type="checkbox"
-              :id="'option-1' + scenario.id"
-              name="option-1"
-              v-model="scenario.conditions.first.checked"
-            />
-            <label class="scenarios-menu-item__option mt4" :for="'option-1' + scenario.id">
-              <span>Пользователь набрал больше </span
-              ><input
-                class="scenarios-menu-item__input ml5 mr5"
-                v-model.number="scenario.conditions.first.scores"
-                type="text"
-              /><span>баллов</span>
-            </label>
+            <div class="flex flex-align-center mt4">
+              <input
+                class="custom-checkbox"
+                type="checkbox"
+                :id="'option-1' + scenario.id"
+                name="option-1"
+                v-model="scenario.conditions.first.checked"
+              />
+              <label :for="'option-1' + scenario.id"></label>
+              <span class="scenarios-menu-item__option">
+                <span>Пользователь набрал </span>
+                <input
+                  class="scenarios-menu-item__input ml5 mr5"
+                  v-model.number="scenario.conditions.first.scores"
+                  type="text"
+                /><span>баллов</span>
+              </span>
+            </div>
+
+            <div class="flex flex-align-center mt4">
+              <input
+                class="custom-checkbox"
+                type="checkbox"
+                :id="'option-2' + scenario.id"
+                name="option-2"
+                v-model="scenario.conditions.second.checked"
+              />
+              <label :for="'option-2' + scenario.id"></label>
+              <span class="scenarios-menu-item__option" :for="'option-2' + scenario.id">
+                <span>Пользователь набрал больше </span
+                ><input
+                  class="scenarios-menu-item__input ml5 mr5"
+                  v-model.number="scenario.conditions.second.scores"
+                  type="text"
+                /><span>баллов</span>
+              </span>
+            </div>
+
+            <div class="flex flex-align-center mt4">
+              <input
+                class="custom-checkbox"
+                type="checkbox"
+                :id="'option-3' + scenario.id"
+                name="option-3"
+                v-model="scenario.conditions.third.checked"
+              />
+              <label :for="'option-3' + scenario.id"></label>
+              <span class="scenarios-menu-item__option" :for="'option-3' + scenario.id">
+                <span>Пользователь набрал меньше </span
+                ><input
+                  class="scenarios-menu-item__input ml5 mr5"
+                  v-model.number="scenario.conditions.third.scores"
+                  type="text"
+                /><span>баллов</span>
+              </span>
+            </div>
 
             <input
               class="custom-checkbox"
               type="checkbox"
-              :id="'option-2' + scenario.id"
-              name="option-2"
-              v-model="scenario.conditions.second.checked"
+              :id="'option-4' + scenario.id"
+              name="option-4"
+              v-model="scenario.conditions.fourth.checked"
             />
-            <label class="scenarios-menu-item__option mt4" :for="'option-2' + scenario.id">
-              <span>Пользователь набрал меньше </span
-              ><input
-                class="scenarios-menu-item__input ml5 mr5"
-                v-model.number="scenario.conditions.second.scores"
-                type="text"
-              /><span>баллов</span>
-            </label>
-
-            <input
-              class="custom-checkbox"
-              type="checkbox"
-              :id="'option-3' + scenario.id"
-              name="option-3"
-              v-model="scenario.conditions.third.checked"
-            />
-            <label class="scenarios-menu-item__option mt6" :for="'option-3' + scenario.id">
+            <label class="scenarios-menu-item__option mt6" :for="'option-4' + scenario.id">
               <span>Пользователь ответил на вопрос</span>
             </label>
             <multiselect
-                v-model="scenario.conditions.third.question"
-                :options="options"
-                label="question"
-                placeholder="Выберите вопрос"
-                class="mt5 mb5"
-                :multiple="false"
-                selectLabel=""
-                selectedLabel=""
-                deselectLabel=""
-              ></multiselect>
-            <div>
-              <button
-               class="button button-clasic button_theme-roboto button_theme-purple" 
-               @click="save(scenario)"
-              >
-               Сохранить
-              </button>
-            </div>
+              v-model="scenario.conditions.fourth.question.name"
+              :options="options"
+              label="question"
+              placeholder="Выберите вопрос"
+              class="mt5 mb5"
+              :multiple="false"
+              selectLabel=""
+              selectedLabel=""
+              deselectLabel=""
+            ></multiselect>
           </div>
         </div>
       </div>
     </div>
+    <MakeFooter type="scenario" @save="save" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import Multiselect from "vue-multiselect";
+import MakeFooter from "@/components/MakeFooter.vue";
 
 export default {
   name: "ScenariosMenu",
@@ -129,7 +143,7 @@ export default {
     };
   },
   components: {
-    Multiselect
+    Multiselect, MakeFooter
   },
   methods: {
     getScenarios() {
@@ -139,7 +153,7 @@ export default {
           let conditions = scenario.conditions;
           scenario.conditions = {};
           this.$set(scenario.conditions, "first", {
-            condition: 'BT',
+            condition: 'EQ',
             checked: false,
             scores: null,
             question: {
@@ -148,7 +162,7 @@ export default {
             },
           });
           this.$set(scenario.conditions, "second", {
-            condition: 'LT',
+            condition: 'BT',
             checked: false,
             scores: null,
             question: {
@@ -157,6 +171,15 @@ export default {
             },
           });
           this.$set(scenario.conditions, "third", {
+            condition: 'LT',
+            checked: false,
+            scores: null,
+            question: {
+              name: null,
+              id: null,
+            },
+          });
+          this.$set(scenario.conditions, "fourth", {
             condition: 'QE',
             checked: false,
             scores: null,
@@ -167,19 +190,22 @@ export default {
           });
 
           conditions.forEach((condition) => {
-            if(condition.condition == 'BT') {
+            if(condition.condition == 'EQ') {
               scenario.conditions.first.checked = true
               scenario.conditions.first.scores = condition.scores
             }
-            if(condition.condition == 'LT') {
+            if(condition.condition == 'BT') {
               scenario.conditions.second.checked = true
               scenario.conditions.second.scores = condition.scores
             }
-            if(condition.condition == 'QE') {
+            if(condition.condition == 'LT') {
               scenario.conditions.third.checked = true
-              console.log(condition)
-              scenario.conditions.third.question.id = condition.question_id
-              scenario.conditions.third.question.question = condition.question_name
+              scenario.conditions.third.scores = condition.scores
+            }
+            if(condition.condition == 'QE') {
+              scenario.conditions.fourth.checked = true
+              scenario.conditions.fourth.question.id = condition.question_id
+              scenario.conditions.fourth.question.name = condition.question
             }
           })
         });
@@ -225,19 +251,22 @@ export default {
       let rangesList = []
       this.scenarios.forEach((scenario) => {
         let conditions = scenario.conditions
-        if (conditions.first.checked && conditions.second.checked) {
-          if (conditions.second.scores-1 < conditions.first.scores+1) {
-            rangesList.push([0, conditions.second.scores-1], [conditions.first.scores+1, 100000])
+        if(conditions.first.checked) {
+          rangesList.push([conditions.first.scores, conditions.first.scores, scenario.id])
+        }
+        if (conditions.second.checked && conditions.third.checked) {
+          if (conditions.third.scores-1 < conditions.second.scores+1) {
+            rangesList.push([0, conditions.third.scores-1, scenario.id], [conditions.second.scores+1, 100000, scenario.id])
           }
           else {
-            rangesList.push([conditions.first.scores+1, conditions.second.scores-1])
+            rangesList.push([conditions.second.scores+1, conditions.third.scores-1, scenario.id])
           }
         }
-        else if(conditions.first.checked) {
-          rangesList.push([conditions.first.scores+1, 100000])
-        }
         else if(conditions.second.checked) {
-          rangesList.push([0, conditions.second.scores-1])
+          rangesList.push([conditions.second.scores+1, 100000, scenario.id])
+        }
+        else if(conditions.third.checked) {
+          rangesList.push([0, conditions.third.scores-1, scenario.id])
         }
       })
       return rangesList;
@@ -252,8 +281,8 @@ export default {
         for (let j = 0; j < rangesList.length; j++) {
           if (j === i) continue;
           if (
-            (rangesList[i][0] >= rangesList[j][0] && rangesList[i][0] <= rangesList[j][1])
-            || (rangesList[i][1] >= rangesList[j][0] && rangesList[i][1] <= rangesList[j][1])
+            (rangesList[i][0] >= rangesList[j][0] && rangesList[i][0] <= rangesList[j][1] && rangesList[i][2] !== rangesList[j][2])
+            || (rangesList[i][1] >= rangesList[j][0] && rangesList[i][1] <= rangesList[j][1] && rangesList[i][2] !== rangesList[i][2])
           ) {
             alert('пересечение')
             return false

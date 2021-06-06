@@ -68,11 +68,13 @@
                   hidden
                   v-if="image.link == null"
                 />
-                <div class="test__image mt6" v-if="showImagePreloader">
-                  <div class="modal-inner modal50 pointer flex flex-center">
-                    <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+                <div class="test-image mt6" v-if="showImagePreloader">
+                  <div class="test-image__wraper">
+                    <img :src="image.link" />
+                    <div class="modal-inner modal50 pointer flex flex-center">
+                      <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+                    </div>
                   </div>
-                  <img :src="image.link" />
                   <div class="modal modal_white absolute" v-if="imageLoading">
                     <Loader />
                   </div>

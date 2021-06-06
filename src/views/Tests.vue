@@ -17,10 +17,12 @@
               <youtube id="youtube" ref="youtube" :video-id="testVideoLink" class="test-video">
               </youtube>
             </div>
-            <div class="test__image mt6" v-if="image.link != null">
-              <img :src="image.link" />
-              <div class="modal modal_white absolute" v-if="imageLoading">
-                <Loader />
+            <div class="test-image mt6" v-if="image.link != null">
+              <div class="test-image__wraper">
+                <img :src="image.link" />
+                <div class="modal modal_white absolute" v-if="imageLoading">
+                  <Loader />
+                </div>
               </div>
             </div>
           </div>
