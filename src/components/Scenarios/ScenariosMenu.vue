@@ -98,40 +98,25 @@
                 /><span>баллов</span>
               </span>
             </div>
-
-            <input
-              class="custom-checkbox"
-              type="checkbox"
-              :id="'option-4' + scenario.id"
-              name="option-4"
-              v-model="scenario.conditions.fourth.checked"
-            />
-            <label class="scenarios-menu-item__option mt6" :for="'option-4' + scenario.id">
-              <span>Пользователь ответил на вопрос</span>
-            </label>
-            <multiselect
-              v-model="scenario.conditions.fourth.question.name"
-              :options="options"
-              label="question"
-              placeholder="Выберите вопрос"
-              class="mt5 mb5"
-              :multiple="false"
-              selectLabel=""
-              selectedLabel=""
-              deselectLabel=""
-            ></multiselect>
           </div>
         </div>
       </div>
     </div>
     <MakeFooter type="scenario" @save="save" />
+    <SuccessModal
+      message="Успешно сохранено"
+      v-if="showSuccess"
+      type="test"
+      :justSave="true"
+      @go="$router.push('/test/edit/' + hash)"
+    />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Multiselect from "vue-multiselect";
 import MakeFooter from "@/components/MakeFooter.vue";
+import SuccessModal from "@/components/SuccessModal.vue";
 
 export default {
   name: "ScenariosMenu",
@@ -140,10 +125,11 @@ export default {
       hash: this.$route.params.hash,
       scenarios: [],
       options: [],
+      showSuccess: false
     };
   },
   components: {
-    Multiselect, MakeFooter
+    MakeFooter, SuccessModal
   },
   methods: {
     getScenarios() {
@@ -179,15 +165,6 @@ export default {
               id: null,
             },
           });
-          this.$set(scenario.conditions, "fourth", {
-            condition: 'QE',
-            checked: false,
-            scores: null,
-            question: {
-              name: null,
-              id: null,
-            },
-          });
 
           conditions.forEach((condition) => {
             if(condition.condition == 'EQ') {
@@ -201,11 +178,6 @@ export default {
             if(condition.condition == 'LT') {
               scenario.conditions.third.checked = true
               scenario.conditions.third.scores = condition.scores
-            }
-            if(condition.condition == 'QE') {
-              scenario.conditions.fourth.checked = true
-              scenario.conditions.fourth.question.id = condition.question_id
-              scenario.conditions.fourth.question.name = condition.question
             }
           })
         });
@@ -296,7 +268,7 @@ export default {
         axios.post('scenarios/conditions/save', {
           scenarios: this.scenarios,
         }).then(() => {
-          
+          this.showSuccess = true
         })
       }
     },

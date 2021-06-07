@@ -209,7 +209,7 @@
                     v-if="question.name != null"
                   >
                     <div
-                      class="test__question-name mb6"
+                      class="test-question-name mb6"
                     >
                       {{ question.name }}
                     </div>
@@ -239,7 +239,7 @@
                       v-if="question.typeAnswer == 'Время'"
                     />
                   </div>
-                  <div class="test__question-empty" v-else>Пустой вопрос</div>
+                  <div class="test-question-empty" v-else>Пустой вопрос</div>
                 </div>
               </template>
             </div>
@@ -364,7 +364,7 @@ export default {
 
     addQuestion() {
       let name = null;
-      let standartVariants = [{ id: 0, name: "Вариант 1" }]; //Стартовое количество вариантов
+      let standartVariants = [{ id: 0, name: "Вариант 1", hasDescription: false}]; //Стартовое количество вариантов
       let questionToPost = {
         testId: this.testId,
         variants: standartVariants,
@@ -581,7 +581,7 @@ export default {
         .then((res) => {
           res.data.data.forEach((element) => {
             let selectedVariants = JSON.parse(element.variants);
-            let standartVariants = [{ id: 0, name: "Вариант 1" }];
+            let standartVariants = [{ id: 0, name: "Вариант 1", hasDescription: false}];
 
             if (element.typeAnswer == "Ввод текста") {
               //
@@ -694,6 +694,5 @@ export default {
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
-
 </style>
 

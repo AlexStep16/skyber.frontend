@@ -12,7 +12,7 @@
         :name="`variant${key}`"
         :value="variant.name"
       />
-      <label class="test__question-answer" :for="`variant${key}`">{{ variant.name }}</label>
+      <label class="test-question-answer" :for="`variant${key}`">{{ variant.name }}</label>
     </div>
   </div>
 </template>

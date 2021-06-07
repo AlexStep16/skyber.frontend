@@ -1,51 +1,59 @@
 <template>
   <div style="width: 100%">
     <div
-      class="test__question mt5"
+      class="test-question flex-vertical mt5"
       v-for="(variant, index) in postQuestion.standartVariants"
       :key="`${variant.id}${index}`"
     >
-      <div class="flex flex-center" v-if="postQuestion.typeAnswer == 'Несколько из списка'">
+      <div class="flex flex-align-center">
+        <div class="flex flex-center" v-if="postQuestion.typeAnswer == 'Несколько из списка'">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            :id="`variantSt${postQuestion.id + index}`"
+            :value="`${JSON.stringify(variant.name)}`"
+            v-model="postQuestion.right_variants"
+          />
+          <label class="test-question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
+        </div>
+        <div class="form_radio form_radio-right flex flex-center mr4" v-if="postQuestion.typeAnswer == 'Один из списка'">
+          <input
+            :id="`radio${postQuestion.id}${variant.id}`"
+            type="radio"
+            :name="`radio${postQuestion.id}`"
+            :value="`${JSON.stringify(variant.name)}`"
+            v-model="postQuestion.right_variants"
+          />
+          <label 
+            class="test-question-answer"
+            :for="`radio${postQuestion.id}${variant.id}`">
+          </label>
+        </div>
         <input
-          class="custom-checkbox"
-          type="checkbox"
-          :id="`variantSt${postQuestion.id + index}`"
-          :value="`${JSON.stringify(variant.name)}`"
-          v-model="postQuestion.right_variants"
+          type="text"
+          class="input input_type-test-small"
+          placeholder="Напишите здесь вариант ответа"
+          v-model="variant.name"
+          @focusout="checkIsEmpty(variant, index)"
         />
-        <label class="test__question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
-      </div>
-      <div class="form_radio form_radio-right flex flex-center mr4" v-if="postQuestion.typeAnswer == 'Один из списка'">
         <input
-          :id="`radio${postQuestion.id}${variant.id}`"
-          type="radio"
-          :name="`radio${postQuestion.id}`"
-          :value="`${JSON.stringify(variant.name)}`"
-          v-model="postQuestion.right_variants"
+          type="text"
+          class="input input_type-test-small"
+          style="width: 80px;flex-grow:0"
+          placeholder="баллы"
+          v-model="variant.scores"
         />
-        <label 
-          class="test__question-answer"
-          :for="`radio${postQuestion.id}${variant.id}`">
-        </label>
+        <span class="flex pointer" @click="deleteVariant(index)">
+          <img src="/pictures/trash.svg" width="19px" />
+        </span>
       </div>
-      <input
-        type="text"
-        class="input input_type-test-small"
-        placeholder="Напишите здесь вариант ответа"
-        v-model="variant.name"
-        @focusout="checkIsEmpty(variant, index)"
-      />
-      <input
-        type="text"
-        class="input input_type-test-small"
-        style="width: 80px;flex-grow:0"
-        placeholder="баллы"
-        v-model="variant.scores"
-      />
-      <span class="pointer" @click="deleteVariant(index)">
-        <img src="/pictures/trash.svg" width="19px" />
-      </span>
-    </div><hr />
+      <div class="test-question-description flex flex-vertical">
+        <span class="pointer" @click="addDescription(variant)" v-if="!variant.hasDescription">+ Добавить описание</span>
+        <span class="pointer" @click="deleteDescription(variant)" v-if="variant.hasDescription">- Удалить описание</span>
+        <textarea class="test-question-description__textarea mt5" v-if="variant.hasDescription" placeholder="Введите здесь описание к варианту" v-model="variant.description"></textarea>
+      </div>
+    </div>
+    <hr />
     <div class="flex flex-justify-between mt5">
       <div class="test__add-variant pointer" @click="addVariant(postQuestion)">
         Добавить вариант
@@ -81,6 +89,7 @@ export default {
         variants.push({
           id: 0,
           name: "Вариант 1",
+          hasDescription: false,
         });
         return;
       }
@@ -88,6 +97,7 @@ export default {
         variants.push({
           id: length,
           name: "Вариант " + ++length,
+          hasDescription: false,
         });
       }
     },
@@ -101,6 +111,14 @@ export default {
     deleteVariant(index) {
       this.postQuestion.standartVariants.splice(index, 1);
     },
+
+    addDescription(variant) {
+      variant.hasDescription = true
+    },
+    deleteDescription(variant) {
+      variant.hasDescription = false
+      variant.description = ''
+    }
   },
 };
 </script>

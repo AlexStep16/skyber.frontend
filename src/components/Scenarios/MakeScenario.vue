@@ -24,14 +24,12 @@
           placeholder="Введите здесь текст который увидит человек после прохождения теста"
           v-model="scenario.description" 
         />
-        <input type="file" @change="uploadImage" ref="scenarioImage" hidden>
-        <div class="scenario__image-slot flex flex-center pointer mt5" v-if="!scenario.imageSrc" @click="clickImage">
-          Добавьте изображение перетащив сюда или нажав на этот блок
-        </div>
+        <input type="file" ref="scenarioImage" hidden>
+        <DragAndDropImage :files="scenario.image" @drop="dropImage" />
         <h2 class="h2-default mt7 mb0">Предпросмотр</h2>
-        <h1 class="scenario__header-preview" v-if="scenario.header">{{ scenario.header }}</h1>
-        <div class="scenario__description mt0" v-if="scenario.description" v-html="scenario.description"></div>
-        <div class="scenario-image" v-if="scenario.imageSrc">
+        <h1 class="scenario__header-preview mb0" v-if="scenario.header">{{ scenario.header }}</h1>
+        <div class="scenario__description mt6" v-if="scenario.description" v-html="scenario.description"></div>
+        <div class="scenario-image mt6" v-if="scenario.imageSrc">
           <div class="scenario-image__wraper">
             <img :src="scenario.imageSrc" />
             <div class="modal-inner modal50 pointer flex flex-center">
@@ -53,6 +51,7 @@ import axios from "axios";
 import MakeFooter from "@/components/MakeFooter.vue";
 import Tiptap from '@/components/TipTap.vue'
 import Loader from "@/components/Loader.vue";
+import DragAndDropImage from "@/components/DragAndDropImage.vue";
 
 export default {
   name: "MakeScenario",
@@ -64,7 +63,7 @@ export default {
         name: '',
         header: '',
         description: '',
-        image: null,
+        image: [],
         imageSrc: '',
       },
       imageLoading: false,
@@ -72,13 +71,13 @@ export default {
   },
   components: {
     MakeFooter,
-    Tiptap, Loader
+    Tiptap, Loader, DragAndDropImage
   },
   methods: {
     saveScenario() {
       const formData = new FormData();
-      this.scenario.image != null
-        ? formData.append("scenaImage", this.scenario.image)
+      this.scenario.image.length > 0
+        ? formData.append("scenaImage", this.scenario.image[0])
         : "";
       formData.append("scenario", JSON.stringify(this.scenario))
       if(!this.isEdit) {
@@ -102,20 +101,19 @@ export default {
         this.scenario.testHash = res.testHash
       })
     },
-    uploadImage(event) {
-      this.imageLoading = true
-      this.scenario.image = event.target.files[0];
-      if (!this.scenario.image) return;
-
-      this.scenario.imageSrc = URL.createObjectURL(this.scenario.image);
-      this.imageLoading = false
-    },
     clickImage() {
       this.$refs.scenarioImage.click()
     },
     deleteImage() {
       this.scenario.image = null
       this.scenario.imageSrc = null
+    },
+    dropImage() {
+      this.imageLoading = true
+      console.log(1)
+      if (!this.scenario.image || this.scenario.image.length === 0) return;
+      this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
+      this.imageLoading = false
     },
   },
   mounted() {

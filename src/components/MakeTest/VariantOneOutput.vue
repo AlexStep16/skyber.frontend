@@ -12,7 +12,7 @@
         :value="variant.name"
       />
       <label 
-        class="test__question-answer"
+        class="test-question-answer"
         :for="`radio${postQuestion.id}${variant.id}`">
         {{ variant.name }}
       </label>
@@ -42,4 +42,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/common.blocks/form-radio_type-main.scss";
 @import "@/common.blocks/maketest.scss";
+
+.form_radio {
+  padding: 10px;
+  border-radius: 2px;
+}
 </style>

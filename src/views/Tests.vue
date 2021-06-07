@@ -34,7 +34,7 @@
             :key="question.id"
           >
             <div style="display: flex; flex-direction: column; width: 100%">
-              <div class="test__question-name mb0">
+              <div class="test-question-name mb0">
                 {{ question.name }}
               </div>
               <div class="test-video-wraper mt6" v-if="question.videoLink">
@@ -90,7 +90,7 @@
             v-show="key == questionCounter"
           >
             <div style="display: flex; flex-direction: column; width: 100%">
-              <div class="test__question-name mb6">
+              <div class="test-question-name mb6">
                 {{ question.name }}
               </div>
               <div class="test__image mt5" v-if="question.image.link != null">

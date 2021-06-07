@@ -1,9 +1,7 @@
 .form_radio input[type=radio] {
 	display: none;
 }
-.form_radio:not(:first-child) {
-  margin-top: 13px;
-}
+
 .form_radio label {
 	display: flex;
   align-items: center;

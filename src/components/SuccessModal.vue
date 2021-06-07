@@ -9,7 +9,7 @@
         >
           <SuccessSVG />{{ message }}
         </h2>
-        <div class="popup-success__link flex flex-align-end">
+        <div class="popup-success__link flex flex-align-end" v-if="!justSave">
           <div class="flex flex-vertical" style="flex: auto">
             <span class="popup-success__link-span">Ссылка на {{ type == "test" ? "тест" : "опрос" }}</span>
             <input
@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="popup-success__social mt7">
-          <div class="popup-success__social-block">
+          <div class="popup-success__social-block" v-if="!justSave">
             <ShareNetwork
               network="vk"
               :url="url"
@@ -55,7 +55,7 @@
           <div>
             <router-link
               :to="'/tests/' + link"
-              class="button button-clasic button_theme-purple"
+              class="button button-clasic button_theme-roboto_small button_theme-purple"
               style="font-size: 0.85em"
               v-if="edit"
               >Перейти к {{ type == "test" ? "тесту" : "опросу" }}</router-link
@@ -63,8 +63,14 @@
             <div
               @click="$emit('resend')"
               v-else-if="resend"
-              class="button button-clasic button_theme-purple"
+              class="button button-clasic button_theme-roboto_small button_theme-purple"
               >Перепройти {{ type == "test" ? "тест" : "опрос" }}</div
+            >
+            <div
+              @click="$emit('go')"
+              v-else
+              class="button button-clasic button_theme-roboto_small button_theme-purple"
+              >Вернуться к {{ type == "test" ? "тесту" : "опросу" }}</div
             >
           </div>
         </div>
@@ -81,7 +87,7 @@ import Facebook from "../../public/pictures/facebook36.svg";
 
 export default {
   name: "SuccessModal",
-  props: ["link", "type", "message", "edit", "resend"],
+  props: ["link", "type", "message", "edit", "resend", "justSave"],
   data() {
     return {
       url: "",
