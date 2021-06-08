@@ -1,5 +1,5 @@
 <template>
-  <div class="form_type-radio mt4">
+  <div class="form_type-radio mt5">
     <div
       :class="showRights ? 'form_radio form_radio-' + variant.color : 'form_radio'"
       v-for="variant in getRadioArray(postQuestion.variants)"

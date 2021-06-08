@@ -76,6 +76,7 @@ export default {
   methods: {
     saveScenario() {
       const formData = new FormData();
+      console.log(this.scenario.image[0])
       this.scenario.image.length > 0
         ? formData.append("scenaImage", this.scenario.image[0])
         : "";
@@ -105,7 +106,7 @@ export default {
       this.$refs.scenarioImage.click()
     },
     deleteImage() {
-      this.scenario.image = null
+      this.scenario.image = []
       this.scenario.imageSrc = null
     },
     dropImage() {

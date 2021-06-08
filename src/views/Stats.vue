@@ -110,6 +110,7 @@ export default {
     getTestAnswers() {
       axios.get("answer/" + this.id).then((res) => {
         res = res.data.data;
+        
         this.answers = res;
         this.questions.forEach((question) => {
           let answersArray = res.filter((answer) => {
@@ -136,9 +137,9 @@ export default {
     variantsTypeOne(answersArray, question) {
       question.variants.forEach((variant) => {
         let countVariantFreq = answersArray.filter((answer) => {
-          return answer.checked == variant.name;
+          return answer.checked[0] == JSON.stringify(variant.name);
         }).length;
-
+        
         variant.percent = (
           (countVariantFreq / answersArray.length) *
           100

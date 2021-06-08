@@ -44,8 +44,10 @@
                 <youtube id="youtube" ref="youtube" :video-id="question.videoLink" class="test-video">
                 </youtube>
               </div>
-              <div class="test__image mt5" v-if="question.image.link != null">
-                <img :src="question.image.link" />
+              <div class="test-image mt5" v-if="question.image.link != null">
+                <div class="test-image__wraper">
+                  <img :src="question.image.link" />
+                </div>
               </div>
               <VariantOneOutput
                 v-if="question.typeAnswer == 'Один из списка'"
@@ -93,8 +95,10 @@
               <div class="test-question-name mb6">
                 {{ question.name }}
               </div>
-              <div class="test__image mt5" v-if="question.image.link != null">
-                <img :src="question.image.link" />
+              <div class="test-image mt5" v-if="question.image.link != null">
+                <div class="test-image__wraper">
+                  <img :src="question.image.link" />
+                </div>
               </div>
               <VariantOneOutput
                 v-if="question.typeAnswer == 'Один из списка'"
@@ -256,7 +260,7 @@ export default {
 
     sendTest() {
       this.scoresCounter()
-      /* let stop = false;
+      let stop = false;
       this.questions.forEach((elem) => {
         if((elem.isRequire && elem.checked === undefined) || !elem.checked) {
           stop = true;
@@ -286,7 +290,7 @@ export default {
         .then(() => {
           this.successMessage = "Успешно отправлено"
           this.showSuccess = true
-        }); */
+        });
     },
     nextQuestion() {
       if (this.questions.length - 1 > this.questionCounter) this.questionCounter++

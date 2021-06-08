@@ -1,8 +1,8 @@
 <template>
   <div class="scenario test__block bg-white-shadow">
     <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
-    <div class="scenario__description mt5" v-if="scenario.description" v-html="scenario.description"></div>
-    <div class="scenario-image" v-if="scenario.image">
+    <div class="scenario__description mt6" v-if="scenario.description" v-html="scenario.description"></div>
+    <div class="scenario-image mt6" v-if="scenario.image">
       <div class="scenario-image__wraper">
         <img :src="scenario.image" />
       </div>

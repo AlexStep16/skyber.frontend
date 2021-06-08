@@ -2,12 +2,8 @@
   <div>
     <div v-for="question in postQuestions" :key="question.id">
       <div class="stats__question">{{ question.question }}: </div>
-      <div
-        v-if="
-          question.typeAnswer == 'Один из списка' ||
-          question.typeAnswer == 'Выпадающий список'
-        "
-        style="z-index:0"
+      <div v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Выпадающий список'"
+           style="z-index:0"
       >
         <DoughnutChart
           :chartData="getChartData(question.variants)"
@@ -17,12 +13,7 @@
         />
       </div>
 
-      <div
-        v-if="
-          question.typeAnswer == 'Несколько из списка'
-        "
-        style="z-index:0"
-      >
+      <div v-if="question.typeAnswer == 'Несколько из списка'" style="z-index:0">
         <BarChart
           :chartData="getChartData(question.answers, 'few')"
           :options="getOptions2()"

@@ -34,7 +34,7 @@ export default {
       let arr = [];
 
       standartVariants.forEach(variant => {
-        arr.push(variant.name)
+        arr.push(JSON.stringify(variant.name))
       });
       return arr;
     }

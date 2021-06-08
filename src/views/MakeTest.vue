@@ -161,11 +161,13 @@
                       @change="questionImage($event, question)"
                       v-if="question.image.link == null"
                     />
-                    <div class="test__image" v-if="question.image.link != null || question.image.isLoading">
-                      <div class="modal-inner modal50 pointer flex flex-center">
-                        <img src="/pictures/trash.svg" width="65px" @click="questionImageDelete(question)" />
+                    <div class="test-image" v-if="question.image.link != null || question.image.isLoading">
+                      <div class="test-image__wraper">
+                        <img :src="question.image.link" />
+                        <div class="modal-inner modal50 pointer flex flex-center">
+                          <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+                        </div>
                       </div>
-                      <img :src="question.image.link" />
                       <div class="modal modal_white absolute" v-if="question.image.isLoading">
                         <Loader />
                       </div>
@@ -213,8 +215,10 @@
                     >
                       {{ question.name }}
                     </div>
-                    <div class="test__image mt5 mb7" v-if="question.image.link != null">
-                      <img :src="question.image.link" />
+                    <div class="test-image mt5 mb7" v-if="question.image.link != null">
+                      <div class="test-image__wraper">
+                        <img :src="question.image.link" />
+                      </div>
                     </div>
                     <VariantOneOutput
                       v-if="question.typeAnswer == 'Один из списка'"
