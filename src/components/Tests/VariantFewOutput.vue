@@ -47,19 +47,29 @@ export default {
       this.$emit('ready', this.newSelected)
     },
 
-    showRightVariant(variant, event) {
-      if(this.settings.is_right_questions) {
+    showRightVariant() {
+      if(this.settings.is_right_questions && this.postQuestion.showAllRightVariants) {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
-        variant.color = 'wrong'
+        
         right_variants.forEach((rightVar) => {
-          if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
-            variant.color = 'right'
-            return true;
-          }
+          this.postQuestion.variants.forEach(variant => {
+            if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
+              variant.color = 'right'
+              return true;
+            }
+            else {
+              variant.color = 'wrong'
+            }
+          })
+          
         })
         this.showRights = true
-        if(!event.target.checked) variant.color = 'default'
       }
+    }
+  },
+  watch: {
+    postQuestion: function () {
+      this.showRightVariant()
     }
   },
 };

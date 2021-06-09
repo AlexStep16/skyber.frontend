@@ -3,7 +3,9 @@
     <p v-if="!over" style="font-size: 1.15em;">Перетащите изображение сюда</p>
     <p v-if="over" style="font-size: 1.15em;">Отпустите чтобы добавить</p>
     <p class="mt6">Или</p>
-    <button @click.prevent="clickImage" class="button button_theme-purple flex flex-center drag-and-drop-slot__button mt6"><img src="/pictures/image-white.svg" class="mr5" width="22px">Выбрать файл</button>
+    <button @click.prevent="clickImage" class="button button_theme-purple flex flex-center drag-and-drop-slot__button mt6">
+      <img src="/pictures/image-white.svg" class="mr5" width="22px">Выбрать файл
+    </button>
   </div>
 </template>
 
@@ -35,6 +37,7 @@ export default {
   },
   mounted() {
     this.dragAndDropCapable = this.determineDragAndDropCapable();
+    const fileTypes = ['image/gif', 'image/jpeg', 'image/png']
     if( this.dragAndDropCapable ){
       ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach( function( evt ) {
         this.$refs.fileform.addEventListener(evt, function(e){
@@ -43,11 +46,11 @@ export default {
         }.bind(this), false);
       }.bind(this));
       this.$refs.fileform.addEventListener('drop', function(e){
-        if(e.dataTransfer.files.length === 1) {
+        if(e.dataTransfer.files.length === 1 && fileTypes.includes(e.dataTransfer.files[0].type)) {
           this.files.push(e.dataTransfer.files[0]);
           this.$emit('drop')
-          this.over = false
         }
+        this.over = false
       }.bind(this));
     }
   }

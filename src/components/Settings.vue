@@ -68,6 +68,22 @@
         </label>
       </div>
 
+      <div class="settings-item mt6">
+        <span class="settings-item__text">Перевыбор ответа</span>
+        <label class="slider">
+          <input type="checkbox" v-model="settings.is_reanswer" class="none">
+          <span class="slider__circle slider__round"></span>
+        </label>
+      </div>
+
+      <div class="settings-item mt6">
+        <span class="settings-item__text">Собирать статистику</span>
+        <label class="slider">
+          <input type="checkbox" v-model="settings.has_statistic" class="none">
+          <span class="slider__circle slider__round"></span>
+        </label>
+      </div>
+
       <!-- <div
         class="settings-item mt6"
       >

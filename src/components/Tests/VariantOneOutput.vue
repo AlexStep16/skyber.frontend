@@ -13,6 +13,7 @@
           :value="`${JSON.stringify(variant.name)}`"
           v-model="postQuestion.checked"
           @change="showRightVariant(variant)"
+          v-if="!variant.disabled"
         />
         <label 
           class="test-question-answer"
@@ -21,7 +22,7 @@
         }}
         </label>
       </div>
-      <div class="description" v-if="variant.hasDescription && showRights && (variant.color === 'wrong' || variant.color === 'right')">
+      <div class="description" v-if="variant.hasDescription && showRights && variantChecked(variant)">
         {{variant.description}}
       </div>
     </div>
@@ -45,20 +46,27 @@ export default {
       });
     },
     showRightVariant(variant) {
-      this.postQuestion.variants.forEach(variant => {
-        variant.color = 'default'
-      })
-      if(this.settings.is_right_questions) {
+      if(this.settings.is_right_questions && !this.postQuestion.alreadySelect) {
         let right_variants = JSON.parse(this.postQuestion.right_variants)
-        if(typeof right_variants === 'string') {
+
+        this.postQuestion.variants.forEach(variant => {
           if (variant.name == right_variants) {
             variant.color = 'right'
           } else {
             variant.color = 'wrong'
           }
           this.showRights = true
-        }
+        })
       }
+      if(!this.settings.is_reanswer) {
+        this.postQuestion.variants.forEach((variantInside) => {
+          if(variant.id !== variantInside.id) variantInside.disabled = true
+        })
+      }
+    },
+    variantChecked(variant) {
+      if(variant.name === JSON.parse(this.postQuestion.checked)) return true
+      return false
     }
   },
 };

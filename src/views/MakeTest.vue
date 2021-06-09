@@ -340,6 +340,8 @@ export default {
         is_list: true,
         is_right_questions: false,
         is_resend: false,
+        is_reanswer: true,
+        has_statistic: true,
         password: '',
         password_confirm: false,
       },

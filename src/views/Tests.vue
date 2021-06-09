@@ -132,28 +132,28 @@
               />
             </div>
           </div>
-          <div class="flex flex-justify-between">
-            <button
-              class="button button_type-index button_theme-purple mt7" 
-              @click="nextQuestion"
-              v-if="questionCounter !== questions.length-1"
-            >
-            Дальше
-            </button>
-            <button 
-              class="button button_type-index button_theme-purple mt7" 
-              @click="sendTest"
-              v-if="questionCounter === questions.length-1"
-            >
-            Готово
-            </button>
-            <button 
-              class="button button_type-index button_theme-purple mt7" 
-              @click="backQuestion"
-            >
-            Назад
-            </button>
-          </div>
+        </div>
+        <div class="flex flex-justify-between">
+          <button 
+            class="button button_type-index button_theme-purple mt7" 
+            @click="backQuestion"
+          >
+          Назад
+          </button>
+          <button
+            class="button button_type-index button_theme-purple mt7" 
+            @click="nextQuestion"
+            v-if="questionCounter !== questions.length-1"
+          >
+          Дальше
+          </button>
+          <button 
+            class="button button_type-index button_theme-purple mt7" 
+            @click="sendTest"
+            v-if="questionCounter === questions.length-1"
+          >
+          Готово
+          </button>
         </div>
       </div>
     </div>
@@ -221,6 +221,7 @@ export default {
       totalScores: null,
       settings: {},
       questionCounter: 0,
+      currentQuestion: {},
     };
   },
   components: {
@@ -305,7 +306,7 @@ export default {
     },
     resend() {
       location.reload()
-    }
+    },
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
@@ -353,9 +354,12 @@ export default {
             },
             right_variants: element.right_variants,
             videoLink: element.videoLink,
+            wasSelected: false,
           });
         });
-        this.currentQuestion = this.questions[0]
+        if(this.questions.length > 0) {
+          this.$set(this, 'currentQuestion', this.questions[0])
+        }
       })
       .catch((e) => {
         console.log(e)
