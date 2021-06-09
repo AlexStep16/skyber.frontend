@@ -1,19 +1,30 @@
 <template>
   <div>
+    <div class="tiptap-menu flex flex-align-center mb6">
+      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3">
+        <BoldSVG />
+      </button>
+      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3">
+        <CursiveSVG />
+      </button>
+      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3">
+        <StrikeSVG />
+      </button>
+    </div>
     <bubble-menu
       class="bubble-menu"
       :tippy-options="{ duration: 100 }"
       :editor="editor"
       v-if="editor"
     >
-      <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-        Bold
+      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3">
+        <BoldSVG />
       </button>
-      <button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">
-        Italic
+      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3">
+        <CursiveSVG />
       </button>
-      <button @click="editor.chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">
-        Strike
+      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3">
+        <StrikeSVG />
       </button>
     </bubble-menu>
 
@@ -29,11 +40,15 @@ import {
 } from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+import BoldSVG from '../../public/pictures/tiptap-icons/bold.svg'
+import CursiveSVG from '../../public/pictures/tiptap-icons/cursive.svg'
+import StrikeSVG from '../../public/pictures/tiptap-icons/strike.svg'
 
 export default {
   components: {
     EditorContent,
-    BubbleMenu,
+    BubbleMenu, BoldSVG, CursiveSVG,
+    StrikeSVG
   },
 
   props: {
@@ -91,6 +106,7 @@ export default {
 /* Basic editor styles */
 .ProseMirror {
   min-height: 200px;
+  padding: 0 13px;
   p {
     margin: 0;
   }
@@ -149,6 +165,25 @@ export default {
     &.is-active {
       opacity: 1;
     }
+  }
+}
+
+.tiptap-menu {
+  border-bottom: 2px solid #eceaea;
+  padding: 5px;
+
+  &__button {
+    background-color: #ffffff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+  }
+  &__button:hover {
+    background-color: #77777750;
   }
 }
 </style>

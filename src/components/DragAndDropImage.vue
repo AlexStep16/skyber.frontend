@@ -1,7 +1,9 @@
 <template>
-  <div ref="fileform" @dragover="over = true" @dragleave="over = false" class="drag-and-drop-slot flex flex-center pointer mt5" :class="over ? 'drag-and-drop-slot_over' : ''">
-    <span v-if="!over">Добавьте изображение перетащив сюда или нажав на этот блок</span>
-    <span v-if="over">Отпустите чтобы добавить</span>
+  <div ref="fileform" @dragover="over = true" @dragleave="over = false" class="drag-and-drop-slot flex flex-vertical flex-center mt5" :class="over ? 'drag-and-drop-slot_over' : ''">
+    <p v-if="!over" style="font-size: 1.15em;">Перетащите изображение сюда</p>
+    <p v-if="over" style="font-size: 1.15em;">Отпустите чтобы добавить</p>
+    <p class="mt6">Или</p>
+    <button @click.prevent="clickImage" class="button button_theme-purple flex flex-center drag-and-drop-slot__button mt6"><img src="/pictures/image-white.svg" class="mr5" width="22px">Выбрать файл</button>
   </div>
 </template>
 
@@ -26,6 +28,9 @@ export default {
               || ( 'ondragstart' in div && 'ondrop' in div ) )
               && 'FormData' in window
               && 'FileReader' in window;
+    },
+    clickImage() {
+      this.$emit('clickImage')
     },
   },
   mounted() {
@@ -53,10 +58,10 @@ export default {
 <style lang="scss" scoped>
   .drag-and-drop-slot {
     width: 100%;
-    height: 100px;
+    height: 170px;
     border-radius: 15px;
-    border: 4px dashed #bdbdbd;
-    color: #bdbdbd;
+    border: 4px dashed #a1a1a1;
+    color: #a1a1a1;
     font: {
       family: 'Roboto', sans-serif;
       size: 0.9em;
@@ -64,7 +69,18 @@ export default {
     }
 
     &_over {
-      border: 4px solid #bdbdbd;
+      border: 4px dashed #6769fc;
+    }
+
+    &__button {
+      padding: 11px 15px;
+      font-size: 1.05em;
+      border-radius: 15px;
+    }
+
+    > p {
+      margin: 0;
+      cursor: default;
     }
   }
 </style>

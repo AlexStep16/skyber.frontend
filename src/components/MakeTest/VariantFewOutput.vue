@@ -39,4 +39,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/common.blocks/form-checkbox_type-main.scss";
 @import "@/common.blocks/maketest.scss";
+
+.checkbox {
+  padding: 10px;
+  border-radius: 2px;
+}
 </style>

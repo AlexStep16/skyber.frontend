@@ -16,19 +16,22 @@
           name="scena-header"
           id="scena-header"
           placeholder="Заголовок результата"
-          class="scenario__input input mt5"
+          class="scenario__header input mt5"
           v-model="scenario.header"
         /><br />
         <tiptap 
-          class="tiptap mt7"
+          class="tiptap mt5"
           placeholder="Введите здесь текст который увидит человек после прохождения теста"
           v-model="scenario.description" 
         />
-        <input type="file" ref="scenarioImage" hidden>
-        <DragAndDropImage :files="scenario.image" @drop="dropImage" />
-        <h2 class="h2-default mt7 mb0">Предпросмотр</h2>
-        <h1 class="scenario__header-preview mb0" v-if="scenario.header">{{ scenario.header }}</h1>
-        <div class="scenario__description mt6" v-if="scenario.description" v-html="scenario.description"></div>
+        <input type="file" @change="uploadImage" ref="scenarioImage" hidden>
+        <DragAndDropImage 
+          v-if="!scenario.imageSrc" 
+          @clickImage="clickImage" 
+          :files="scenario.image" 
+          @drop="dropImage"
+          class="mt7"
+        />
         <div class="scenario-image mt6" v-if="scenario.imageSrc">
           <div class="scenario-image__wraper">
             <img :src="scenario.imageSrc" />
@@ -43,6 +46,7 @@
       </div>
     </div>
     <MakeFooter type="scenario" @save="saveScenario" />
+    <InfoModal :message="infoMessage" />
   </div>
 </template>
 
@@ -52,6 +56,7 @@ import MakeFooter from "@/components/MakeFooter.vue";
 import Tiptap from '@/components/TipTap.vue'
 import Loader from "@/components/Loader.vue";
 import DragAndDropImage from "@/components/DragAndDropImage.vue";
+import InfoModal from "@/components/InfoModal.vue";
 
 export default {
   name: "MakeScenario",
@@ -66,21 +71,26 @@ export default {
         image: [],
         imageSrc: '',
       },
+      infoMessage: {},
       imageLoading: false,
     }
   },
   components: {
     MakeFooter,
-    Tiptap, Loader, DragAndDropImage
+    Tiptap, Loader, DragAndDropImage,
+    InfoModal
   },
   methods: {
     saveScenario() {
       const formData = new FormData();
-      console.log(this.scenario.image[0])
       this.scenario.image.length > 0
         ? formData.append("scenaImage", this.scenario.image[0])
         : "";
       formData.append("scenario", JSON.stringify(this.scenario))
+      if(this.scenario.name.length === 0) {
+        this.infoMessage = {body: 'Вы не ввели имя сценария', type: 'danger'}
+        return false;
+      }
       if(!this.isEdit) {
         axios.post('scenarios/create', formData).then(() => {
           this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
@@ -115,6 +125,11 @@ export default {
       if (!this.scenario.image || this.scenario.image.length === 0) return;
       this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
       this.imageLoading = false
+    },
+    uploadImage(event) {
+      this.scenario.image.push(event.target.files[0]);
+      if (!this.scenario.image[0]) return;
+      this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
     },
   },
   mounted() {
