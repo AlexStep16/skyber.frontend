@@ -6,95 +6,100 @@
     </div>
     
     <div :class="showSettings ? 'settings__main' : 'none'">
-      <div class="settings-item">
-        <span class="settings-item__text">Управление сценариями</span>
-        <router-link
-          :to="'/test/scenario/menu/' + hash"
-          target="_blank"
-          class="settings-item__link pointer flex flex-center"
-        >
-          <span class="mr3">Меню управления</span>
-          <img src="/pictures/link.svg">
-        </router-link>
+      <div class="settings-group">
+        <div class="settings-item">
+          <span class="settings-item__text">Управление сценариями</span>
+          <router-link
+            :to="'/test/scenario/menu/' + hash"
+            target="_blank"
+            class="settings-item__link pointer flex flex-center"
+          >
+            <span class="mr3">Меню управления</span>
+            <img src="/pictures/link.svg">
+          </router-link>
+        </div>
       </div>
-      
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Открыть доступ по ссылке для всех</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.access_for_all" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
+      <div class="settings-group">
+        <div class="settings-item mt6">
+          <span class="settings-item__text">Открыть доступ по ссылке для всех</span>
+          <label class="slider">
+            <input type="checkbox" v-model="settings.access_for_all" class="none">
+            <span class="slider__circle slider__round"></span>
+          </label>
+        </div>
+
+        <div class="settings-item mt6">
+          <span class="settings-item__text">Доступ по паролю</span>
+          <label class="slider">
+            <input type="checkbox" v-model="settings.password_access" class="none">
+            <span class="slider__circle slider__round"></span>
+          </label>
+        </div>
+
+        <div class="settings-item mt6" v-if="settings.password_access">
+          <input 
+            v-model="settings.password" 
+            type="password" 
+            class="input settings-item__input" 
+            :placeholder="settings.password_confirm === true ? 'Введите новый пароль' : 'Введите пароль'"
+          />
+          <span class="settings-item__password-setted" v-if="settings.password_confirm === true">Пароль установлен</span>
+        </div>
+
+        <div class="settings-item mt6">
+          <span class="settings-item__text">Собирать статистику</span>
+          <label class="slider">
+            <input type="checkbox" v-model="settings.has_statistic" class="none">
+            <span class="slider__circle slider__round"></span>
+          </label>
+        </div>
       </div>
 
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Доступ по паролю</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.password_access" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
-      </div>
+      <div class="settings-group">
+        <div class="settings-item mt6">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            id="setting-1"
+            name="setting-1"
+            v-model="settings.is_list"
+          />
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-1">Показывать вопросы списком</label>
+        </div>
 
-      <div class="settings-item mt6" v-if="settings.password_access">
-        <input 
-          v-model="settings.password" 
-          type="password" 
-          class="input settings-item__input" 
-          :placeholder="settings.password_confirm === true ? 'Введите новый пароль' : 'Введите пароль'"
-        />
-        <span class="settings-item__password-setted" v-if="settings.password_confirm === true">Пароль установлен</span>
-      </div>
+        <div class="settings-item mt6">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            id="setting-2"
+            name="setting-2"
+            v-model="settings.is_right_questions"
+          />
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-2">Показывать правильные вопросы</label>
+        </div>
 
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Показывать вопросы списком</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.is_list" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
-      </div>
+        <div class="settings-item mt6">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            id="setting-3"
+            name="setting-3"
+            v-model="settings.is_resend"
+          />
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-3">Перепрохождение теста</label>
+        </div>
 
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Показывать правильные вопросы</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.is_right_questions" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
+        <div class="settings-item mt6">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            id="setting-4"
+            name="setting-4"
+            v-model="settings.is_reanswer"
+          />
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-4">Перевыбор ответа</label>
+        </div>
       </div>
-
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Перепрохождение теста</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.is_resend" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
-      </div>
-
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Перевыбор ответа</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.is_reanswer" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
-      </div>
-
-      <div class="settings-item mt6">
-        <span class="settings-item__text">Собирать статистику</span>
-        <label class="slider">
-          <input type="checkbox" v-model="settings.has_statistic" class="none">
-          <span class="slider__circle slider__round"></span>
-        </label>
-      </div>
-
-      <!-- <div
-        class="settings-item mt6"
-      >
-        <input
-          class="custom-checkbox"
-          type="checkbox"
-          id="setting-2"
-          name="setting-2"
-        />
-        <label class="settings-item__text settings-item__before-right" for="setting-2">Выбрать ответы для теста</label>
-      </div> -->
     </div>
   </div>
 </template>

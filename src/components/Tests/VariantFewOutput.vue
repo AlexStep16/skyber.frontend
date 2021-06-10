@@ -13,12 +13,12 @@
           :name="`variant${key}`"
           :value="`${JSON.stringify(variant.name)}`"
           v-model="newSelected"
-          @change="ready();showRightVariant(variant, $event)"
+          @change="ready()"
           :disabled="variant.disabled"
         />
         <label :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
       </div>
-      <div class="description" v-if="variant.hasDescription && showRights && (variant.color === 'wrong' || variant.color === 'right')">
+      <div class="description" v-if="variant.hasDescription && showRights && isThatDescription(variant)">
         {{variant.description}}
       </div>
     </div>
@@ -34,48 +34,45 @@ export default {
   data() {
     return {
       newSelected: [],
-      showRights: false
+      showRights: false,
     };
   },
   methods: {
     getRadioArray(variants) {
-      if(!this.settings.is_reanswer && this.showRights) return this.newSelected
       return variants.filter((elem) => {
         return elem.name != null;
       });
     },
 
     ready() {
+      if(!this.settings.is_reanswer && this.showRights) return false
       this.$emit('ready', this.newSelected)
     },
 
     showRightVariant() {
       if(this.settings.is_right_questions && this.postQuestion.showAllRightVariants) {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
-        
+        this.postQuestion.variants.forEach(variant => {
+          variant.color = 'wrong'
+        })
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
             if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
               variant.color = 'right'
-              return true;
-            }
-            else {
-              variant.color = 'wrong'
-              if(!this.settings.is_reanswer) {
-                variant.disabled = true
-              }
             }
           })
-          
         })
         this.showRights = true
+        this.postQuestion.wasSelected = true
       }
+    },
 
-      
+    isThatDescription(variant) {
+      return this.newSelected.includes(JSON.stringify(variant.name))
     }
   },
   watch: {
-    postQuestion: {
+    "postQuestion.showAllRightVariants": {
       deep: true,
       handler() {
         this.showRightVariant()

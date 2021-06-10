@@ -10,6 +10,11 @@
   }
 }
 
+.settings-group:not(:last-child) {
+  border-bottom: 1px solid rgb(220,220,220);
+  padding-bottom: 13px;
+}
+
 .settings-item {
   display: flex;
   align-items: center;
@@ -28,7 +33,12 @@
     position: relative;
   }
 
+  &__before-right {
+    width: 100%;
+  }
+
   &__before-right::before {
+    margin: 0!important;
     position: absolute;
     right: 0;
   }

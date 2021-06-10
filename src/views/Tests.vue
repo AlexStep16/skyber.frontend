@@ -144,14 +144,14 @@
           <button
             class="button button_type-index button_theme-purple mt7" 
             @click="nextQuestion"
-            v-if="questionCounter !== questions.length-1 && "
+            v-if="nextButton()"
           >
           Дальше
           </button>
           <button
             class="button button_type-index button_theme-purple mt7" 
             @click="showAllRightVariantsMethod"
-            v-if="questions[questionCounter].typeAnswer === 'Несколько из списка' && !fewAlreadySelected()"
+            v-if="answerButton()"
           >
           Ответить
           </button>
@@ -294,7 +294,8 @@ export default {
         .post("answers/send", {
           questions: this.questions,
           testId: this.testId,
-          fingerprint: window.VISITOR_ID
+          fingerprint: window.VISITOR_ID,
+          hasStatistic: this.settings.has_statistic
         })
         .then(() => {
           this.successMessage = "Успешно отправлено"
@@ -316,10 +317,14 @@ export default {
       location.reload()
     },
     showAllRightVariantsMethod() {
-      this.questions[this.questionCounter].showAllRightVariants = true
+      this.currentQuestion.showAllRightVariants = true
     },
-    fewAlreadySelected() {
-      return this.questions[this.questionCounter].showAllRightVariants
+    answerButton() {
+      return this.currentQuestion.typeAnswer === 'Несколько из списка'
+             && !this.currentQuestion.wasSelected
+    },
+    nextButton() {
+      return !this.answerButton() && this.questionCounter !== this.questions.length - 1
     }
   },
   mounted() {
@@ -369,6 +374,7 @@ export default {
             right_variants: element.right_variants,
             videoLink: element.videoLink,
             showAllRightVariants: false,
+            wasSelected: false,
           });
         });
         if(this.questions.length > 0) {
