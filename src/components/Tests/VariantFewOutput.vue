@@ -14,6 +14,7 @@
           :value="`${JSON.stringify(variant.name)}`"
           v-model="newSelected"
           @change="ready();showRightVariant(variant, $event)"
+          :disabled="variant.disabled"
         />
         <label :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
       </div>
@@ -38,6 +39,7 @@ export default {
   },
   methods: {
     getRadioArray(variants) {
+      if(!this.settings.is_reanswer && this.showRights) return this.newSelected
       return variants.filter((elem) => {
         return elem.name != null;
       });
@@ -59,17 +61,25 @@ export default {
             }
             else {
               variant.color = 'wrong'
+              if(!this.settings.is_reanswer) {
+                variant.disabled = true
+              }
             }
           })
           
         })
         this.showRights = true
       }
+
+      
     }
   },
   watch: {
-    postQuestion: function () {
-      this.showRightVariant()
+    postQuestion: {
+      deep: true,
+      handler() {
+        this.showRightVariant()
+      }
     }
   },
 };

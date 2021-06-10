@@ -137,15 +137,23 @@
           <button 
             class="button button_type-index button_theme-purple mt7" 
             @click="backQuestion"
+            v-if="questionCounter !== 0"
           >
           Назад
           </button>
           <button
             class="button button_type-index button_theme-purple mt7" 
             @click="nextQuestion"
-            v-if="questionCounter !== questions.length-1"
+            v-if="questionCounter !== questions.length-1 && "
           >
           Дальше
+          </button>
+          <button
+            class="button button_type-index button_theme-purple mt7" 
+            @click="showAllRightVariantsMethod"
+            v-if="questions[questionCounter].typeAnswer === 'Несколько из списка' && !fewAlreadySelected()"
+          >
+          Ответить
           </button>
           <button 
             class="button button_type-index button_theme-purple mt7" 
@@ -307,6 +315,12 @@ export default {
     resend() {
       location.reload()
     },
+    showAllRightVariantsMethod() {
+      this.questions[this.questionCounter].showAllRightVariants = true
+    },
+    fewAlreadySelected() {
+      return this.questions[this.questionCounter].showAllRightVariants
+    }
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
@@ -354,7 +368,7 @@ export default {
             },
             right_variants: element.right_variants,
             videoLink: element.videoLink,
-            wasSelected: false,
+            showAllRightVariants: false,
           });
         });
         if(this.questions.length > 0) {
