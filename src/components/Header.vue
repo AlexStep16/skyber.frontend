@@ -8,53 +8,35 @@
         <span v-else-if="type == 'poll'">опросы</span>
       </span>
     </router-link>
-    <div class="header__links">
-      <div class="header-avatar" v-click-outside="hideMenu">
-        <div class="header-avatar__image-wrapper">
-          <div class="header-avatar__image" :style="userAvatarStyle" @click="toggleMenu"></div>
+      <div class="header-links-list" v-if="isAuthorized">
+        <div :class="$route.path === '/list' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+          <router-link to="/list" class="flex flex-align-center"><Home25 v-if="false" /><span>Мои тесты</span></router-link>
         </div>
-        <div
-          class="header-menu bg-white-border"
-          v-if="!isMenuHide"
-        >
-          <ul class="header-menu-list" v-if="isAuthorized">
-            <div class="header-menu-list__header flex flex-align-center">
-              <h3>@{{$store.state.auth.user.login}}</h3>
-            </div>
-            <li class="header-menu-list__item">
-              <router-link to="/list" class="flex flex-align-center"><Home32 />Мои тесты</router-link>
-            </li>
-            <li class="header-menu-list__item">
-              <router-link to="/test/create" class="flex flex-align-center"><Add32 />Создать тест</router-link>
-            </li>
-            <li class="header-menu-list__item">
-              <router-link to="/poll/create" class="flex flex-align-center"><Add32 />Создать опрос</router-link>
-            </li>
-            <li class="header-menu-list__item">
-              <a href="#" @click.prevent="logout" class="flex flex-align-center"><Exit32 />Выход</a>
-            </li>
-          </ul>
-          <ul class="header-menu-list" v-else>
-            <div class="header-menu-list__header flex flex-align-center">
-              <h3>@guess13358</h3>
-            </div>
-            <li class="header-menu-list__item">
-              <router-link to="/test/create" class="flex flex-align-center"><Add32 />Создать тест</router-link>
-            </li>
-            <li class="header-menu-list__item">
-              <router-link to="/poll/create" class="flex flex-align-center"><Add32 />Создать опрос</router-link>
-            </li>
-            <li class="header-menu-list__item">
-              <router-link to="/register" class="flex flex-align-center"><NewUser32 />Зарегистрироваться</router-link>
-            </li>
-            <li class="header-menu-list__item">
-              <router-link to="/login" class="flex flex-align-center"><Login32 />Войти</router-link>
-            </li>
-          </ul>
+        <div :class="$route.name === 'MakeTest' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+          <router-link to="/test/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать тест</span></router-link>
+        </div>
+        <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+          <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
+        </div>
+        <div class="header-links-list__item header-links-list__item-margin header-links-list__item-exit">
+          <a href="#" @click.prevent="logout" class="flex flex-align-center"><Exit25 v-if="false" /><span>Выход</span></a>
+        </div>
+      </div>
+      <div class="header-links-list" v-else>
+        <div :class="$route.name === 'MakeTest' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+          <router-link to="/test/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать тест</span></router-link>
+        </div>
+        <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+          <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
+        </div>
+        <div class="header-links-list__item header-links-list__item-margin">
+          <router-link to="/register" class="flex flex-align-center"><NewUser25 v-if="false" /><span>Зарегистрироваться</span></router-link>
+        </div>
+        <div class="header-links-list__item header-links-list__item-exit">
+          <router-link to="/login" class="flex flex-align-center"><Login25 v-if="false" /><span>Войти</span></router-link>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -63,11 +45,11 @@ import { mapActions } from "vuex";
 
 
 //Add SVG's
-import Home32 from '../../public/Vectors/home32.svg'
-import Add32 from '../../public/Vectors/add32_new.svg'
-import Exit32 from '../../public/Vectors/exit32.svg'
-import Login32 from '../../public/Vectors/login32.svg'
-import NewUser32 from '../../public/Vectors/new-user32.svg'
+import Home25 from '../../public/Vectors/home25.svg'
+import Add25 from '../../public/Vectors/add25_new.svg'
+import Exit25 from '../../public/Vectors/exit25.svg'
+import Login25 from '../../public/Vectors/login25.svg'
+import NewUser25 from '../../public/Vectors/new-user25.svg'
 
 
 export default {
@@ -82,7 +64,7 @@ export default {
   },
   props: ['type'],
   components: {
-    Home32, Add32, Exit32, NewUser32, Login32
+    Home25, Add25, Exit25, NewUser25, Login25
   },
   methods: {
     ...mapActions({

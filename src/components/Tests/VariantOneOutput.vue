@@ -46,7 +46,10 @@ export default {
       });
     },
     showRightVariant(variant) {
-      if(this.settings.is_right_questions && !this.postQuestion.alreadySelect) {
+      if (this.settings.is_list && !this.postQuestion.showAllRightVariants) {
+        return false;
+      }
+      if (this.settings.is_right_questions && !this.postQuestion.alreadySelect) {
         let right_variants = JSON.parse(this.postQuestion.right_variants)
 
         this.postQuestion.variants.forEach(variant => {
@@ -58,15 +61,27 @@ export default {
           this.showRights = true
         })
       }
-      if(!this.settings.is_reanswer) {
+      if (!this.settings.is_reanswer && !this.settings.is_list) {
         this.postQuestion.variants.forEach((variantInside) => {
-          if(variant.id !== variantInside.id) variantInside.disabled = true
+          if (variant.id !== variantInside.id) variantInside.disabled = true
+        })
+      } else if (!this.settings.is_reanswer && this.settings.is_list) {
+        this.postQuestion.variants.forEach((variant) => {
+          if (this.postQuestion.checked !== JSON.stringify(variant.name)) variant.disabled = true
         })
       }
     },
     variantChecked(variant) {
       if(variant.name === JSON.parse(this.postQuestion.checked)) return true
       return false
+    }
+  },
+  watch: {
+    "postQuestion.showAllRightVariants": {
+      deep: true,
+      handler() {
+        this.showRightVariant()
+      }
     }
   },
 };

@@ -19,7 +19,6 @@
       <div class="preview-eye mr7 pointer flex flex-align-center" @click="preview" v-if="type == 'poll'">
         <EyeSVG />
       </div>
-      <SettingsSVG @click="showSettings" v-if="type == 'test' || type == 'poll'" class="pointer" />
       <button
         class="button button_type-index button_theme-blue ml7"
         @click="save"
@@ -32,13 +31,12 @@
 
 <script>
 import EyeSVG from '../../public/pictures/eye.svg'
-import SettingsSVG from '../../public/pictures/settings.svg'
 
 export default {
   name: 'MakeFooter',
   props: ["link", "type"],
   components: {
-    EyeSVG, SettingsSVG
+    EyeSVG
   },
   methods: {
     save() {

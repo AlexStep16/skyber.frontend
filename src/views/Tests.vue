@@ -133,7 +133,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-justify-between">
+        <div class="flex flex-justify-between" v-if="!settings.is_list">
           <button 
             class="button button_type-index button_theme-purple mt7" 
             @click="backQuestion"
@@ -269,6 +269,11 @@ export default {
 
     sendTest() {
       this.scoresCounter()
+      if(this.settings.is_list && this.settings.is_right_questions) {
+        this.questions.forEach(question => {
+          question.showAllRightVariants = true
+        })
+      } 
       let stop = false;
       this.questions.forEach((elem) => {
         if((elem.isRequire && elem.checked === undefined) || !elem.checked) {
@@ -322,6 +327,7 @@ export default {
     answerButton() {
       return this.currentQuestion.typeAnswer === 'Несколько из списка'
              && !this.currentQuestion.wasSelected
+             && this.settings.is_right_questions
     },
     nextButton() {
       return !this.answerButton() && this.questionCounter !== this.questions.length - 1

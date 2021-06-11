@@ -65,6 +65,11 @@ export default {
         this.showRights = true
         this.postQuestion.wasSelected = true
       }
+      if (!this.settings.is_reanswer && this.postQuestion.showAllRightVariants) {
+        this.postQuestion.variants.forEach(variant => {
+          variant.disabled = true
+        })
+      } 
     },
 
     isThatDescription(variant) {

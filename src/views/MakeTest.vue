@@ -56,8 +56,8 @@
                 </div>
                 <div class="test-add-video-block flex flex-center mt5" v-if="!hideVideoBox">
                   <div class="test-add-video-block__modal flex flex-column">
-                    <input type="text" class="input" ref="linkInput" placeholder="Введите ссылку на YouTube видео">
-                    <button class="button button-theme-blue" @click.prevent="saveLink">Добавить</button>
+                    <input type="text" class="input test-add-video-block__input" ref="linkInput" placeholder="Введите ссылку на YouTube видео">
+                    <button class="button button_theme-blue test-add-video-block__button" @click.prevent="saveLink">Добавить</button>
                   </div>
                 </div>
                 <input
@@ -146,8 +146,8 @@
                     </div>
                     <div class="test-add-video-block flex flex-center mt5" v-if="!question.hideVideoBox">
                       <div class="test-add-video-block__modal flex flex-column">
-                        <input type="text" class="input" v-model="question.preparateVideoLink" placeholder="Введите ссылку на YouTube видео">
-                        <button class="button button-theme-blue" @click.prevent="questionSaveLink(question)">Добавить</button>
+                        <input type="text" class="input test-add-video-block__input" v-model="question.preparateVideoLink" placeholder="Введите ссылку на YouTube видео">
+                        <button class="button button_theme-blue test-add-video-block__button" @click.prevent="questionSaveLink(question)">Добавить</button>
                       </div>
                     </div>
                     <!-- Конец блока с видео -->
@@ -452,9 +452,8 @@ export default {
         fingerprint: this.fingerprint,
         settings: this.settings
       };
-      if(!stop) axios.post("test/save", test).then((res) => {
+      if(!stop) axios.post("test/save", test).then(() => {
 
-        console.log(res)
         if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
         this.successMessage = "Успешно сохранено"
         this.showSuccess = true
@@ -549,6 +548,7 @@ export default {
     getTest(hash) {
       this.showImagePreloader = true
       this.imageLoading = true
+      console.log(this.fingerprint)
       axios.post("test/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
           this.$router.push('/test/create')
@@ -573,7 +573,6 @@ export default {
         if(hashStore != null && hash == hashStore) {
           this.CLEAR_TEST_DRAFT()
         }
-        this.$router.replace('/404');
       }).finally(() => {
         this.$store.commit('HIDE_LOADER')
       });
