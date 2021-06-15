@@ -201,11 +201,11 @@
                     v-if="question.name != null"
                   >
                     <div
-                      class="test-question-name mb6"
+                      class="test-question-name mb0"
                     >
                       {{ question.name }}
                     </div>
-                    <div class="test-image mt5 mb7" v-if="question.image.link != null">
+                    <div class="test-image mt6" v-if="question.image.link != null">
                       <div class="test-image__wraper">
                         <img :src="question.image.link" />
                       </div>
@@ -268,19 +268,13 @@ import { getIdFromUrl } from 'vue-youtube'
 import Header from "@/components/Header.vue";
 
 import VariantStandart from "@/components/MakeTest/VariantStandart.vue";
-
 import VariantInput from "@/components/MakeTest/VariantInput.vue";
 import VariantInputOutput from "@/components/MakeTest/VariantInputOutput.vue";
-
 import VariantUnfoldOutput from "@/components/MakeTest/VariantUnfoldOutput.vue";
-
 import VariantOneOutput from "@/components/MakeTest/VariantOneOutput.vue";
-
 import VariantFewOutput from "@/components/MakeTest/VariantFewOutput.vue";
-
 import VariantDate from "@/components/MakeTest/VariantDate.vue";
 import VariantDateOutput from "@/components/MakeTest/VariantDateOutput.vue";
-
 import VariantTime from "@/components/MakeTest/VariantTime.vue";
 import VariantTimeOutput from "@/components/MakeTest/VariantTimeOutput.vue";
 

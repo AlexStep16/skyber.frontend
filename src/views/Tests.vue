@@ -44,7 +44,7 @@
                 <youtube id="youtube" ref="youtube" :video-id="question.videoLink" class="test-video">
                 </youtube>
               </div>
-              <div class="test-image mt5" v-if="question.image.link != null">
+              <div class="test-image mt6" v-if="question.image.link != null">
                 <div class="test-image__wraper">
                   <img :src="question.image.link" />
                 </div>

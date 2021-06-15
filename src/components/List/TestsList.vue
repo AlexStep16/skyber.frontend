@@ -1,6 +1,6 @@
 <template>
   <div class="list-main-wraper">
-    <div class="list-item" v-for="(test, key) in postTests" :key="test.id">
+    <div class="list-item bg-white-shadow" v-for="(test, key) in postTests" :key="test.id">
       <span class="list-item__tag">Тест</span>
       <h2 @click="goCreateTest(test)" class="mt6 mb6 pointer">{{ test.testName }}</h2>
       <p class="list-item__description mb7">{{ test.description }}</p>

@@ -1,5 +1,5 @@
 <template>
-  <div class="form_type-checkbox">
+  <div class="form_type-checkbox mt7">
     <div
       class="checkbox"
       v-for="(variant, key) in getRadioArray(postQuestion.standartVariants)"
@@ -41,7 +41,6 @@ export default {
 @import "@/common.blocks/maketest.scss";
 
 .checkbox {
-  padding: 10px;
   border-radius: 2px;
 }
 </style>

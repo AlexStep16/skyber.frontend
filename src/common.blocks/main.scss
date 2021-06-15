@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Golos; /* Имя шрифта */
+  src: url(/Golos-Text_Medium.woff2); /* Путь к файлу со шрифтом */
+}
+
 /* ------Common styles start here------ */
 
 body {
@@ -315,7 +320,7 @@ button, .button {
 
 .bg-white-shadow {
   background-color: white;
-  box-shadow: 0px 4px 12px rgba(30, 30, 30, 0.1);
+  box-shadow: 0px 4px 0 #e0e0e0;
 }
 
 .bg-white-border {

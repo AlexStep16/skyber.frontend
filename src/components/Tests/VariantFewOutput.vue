@@ -1,5 +1,5 @@
 <template>
-  <div class="form_type-checkbox mt6">
+  <div class="form_type-checkbox mt7">
     <div
       :class="'checkbox checkbox-' + variant.color"
       v-for="(variant, key) in getRadioArray(postQuestion.variants)"
@@ -16,7 +16,7 @@
           @change="ready()"
           :disabled="variant.disabled"
         />
-        <label :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
+        <label class="pointer" :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
       </div>
       <div class="description" v-if="variant.hasDescription && showRights && isThatDescription(variant)">
         {{variant.description}}
@@ -91,16 +91,17 @@ export default {
 @import "@/common.blocks/form-checkbox_type-main.scss";
 
 .right-question-checkbox{
+  padding: 10px;
   background-color: #caffbd!important;
 }
 
 .wrong-question-checkbox{
+  padding: 10px;
   background-color: rgb(255, 180, 184)!important;
 }
 
 .checkbox {
-  padding: 10px;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 .checkbox-wrong {

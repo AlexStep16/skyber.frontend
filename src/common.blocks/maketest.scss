@@ -38,10 +38,11 @@
 
 .test__block {
   height: auto;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 28px 34px;
   position: relative;
   flex: auto;
+  border: 1px solid #eceaea;
 }
 
 .test-block-wraper {
@@ -91,7 +92,7 @@
   flex-grow: 1; 
   display: flex; 
   align-items: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Golos", sans-serif;
   font-size: 1.3em;
   color: #494646;
 }
@@ -112,7 +113,7 @@
 }
 
 .test-question-answer {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1em;
   color: #686669;
   display: flex;
@@ -138,7 +139,7 @@
 .test__description {
   font-family: 'Roboto', sans-serif;
   font-size: 1.05em;
-  color: #444;
+  color: rgb(90, 90, 90);
 }
 
 .test-add-video-block {
@@ -179,7 +180,7 @@
 
 
 .h1-test {
-  font-size: 1.2em;
+  font-size: 1.4em;
   color: #565656;
   font-family: 'Montserrat', sans-serif;
 }
@@ -331,7 +332,7 @@ hr {
     padding: 60px 0 70px 0;
   }
 
-  .test-question-name[data-v-3e6fd9da] {
+  .test-question-name {
     font-size: 1.15em;
     margin-bottom: 15px!important;
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="list-main-wraper">
-    <div class="list-item" v-for="(poll, key) in postPolls" :key="poll.id">
+    <div class="list-item bg-white-shadow" v-for="(poll, key) in postPolls" :key="poll.id">
       <span class="list-item__tag">Опрос</span>
       <h2 @click="goCreatePoll(poll)" class="mt6 mb6 pointer">{{ poll.pollName }}</h2>
       <p class="list-item__description mb7">{{ poll.pollDescription }}</p>
