@@ -6,7 +6,7 @@
       :key="`${variant.id}${index}`"
     >
       <div class="flex flex-align-center">
-        <div class="flex flex-center" v-if="postQuestion.typeAnswer == 'Несколько из списка'">
+        <div class="flex flex-center">
           <input
             class="custom-checkbox"
             type="checkbox"
@@ -16,19 +16,7 @@
           />
           <label class="test-question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
         </div>
-        <div class="form_radio form_radio-right flex flex-center mr4" v-if="postQuestion.typeAnswer == 'Один из списка'">
-          <input
-            :id="`radio${postQuestion.id}${variant.id}`"
-            type="radio"
-            :name="`radio${postQuestion.id}`"
-            :value="`${JSON.stringify(variant.name)}`"
-            v-model="postQuestion.right_variants"
-          />
-          <label 
-            class="test-question-answer"
-            :for="`radio${postQuestion.id}${variant.id}`">
-          </label>
-        </div>
+        
         <input
           type="text"
           class="input input_type-test-small"

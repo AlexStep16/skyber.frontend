@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="tiptap-menu flex flex-align-center mb6">
-      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3">
+      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bold') ? 'tiptap-menu__button_is-active' : ''">
         <BoldSVG />
       </button>
-      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3">
+      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3" :class="editor.isActive('italic') ? 'tiptap-menu__button_is-active' : ''">
         <CursiveSVG />
       </button>
-      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3">
+      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3" :class="editor.isActive('strike') ? 'tiptap-menu__button_is-active' : ''">
         <StrikeSVG />
       </button>
     </div>
@@ -17,13 +17,13 @@
       :editor="editor"
       v-if="editor"
     >
-      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3">
+      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bold') ? 'tiptap-menu__button_is-bubble-active' : ''">
         <BoldSVG />
       </button>
-      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3">
+      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3" :class="editor.isActive('italic') ? 'tiptap-menu__button_is-bubble-active' : ''">
         <CursiveSVG />
       </button>
-      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3">
+      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3" :class="editor.isActive('strike') ? 'tiptap-menu__button_is-bubble-active' : ''">
         <StrikeSVG />
       </button>
     </bubble-menu>
@@ -81,7 +81,7 @@ export default {
     },
   },
 
-  mounted() {
+  beforeMount() {
     this.editor = new Editor({
       extensions: [
         StarterKit,
@@ -138,12 +138,6 @@ export default {
     font-size: 0.85rem;
     font-weight: 500;
     padding: 0 0.2rem;
-    opacity: 0.6;
-
-    &:hover,
-    &.is-active {
-      opacity: 1;
-    }
   }
 }
 
@@ -159,12 +153,6 @@ export default {
     font-size: 0.85rem;
     font-weight: 500;
     padding: 0 0.2rem;
-    opacity: 0.6;
-
-    &:hover,
-    &.is-active {
-      opacity: 1;
-    }
   }
 }
 
@@ -181,6 +169,22 @@ export default {
     width: 35px;
     height: 35px;
     border-radius: 100%;
+
+    &_is-active {
+      background-color: #77777750;
+
+      svg path {
+        fill: #444;
+      }
+    }
+
+    &_is-bubble-active {
+      background-color: #77777750!important;
+
+      svg path {
+        fill: #fff!important;
+      }
+    }
   }
   &__button:hover {
     background-color: #77777750;

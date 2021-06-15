@@ -6,7 +6,7 @@
       <LinkClosed v-else-if="settings.password_access" from="test" type="password" @openTest="openTest" />
       <div class="test" v-if="settings.access_for_all && !settings.password_access">
         <TestAnswer :totalScores="totalScores" :hash="hash" v-if="totalScores !== null" />
-        <div class="test__block_wraper mt7">
+        <div class="test__block_wraper">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
             <h1 class="h1-test mt0 mb0">{{ testName }}</h1>
             <div class="test__description mt6" v-if="testDescription">{{ testDescription }}</div>
@@ -166,7 +166,7 @@
       </div>
     </div>
     <InfoModal :message="infoMessage" />
-    <SuccessModal 
+    <!-- <SuccessModal 
       v-if="showSuccess" 
       :message="successMessage" 
       type="test" 
@@ -174,7 +174,7 @@
       :edit="false"
       :resend="settings.is_resend"
       @resend="resend()"
-    />
+    /> -->
     <SendFooter 
       v-if="this.settings.is_list && this.settings.access_for_all && !this.settings.password_access"
       :link="hash"
@@ -199,7 +199,7 @@ import VariantTimeOutput from "@/components/Tests/VariantTimeOutput.vue";
 import Header from "@/components/Header.vue";
 import InfoModal from "@/components/InfoModal.vue";
 import LinkClosed from "@/components/LinkClosed.vue";
-import SuccessModal from "@/components/SuccessModal.vue";
+/* import SuccessModal from "@/components/SuccessModal.vue"; */
 import SendFooter from "@/components/SendFooter.vue";
 import Loader from "@/components/Loader.vue";
 import TestAnswer from "@/components/Scenarios/TestAnswer.vue";
@@ -238,7 +238,7 @@ export default {
     VariantFewOutput,
     VariantUnfoldOutput,
     VariantDateOutput, VariantTimeOutput,
-    Header, InfoModal, SuccessModal,
+    Header, InfoModal, /* SuccessModal, */
     SendFooter, Loader, LinkClosed,
     TestAnswer
   },
@@ -268,13 +268,6 @@ export default {
     },
 
     sendTest() {
-      this.scoresCounter()
-      if(this.settings.is_list && this.settings.is_right_questions) {
-        this.questions.forEach(question => {
-          question.showAllRightVariants = true
-        })
-      } 
-      let stop = false;
       this.questions.forEach((elem) => {
         if((elem.isRequire && elem.checked === undefined) || !elem.checked) {
           stop = true;
@@ -282,30 +275,46 @@ export default {
       });
       if (stop) {
         this.infoMessage = {body: 'Вы ответили не на все вопросы', type: 'danger'}
-        return;
+        return false;
       }
-      for(let key in this.questions) {
-        if(!this.questions[key]['checked']) {
-          this.questions[key]['checked'] = []
+      this.scoresCounter()
+      if(this.settings.is_list && this.settings.is_right_questions) {
+        this.questions.forEach(question => {
+          question.showAllRightVariants = true
+        })
+      } 
+      let stop = false;
+      let questions = []
+      this.questions.forEach((question, key) => {
+        questions[key] = Object.assign({}, question)  // !!!!! в this.questions могут быть только простые объекты
+      })
+
+      for(let key in questions) {
+        if(!questions[key]['checked']) {
+          questions[key]['checked'] = []
         }
-        if(!Array.isArray(this.questions[key]['checked'])) {
-          this.questions[key]['checked'] = [this.questions[key]['checked']]
+        if(!Array.isArray(questions[key]['checked'])) {
+          questions[key]['checked'] = [questions[key]['checked']]
         }
       }
-      this.questions = this.questions.filter((question) => {
+      questions = questions.filter((question) => {
         return question.checked.length > 0
       })
       axios
         .post("answers/send", {
-          questions: this.questions,
+          questions: questions,
           testId: this.testId,
           fingerprint: window.VISITOR_ID,
           hasStatistic: this.settings.has_statistic
         })
         .then(() => {
-          this.successMessage = "Успешно отправлено"
-          this.showSuccess = true
+          /* this.successMessage = "Успешно отправлено"
+          this.showSuccess = true */
         });
+      scroll({
+        top: 0,
+        behavior: "smooth"
+      });
     },
     nextQuestion() {
       if (this.questions.length - 1 > this.questionCounter) this.questionCounter++
@@ -334,6 +343,8 @@ export default {
     }
   },
   mounted() {
+    this.imageLoading = true
+
     this.$store.commit('SHOW_LOADER')
     axios.get("test/getByHash/" + this.hash).then((res) => {
       res = res.data.data;
@@ -344,6 +355,7 @@ export default {
       this.testVideoLink = res.videoLink;
       this.testDescription = res.description;
       this.image.link = res.imageLink;
+      this.imageLoading = false
 
       if(res.fingerprint == window.VISITOR_ID) this.isMine = true
       else this.isMine = false

@@ -78,7 +78,6 @@ export default {
   },
   watch: {
     "postQuestion.showAllRightVariants": {
-      deep: true,
       handler() {
         this.showRightVariant()
       }

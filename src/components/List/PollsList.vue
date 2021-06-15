@@ -37,6 +37,9 @@
         </div>
       </div>
     </div>
+    <div class="list-empty" v-if="postPolls.length === 0">
+      У вас пока нет опросов.
+    </div>
 
     <DeleteModal
       v-if="!isModalHide"

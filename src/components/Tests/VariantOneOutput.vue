@@ -45,29 +45,27 @@ export default {
         return elem.name != null;
       });
     },
-    showRightVariant(variant) {
+    showRightVariant() {
       if (this.settings.is_list && !this.postQuestion.showAllRightVariants) {
         return false;
       }
-      if (this.settings.is_right_questions && !this.postQuestion.alreadySelect) {
-        let right_variants = JSON.parse(this.postQuestion.right_variants)
-
+      if (this.settings.is_right_questions) {
+        let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
         this.postQuestion.variants.forEach(variant => {
-          if (variant.name == right_variants) {
-            variant.color = 'right'
-          } else {
-            variant.color = 'wrong'
-          }
-          this.showRights = true
+          variant.color = 'wrong'
         })
+        right_variants.forEach((rightVar) => {
+          this.postQuestion.variants.forEach(variant => {
+            if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
+              variant.color = 'right'
+            }
+          })
+        })
+        this.showRights = true
       }
-      if (!this.settings.is_reanswer && !this.settings.is_list) {
-        this.postQuestion.variants.forEach((variantInside) => {
-          if (variant.id !== variantInside.id) variantInside.disabled = true
-        })
-      } else if (!this.settings.is_reanswer && this.settings.is_list) {
+      if (!this.settings.is_reanswer) {
         this.postQuestion.variants.forEach((variant) => {
-          if (this.postQuestion.checked !== JSON.stringify(variant.name)) variant.disabled = true
+          if(this.postQuestion.checked !== JSON.stringify(variant.name)) variant.disabled = true
         })
       }
     },
@@ -78,7 +76,6 @@ export default {
   },
   watch: {
     "postQuestion.showAllRightVariants": {
-      deep: true,
       handler() {
         this.showRightVariant()
       }

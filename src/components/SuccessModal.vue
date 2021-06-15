@@ -54,7 +54,7 @@
           </div>
           <div>
             <router-link
-              :to="'/tests/' + link"
+              :to="(type=== 'test' ? '/tests/' : '/polls/') + link"
               class="button button-clasic button_theme-roboto_small button_theme-purple"
               style="font-size: 0.85em"
               v-if="edit"

@@ -37,7 +37,7 @@
                 style="vertical-align: bottom"
                 src="/pictures/trash_white.svg"
                 height="24px"
-                @click="deleteScenario(scenario.id, index)"
+                @click="showDeleteModal(scenario.id, index)"
               />
             </div>
           </div>
@@ -102,6 +102,13 @@
         </div>
       </div>
     </div>
+    <DeleteModal 
+      v-if="activeDeleteModal"
+      message="Вы действительно хотите удалить сценарий?" 
+      redMessage="Удалить" 
+      blueMessage="Отмена"
+      @action="deleteScenario($event)"
+    />
     <MakeFooter type="scenario" @save="save" />
     <SuccessModal
       message="Успешно сохранено"
@@ -117,6 +124,7 @@
 import axios from "axios";
 import MakeFooter from "@/components/MakeFooter.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
+import DeleteModal from "@/components/DeleteModal.vue";
 
 export default {
   name: "ScenariosMenu",
@@ -125,11 +133,17 @@ export default {
       hash: this.$route.params.hash,
       scenarios: [],
       options: [],
-      showSuccess: false
+      showSuccess: false,
+      activeDeleteModal: false,
+      tempDelete: {
+        id: null,
+        key: null
+      }
     };
   },
   components: {
-    MakeFooter, SuccessModal
+    MakeFooter, SuccessModal,
+    DeleteModal
   },
   methods: {
     getScenarios() {
@@ -192,6 +206,19 @@ export default {
     },
     hideMenu() {
       this.$emit("hideMenu");
+    },
+    showDeleteModal(id, key) {
+      this.tempDelete.id = id
+      this.tempDelete.key = key
+      this.activeDeleteModal = true
+    },
+    deleteScenario(value) {
+      if(value === 1) {
+        axios.delete('scenario/delete/' + this.tempDelete.id).then(() => {
+          this.$delete(this.scenarios, this.tempDelete.key)
+        })
+      }
+      this.activeDeleteModal = false
     },
     /* disableException(scenario, typeCondition) {
       if (
@@ -272,11 +299,6 @@ export default {
         })
       }
     },
-    deleteScenario(id, index) {
-      axios.delete('scenario/delete/' + id).then(() => {
-        this.$delete(this.scenarios, index)
-      })
-    }
   },
   mounted() {
     this.getScenarios();

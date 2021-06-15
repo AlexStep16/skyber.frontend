@@ -15,8 +15,13 @@
               <youtube id="youtube" ref="youtube" :video-id="pollVideoLink" class="test-video">
               </youtube>
             </div>
-            <div class="test__image mt5" v-if="image.link != null">
-              <img :src="image.link" />
+            <div class="test-image mt6" v-if="image.link != null">
+              <div class="test-image__wraper">
+                <img :src="image.link" />
+                <div class="modal modal_white absolute" v-if="imageLoading">
+                  <Loader />
+                </div>
+              </div>
             </div>
             <VariantFewOutput
               :variants="variants"
@@ -78,6 +83,7 @@ export default {
       isAlreadySent: true,
       hash: this.$route.params.hash,
       videoLoadDone: false,
+      imageLoading: false,
     };
   },
   components: {

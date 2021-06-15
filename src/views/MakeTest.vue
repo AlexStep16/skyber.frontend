@@ -174,18 +174,8 @@
                     </div>
                     <!-- Конец блока с изображением -->
 
-                    <multiselect
-                      :allow-empty="false"
-                      :multiple="false"
-                      v-model="question.typeAnswer"
-                      :options="options"
-                      selectLabel=""
-                      selectedLabel=""
-                      deselectLabel=""
-                      :placeholder="'Выберите тип ответа'"
-                      class="mt5 mb5"
-                      @select="clearRights(question)"
-                    ></multiselect>
+                    <MultiselectIcons :question="question" />
+
                     <VariantStandart
                       :postQuestion="question"
                       v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка' || question.typeAnswer == 'Выпадающий список'"
@@ -272,7 +262,7 @@ import axios from "axios";
 import { mapMutations } from "vuex";
 import Loader from "@/components/Loader.vue";
 
-import Multiselect from "vue-multiselect";
+import MultiselectIcons from "@/components/Multiselect/MultiselectIcons";
 import { getIdFromUrl } from 'vue-youtube'
 
 import Header from "@/components/Header.vue";
@@ -315,7 +305,6 @@ export default {
       testDescription: "",
       testLink: "",
       testHash: this.hash,
-      options: ["Один из списка", "Ввод текста", "Несколько из списка", "Выпадающий список", "Дата", "Время"],
       image: {
         data: null,
         link: null,
@@ -349,7 +338,6 @@ export default {
     };
   },
   components: {
-    Multiselect,
     VariantStandart,
     VariantInput,
     VariantOneOutput,
@@ -360,7 +348,7 @@ export default {
     VariantTime, VariantTimeOutput,
     draggable,  Header, AddSVG,
     MakeFooter, SuccessModal,
-    Loader, InfoModal,
+    Loader, InfoModal, MultiselectIcons,
     Settings
   },
   computed: {
@@ -431,7 +419,7 @@ export default {
       }
       this.questions.forEach((question) => {
         if(!question.name) { 
-          stop = true; 
+          stop = true;
           this.questionFocus(question)
         }
         switch (question.typeAnswer) {
@@ -443,6 +431,7 @@ export default {
             break;
         }
       });
+      if(stop) this.infoMessage = {body: 'Введите название вопроса', type: 'danger'}
       let test = {
         questions: this.questions,
         testName: this.testName || 'Без названия',
@@ -505,7 +494,6 @@ export default {
     questionSaveLink(question) {
       question.videoLink = getIdFromUrl(question.preparateVideoLink)
       question.hideVideoBox = true
-      console.log(question.preparateVideoLink)
     },
     questionDeleteVideo(question) {
       question.videoLink = null
@@ -534,7 +522,6 @@ export default {
     dragEnd() {
       this.questions.forEach((question, index) => {
         question.index = index;
-        console.log(question)
       })
     },
     saveLink() {
@@ -548,7 +535,6 @@ export default {
     getTest(hash) {
       this.showImagePreloader = true
       this.imageLoading = true
-      console.log(this.fingerprint)
       axios.post("test/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
           this.$router.push('/test/create')
@@ -576,9 +562,6 @@ export default {
       }).finally(() => {
         this.$store.commit('HIDE_LOADER')
       });
-    },
-    clearRights(question) {
-      question.right_variants = []
     },
     getTestQuestions() {
       axios
@@ -638,33 +621,24 @@ export default {
       let name = question.name;
       let standartVariants = question.standartVariants; //Стартовое количество вариантов
       let questionToPost = {
-        testHash: this.testHash,
-        variants: standartVariants,
-        name: name,
-        index: this.questions.length,
+        testId: this.testId,
+        name: name || 'Без названия',
+        focused: false,
         typeAnswer: question.typeAnswer,
-        isRequire: question.isRequire
+        standartVariants: standartVariants,
+        index: this.questions.length,
+        isRequire: question.isRequire,
+        image: question.image,
+        right_variants: question.right_variants,
+        videoLink: question.videoLink,
+        hideVideoBox: true
       };
 
       axios.post("test/question", questionToPost).then((res) => {
-        let Question = {
-          id: res.data,
-          name: name || 'Без названия',
-          focused: false,
-          typeAnswer: question.typeAnswer,
-          standartVariants: standartVariants,
-          index: questionToPost.index,
-          isRequire: question.isRequire,
-          image: {
-            data: null,
-            link: null,
-            isLoading: false
-          },
-          right_variants: [],
-        };
+        questionToPost.id = res.data
 
-        this.questions.push(Question);
-        this.questionFocus(Question);
+        this.questions.push(questionToPost);
+        this.questionFocus(questionToPost);
       });
     },
   },
@@ -699,5 +673,7 @@ export default {
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
+@import "@/common.blocks/custom-multiselect.scss";
+
 </style>
 

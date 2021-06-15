@@ -10,7 +10,7 @@
     </router-link>
       <div class="header-links-list" v-if="isAuthorized">
         <div :class="$route.path === '/list' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
-          <router-link to="/list" class="flex flex-align-center"><Home25 v-if="false" /><span>Мои тесты</span></router-link>
+          <router-link to="/list" class="flex flex-align-center"><Home25 v-if="false" /><span>Главная</span></router-link>
         </div>
         <div :class="$route.name === 'MakeTest' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
           <router-link to="/test/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать тест</span></router-link>

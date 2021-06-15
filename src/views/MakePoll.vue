@@ -24,8 +24,10 @@
               <youtube :video-id="pollVideoLink">
               </youtube>
             </div>
-            <div class="test__image mt5 mb7" v-if="image.link != null">
-              <img :src="image.link" />
+            <div class="test-image mt5 mb7" v-if="image.link != null">
+              <div class="test-image__wraper">
+                <img :src="image.link" />
+              </div>
             </div>
             <VariantFewOutput
               :variants="variants"
@@ -80,30 +82,22 @@
               hidden
               v-if="image.link == null"
             />
-            <div class="test__image mt5 mb5" v-if="showImagePreloader">
-              <div class="modal-inner modal50 pointer flex flex-center">
-                <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+            <div class="test-image mt6" v-if="showImagePreloader">
+              <div class="test-image__wraper">
+                <img :src="image.link" />
+                <div class="modal-inner modal50 pointer flex flex-center">
+                  <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+                </div>
               </div>
-              <img :src="image.link" />
               <div class="modal modal_white absolute" v-if="imageLoading">
                 <Loader />
               </div>
             </div>
-            <multiselect
-              v-model="typeVariants"
-              :options="options"
-              class="mt5"
-              :allow-empty="false"
-              :multiple="false"
-              selectLabel=""
-              selectedLabel=""
-              deselectLabel=""
-              :placeholder="'Выберите тип ответа'"
-            ></multiselect>
+            <MultiselectPollIcons :typeVariants="typeVariants" @selected="typeVariants = $event" />
 
             <div class="mt5">
               <div
-                class="test__question mt6"
+                class="test-question mt6"
                 v-for="(variant, index) in variants"
                 :key="variant.id"
               >
@@ -141,7 +135,7 @@ import { getIdFromUrl } from 'vue-youtube'
 import Loader from "@/components/Loader.vue";
 
 import Header from "@/components/Header.vue";
-import Multiselect from "vue-multiselect";
+import MultiselectPollIcons from "@/components/Multiselect/MultiselectPollIcons";
 import VariantFewOutput from "@/components/MakePoll/VariantFewOutput.vue";
 import VariantOneOutput from "@/components/MakePoll/VariantOneOutput.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
@@ -178,7 +172,7 @@ export default {
   },
   components: {
     Header,
-    Multiselect,
+    MultiselectPollIcons,
     VariantFewOutput,
     VariantOneOutput,
     MakeFooter, SuccessModal,
@@ -337,4 +331,6 @@ export default {
 @import "@/common.blocks/makepoll.scss";
 @import "@/common.blocks/form-checkbox_type-main.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
+@import "@/common.blocks/custom-multiselect.scss";
+
 </style>

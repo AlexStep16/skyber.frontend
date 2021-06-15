@@ -2,11 +2,19 @@
   padding: 60px 0;
 }
 
+@keyframes showEffect {
+  0% { box-shadow: 0px 4px 12px rgba(30, 30, 30, 0.1);}
+  50% { box-shadow: 0 4px 18px #2bb673;}
+  100% { box-shadow: 0px 4px 12px rgba(30, 30, 30, 0.1);}
+}
+
 .scenario {
   width: 700px;
   height: auto;
   border-radius: 20px;
   padding: 21px;
+  -webkit-animation: showEffect 4s;
+  animation: showEffect 4s;
 
   &__header-preview {
     font-family: 'Raleway', 'Montserrat', 'Roboto', sans-serif;
@@ -69,6 +77,22 @@
         min-width: 400px;
         display: block;
       }
+    }
+  }
+}
+
+.scenario-success {
+
+  &__message {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25em;
+    color: #444;
+    margin: 0;
+    -webkit-animation: fadeOut 1s;
+    animation: fadeOut 1s;
+    animation-fill-mode: forwards;
+    > svg {
+      margin-right: 13px;
     }
   }
 }

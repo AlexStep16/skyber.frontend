@@ -37,6 +37,9 @@
         </div>
       </div>
     </div>
+    <div class="list-empty" v-if="postTests.length === 0">
+      У вас пока нет тестов.
+    </div>
 
     <DeleteModal 
       v-if="!isModalHide"

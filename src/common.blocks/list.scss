@@ -14,6 +14,16 @@
 
 .list-main-wraper {
   margin-top: 20px;
+  width: 100%;
+}
+
+.list-empty {
+  color: #c9c9c9;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
 }
 
 .list-item {
