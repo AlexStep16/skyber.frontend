@@ -44,11 +44,11 @@
 
 <script>
 import Multiselect from "vue-multiselect";
-import RadioSVG from '../../../public/Vectors/radio.svg'
-import CheckboxSVG from '../../../public/Vectors/checkbox.svg'
-import DateSVG from '../../../public/Vectors/date.svg'
-import ClockSVG from '../../../public/Vectors/clock.svg'
-import ListSVG from '../../../public/Vectors/list.svg'
+import RadioSVG from '/public/Vectors/radio.svg'
+import CheckboxSVG from '/public/Vectors/checkbox.svg'
+import DateSVG from '/public/Vectors/date.svg'
+import ClockSVG from '/public/Vectors/clock.svg'
+import ListSVG from '/public/Vectors/list.svg'
 
 
 export default {

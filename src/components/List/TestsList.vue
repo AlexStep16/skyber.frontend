@@ -55,9 +55,6 @@
 import axios from "axios";
 import DeleteModal from "@/components/DeleteModal.vue";
 
-/* import Circle32 from "../../public/pictures/circle.svg";
-import Trash32 from "../../public/pictures/trash.svg"; */
-
 export default {
   name: "TestList",
   props: ["postTests"],

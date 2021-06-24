@@ -11,6 +11,9 @@
         </router-link>
       </h3>
       <div class="scenarios-menu__main">
+        <div class="scenarios-menu__empty flex flex-center" v-if="scenarios.length === 0">
+          У вас пока нет сценариев
+        </div>
         <div
           class="scenarios-menu-item"
           v-for="(scenario, index) in scenarios"
@@ -18,11 +21,8 @@
         >
           <div class="scenarios-menu-item__header flex flex-align-center">
             <div class="inline-flex flex-align-center">
-              <label class="slider">
-                <input type="checkbox" class="none" />
-                <span class="slider__circle slider__round"></span>
-              </label>
-              <span class="ml6">{{ scenario.name }}</span>
+              <ListSVG />
+              <span class="ml4">{{ scenario.name }}</span>
             </div>
             <div>
               <router-link :to="`/test/scenario/edit/${scenario.id}`" title="Редактировать">
@@ -33,7 +33,7 @@
                 />
               </router-link>
               <img
-                class="ml4 pointer"
+                class="ml5 pointer"
                 style="vertical-align: bottom"
                 src="/pictures/trash_white.svg"
                 height="24px"
@@ -117,6 +117,7 @@
       :justSave="true"
       @go="$router.push('/test/edit/' + hash)"
     />
+    <InfoModal :message="infoMessage" />
   </div>
 </template>
 
@@ -125,6 +126,8 @@ import axios from "axios";
 import MakeFooter from "@/components/MakeFooter.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
+import InfoModal from "@/components/InfoModal.vue";
+import ListSVG from '/public/Vectors/list32-white.svg'
 
 export default {
   name: "ScenariosMenu",
@@ -138,12 +141,13 @@ export default {
       tempDelete: {
         id: null,
         key: null
-      }
+      },
+      infoMessage: {},
     };
   },
   components: {
     MakeFooter, SuccessModal,
-    DeleteModal
+    DeleteModal, InfoModal, ListSVG
   },
   methods: {
     getScenarios() {
@@ -246,6 +250,23 @@ export default {
       if(min > 1 || max > 1) return false
       else return true
     },
+    checkEmptyConditions() {
+      let stopBecauseEmpty = false
+      this.scenarios.forEach((scenario) => {
+        let conditions = scenario.conditions
+        
+        if(conditions.first.checked && !Number.isInteger(conditions.first.scores)) {
+          stopBecauseEmpty = true
+        }
+        if(conditions.second.checked && !Number.isInteger(conditions.second.scores)) {
+          stopBecauseEmpty = true
+        }
+        if(conditions.third.checked && !Number.isInteger(conditions.third.scores)) {
+          stopBecauseEmpty = true
+        }
+      })
+      return stopBecauseEmpty
+    },
     getRangesList() {
       let rangesList = []
       this.scenarios.forEach((scenario) => {
@@ -272,8 +293,12 @@ export default {
     },
     checkedConditions() {
       let rangesList = this.getRangesList()
+      if(this.checkEmptyConditions()) {
+        this.infoMessage = {body: 'Вы не ввели количество баллов', type: 'danger'}
+        return false;
+      }
       if(!this.getExtremus(rangesList)) {
-        alert('Пересечение')
+        this.infoMessage = {body: 'Пересечение с другими сценариями', type: 'danger'}
         return false
       }
       for (let i = 0; i < rangesList.length; i++) {
@@ -283,7 +308,7 @@ export default {
             (rangesList[i][0] >= rangesList[j][0] && rangesList[i][0] <= rangesList[j][1] && rangesList[i][2] !== rangesList[j][2])
             || (rangesList[i][1] >= rangesList[j][0] && rangesList[i][1] <= rangesList[j][1] && rangesList[i][2] !== rangesList[i][2])
           ) {
-            alert('пересечение')
+            this.infoMessage = {body: 'Пересечение с другими сценариями', type: 'danger'}
             return false
           }
         }

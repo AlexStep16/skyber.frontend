@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import EyeSVG from '../../public/pictures/eye.svg'
+import EyeSVG from '/public/pictures/eye.svg'
 
 export default {
   name: 'MakeFooter',

@@ -40,9 +40,9 @@ import {
 } from '@tiptap/vue-2'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import BoldSVG from '../../public/pictures/tiptap-icons/bold.svg'
-import CursiveSVG from '../../public/pictures/tiptap-icons/cursive.svg'
-import StrikeSVG from '../../public/pictures/tiptap-icons/strike.svg'
+import BoldSVG from '/public/pictures/tiptap-icons/bold.svg'
+import CursiveSVG from '/public/pictures/tiptap-icons/cursive.svg'
+import StrikeSVG from '/public/pictures/tiptap-icons/strike.svg'
 
 export default {
   components: {

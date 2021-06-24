@@ -33,7 +33,7 @@ export default {
         this.timeoutId = setTimeout(() => {
           this.show = false
           this.timeoutId = null
-        }, 10000)
+        }, 5000)
       }
     }
   }

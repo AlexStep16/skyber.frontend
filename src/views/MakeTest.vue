@@ -165,7 +165,7 @@
                       <div class="test-image__wraper">
                         <img :src="question.image.link" />
                         <div class="modal-inner modal50 pointer flex flex-center">
-                          <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+                          <img src="/pictures/trash.svg" width="65px" @click="questionImageDelete(question)" />
                         </div>
                       </div>
                       <div class="modal modal_white absolute" v-if="question.image.isLoading">
@@ -285,7 +285,7 @@ import Settings from "@/components/Settings.vue";
 
 import draggable from 'vuedraggable'
 
-import AddSVG from '../../public/Vectors/add32.svg'
+import AddSVG from '/public/Vectors/add32.svg'
 import InfoModal from "@/components/InfoModal.vue";
 
 export default {

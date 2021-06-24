@@ -24,6 +24,14 @@
   &__main {
     margin-top: 30px;
   }
+
+  &__empty {
+    font-family: 'Roboto', sans-serif;
+    color: #c9c9c9;
+    font-size: 1em;
+    width: 100%;
+    min-height: 60px;
+  }
 }
 
 .scenarios-menu-item {

@@ -21,7 +21,7 @@
         /><br />
         <tiptap 
           class="tiptap mt5"
-          placeholder="Введите здесь текст который увидит человек после прохождения теста"
+          placeholder="Введите здесь текст который увидит пользователь после прохождения теста"
           v-model="scenario.description" 
         />
         <input type="file" @change="uploadImage" ref="scenarioImage" hidden>

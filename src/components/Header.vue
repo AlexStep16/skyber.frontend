@@ -45,11 +45,11 @@ import { mapActions } from "vuex";
 
 
 //Add SVG's
-import Home25 from '../../public/Vectors/home25.svg'
-import Add25 from '../../public/Vectors/add25_new.svg'
-import Exit25 from '../../public/Vectors/exit25.svg'
-import Login25 from '../../public/Vectors/login25.svg'
-import NewUser25 from '../../public/Vectors/new-user25.svg'
+import Home25 from '/public/Vectors/home25.svg'
+import Add25 from '/public/Vectors/add25_new.svg'
+import Exit25 from '/public/Vectors/exit25.svg'
+import Login25 from '/public/Vectors/login25.svg'
+import NewUser25 from '/public/Vectors/new-user25.svg'
 
 
 export default {

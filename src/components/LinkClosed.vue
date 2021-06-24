@@ -20,7 +20,7 @@
 
 <script>
 import axios from 'axios'
-import ClosedSVG from '../../public/pictures/closed.svg'
+import ClosedSVG from '/public/pictures/closed.svg'
 
 export default {
   name: 'LinkClosed',

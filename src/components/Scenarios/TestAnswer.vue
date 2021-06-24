@@ -1,5 +1,5 @@
 <template>
-  <div class="scenario test__block bg-white-shadow mb7" :class="showEffect ? 'scenario_show-effect' : ''">
+  <div class="scenario scenario_effect test__block bg-white-shadow mb7" :class="showEffect ? 'scenario_show-effect' : ''">
     <Loader v-if="showLoader" />
     <template v-if="scenario.header && !showLoader">
       <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import SuccessSVG from "../../../public/pictures/success.svg";
+import SuccessSVG from "/public/pictures/success.svg";
 import axios from "axios";
 import Loader from "@/components/Loader.vue";
 

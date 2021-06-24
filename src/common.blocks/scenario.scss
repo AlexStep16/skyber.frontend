@@ -13,8 +13,11 @@
   height: auto;
   border-radius: 20px;
   padding: 21px;
-  -webkit-animation: showEffect 4s;
-  animation: showEffect 4s;
+
+  &_effect {
+    -webkit-animation: showEffect 4s;
+    animation: showEffect 4s;
+  }
 
   &__header-preview {
     font-family: 'Raleway', 'Montserrat', 'Roboto', sans-serif;

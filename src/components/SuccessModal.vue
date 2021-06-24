@@ -80,10 +80,10 @@
 </template>
 
 <script>
-import SuccessSVG from "../../public/pictures/success.svg";
-import Vk from "../../public/pictures/vk36.svg";
-import Twitter from "../../public/pictures/twitter36.svg";
-import Facebook from "../../public/pictures/facebook36.svg";
+import SuccessSVG from "/public/pictures/success.svg";
+import Vk from "/public/pictures/vk36.svg";
+import Twitter from "/public/pictures/twitter36.svg";
+import Facebook from "/public/pictures/facebook36.svg";
 
 export default {
   name: "SuccessModal",
