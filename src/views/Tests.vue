@@ -5,7 +5,7 @@
       <LinkClosed v-if="!settings.access_for_all" from="test" type="link" />
       <LinkClosed v-else-if="settings.password_access" from="test" type="password" @openTest="openTest" />
       <div class="test" v-if="settings.access_for_all && !settings.password_access">
-        <TestAnswer :totalScores="totalScores" :hash="hash" v-if="totalScores !== null" />
+        <TestAnswer :fakeLoader="fakeLoader" :totalScores="totalScores" :hash="hash" v-if="totalScores !== null" />
         <div class="test__block_wraper">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
             <h1 class="h1-test mt0 mb0">{{ testName }}</h1>
@@ -230,6 +230,7 @@ export default {
       settings: {},
       questionCounter: 0,
       currentQuestion: {},
+      fakeLoader: false,
     };
   },
   components: {
@@ -308,6 +309,11 @@ export default {
           hasStatistic: this.settings.has_statistic
         })
         .then(() => {
+          this.fakeLoader = true
+          let th = this
+          setTimeout(() => {
+            th.fakeLoader = false
+          }, 3500)
           /* this.successMessage = "Успешно отправлено"
           this.showSuccess = true */
         });

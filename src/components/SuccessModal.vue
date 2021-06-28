@@ -96,9 +96,7 @@ export default {
   },
   components: {
     SuccessSVG,
-    Vk,
-    Facebook,
-    Twitter,
+    Vk, Facebook, Twitter,
   },
   methods: {
     copy() {

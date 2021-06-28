@@ -2,7 +2,7 @@
   <div class="container flex flex-justify-center">
     <Header />
     <div class="main">
-      <div class="pollOrTest">
+      <!-- <div class="pollOrTest">
         <div
           @click="listSelected = 'tests'"
           :class="
@@ -23,18 +23,18 @@
         >
           Опросы
         </div>
-      </div>
+      </div> -->
       <div class="list">
-        <div class="create-test bg-white-shadow pointer" v-if="listSelected == 'tests'" @click="makeTest()">
+        <div class="create-test bg-white-shadow pointer" @click="makeTest()">
           <img src="/pictures/plus.svg" width="22" class="mr5">
           <span>Создать новый тест</span>
         </div>
-        <div class="create-test bg-white-shadow pointer" v-if="listSelected == 'polls'" @click="makePoll()">
+        <!-- <div class="create-test bg-white-shadow pointer" v-if="listSelected == 'polls'" @click="makePoll()">
           <img src="/pictures/plus.svg" width="22" class="mr5">
           <span>Создать новый опрос</span>
-        </div>
+        </div> -->
         <TestsList :postTests="tests" v-if="listSelected == 'tests'" />
-        <PollsList :postPolls="polls" v-if="listSelected == 'polls'" />
+        <!-- <PollsList :postPolls="polls" v-if="listSelected == 'polls'" /> -->
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import TestsList from "@/components/List/TestsList.vue";
-import PollsList from "@/components/List/PollsList.vue";
+/* import PollsList from "@/components/List/PollsList.vue"; */
 
 export default {
   name: "List",
@@ -64,7 +64,6 @@ export default {
   components: {
     Header,
     TestsList,
-    PollsList,
   },
   methods: {
     makeTest() {

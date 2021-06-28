@@ -15,9 +15,9 @@
         <div :class="$route.name === 'MakeTest' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
           <router-link to="/test/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать тест</span></router-link>
         </div>
-        <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+        <!-- <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
           <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
-        </div>
+        </div> -->
         <div class="header-links-list__item header-links-list__item-margin header-links-list__item-exit">
           <a href="#" @click.prevent="logout" class="flex flex-align-center"><Exit25 v-if="false" /><span>Выход</span></a>
         </div>
@@ -26,9 +26,9 @@
         <div :class="$route.name === 'MakeTest' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
           <router-link to="/test/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать тест</span></router-link>
         </div>
-        <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+        <!-- <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
           <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
-        </div>
+        </div> -->
         <div class="header-links-list__item header-links-list__item-margin">
           <router-link to="/register" class="flex flex-align-center"><NewUser25 v-if="false" /><span>Зарегистрироваться</span></router-link>
         </div>

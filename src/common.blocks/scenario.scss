@@ -100,6 +100,18 @@
   }
 }
 
+.scenario-share {
+  display: flex;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95em;
+  color: #444444;
+
+  a:not(:last-child) {
+    margin-right: 8px;
+  }
+}
+
 .tiptap {
   font-family: 'Roboto', sans-serif;
   font-size: 1.05em;

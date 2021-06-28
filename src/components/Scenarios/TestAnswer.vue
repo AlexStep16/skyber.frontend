@@ -1,7 +1,7 @@
 <template>
-  <div class="scenario scenario_effect test__block bg-white-shadow mb7" :class="showEffect ? 'scenario_show-effect' : ''">
-    <Loader v-if="showLoader" />
-    <template v-if="scenario.header && !showLoader">
+  <div class="scenario test__block bg-white-shadow mb7" :class="showEffect ? 'scenario_show-effect' : ''">
+    <Loader v-if="showLoader || fakeLoader" />
+    <template v-if="scenario.header && !showLoader && !fakeLoader">
       <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
       <div class="scenario__description mt6" v-if="scenario.description" v-html="scenario.description"></div>
       <div class="scenario-image mt6" v-if="scenario.image">
@@ -13,7 +13,7 @@
         </div>
       </div>
     </template>
-    <template v-else-if="!showLoader">
+    <template v-else-if="!showLoader && !fakeLoader">
       <div class="scenario-success">
         <h2
           class="scenario-success__message flex flex-align-center"
@@ -22,6 +22,32 @@
         </h2>
       </div>
     </template>
+    <div class="scenario-share mt7" v-if="!showLoader && !fakeLoader">
+      <ShareNetwork
+        network="vk"
+        :url="url"
+        :title="title"
+        hashtags="skyber,tests,тесты"
+      >
+        <Vk />
+      </ShareNetwork>
+      <ShareNetwork
+        network="twitter"
+        :url="url"
+        :title="title"
+        hashtags="skyber,tests,тесты"
+      >
+        <Twitter />
+      </ShareNetwork>
+      <ShareNetwork
+        network="facebook"
+        :url="url"
+        :title="title"
+        hashtags="skyber,tests,тесты"
+      >
+        <Facebook />
+      </ShareNetwork>
+    </div>
   </div>
 </template>
 
@@ -29,10 +55,13 @@
 import SuccessSVG from "/public/pictures/success.svg";
 import axios from "axios";
 import Loader from "@/components/Loader.vue";
+import Vk from "/public/pictures/vk36.svg";
+import Twitter from "/public/pictures/twitter36.svg";
+import Facebook from "/public/pictures/facebook36.svg";
 
 export default {
   name: 'TestAnswer',
-  props: ['totalScores', 'hash'],
+  props: ['totalScores', 'hash', 'fakeLoader'],
   data() {
     return {
       scenario: {
@@ -48,7 +77,8 @@ export default {
     }
   },
   components: {
-    Loader, SuccessSVG
+    Loader, SuccessSVG,
+    Vk, Facebook, Twitter
   },
   methods: {
     getScenario() {

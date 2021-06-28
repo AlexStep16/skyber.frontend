@@ -8,11 +8,11 @@ import Scenario from '../views/Scenario.vue'
 import MakeScenario from '../components/Scenarios/MakeScenario.vue'
 import ScenariosMenu from '../components/Scenarios/ScenariosMenu.vue'
 import TestCreator from '../views/TestCreator.vue'
-import PollCreator from '../views/PollCreator.vue'
+//import PollCreator from '../views/PollCreator.vue'
 import List from '../views/List.vue'
-import MakePoll from '../views/MakePoll.vue'
+//import MakePoll from '../views/MakePoll.vue'
 import Tests from '../views/Tests.vue'
-import Polls from '../views/Polls.vue'
+//import Polls from '../views/Polls.vue'
 import Stats from '../views/Stats.vue'
 
 Vue.use(VueRouter)
@@ -111,7 +111,7 @@ const routes = [
       next();
     },
   },
-  {
+  /* {
     path: '/poll/create',
     name: 'PollCreator',
     component: PollCreator,
@@ -122,17 +122,17 @@ const routes = [
     name: 'MakePoll',
     component: MakePoll,
     props: true,
-  },
+  }, */
   {
     path: '/tests/:hash',
     name: 'Tests',
     component: Tests
   },
-  {
+  /* {
     path: '/polls/:hash',
     name: 'Polls',
     component: Polls
-  },
+  }, */
   {
     path: '/stats/:hash',
     name: 'Stats',
