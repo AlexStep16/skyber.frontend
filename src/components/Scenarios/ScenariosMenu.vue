@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div class="scenarios-menu bg-white-shadow">
+    <div class="scenarios-menu bg-white-border">
       <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
         Управление сценариями
         <router-link 

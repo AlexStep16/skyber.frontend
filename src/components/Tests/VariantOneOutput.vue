@@ -45,14 +45,15 @@ export default {
         return elem.name != null;
       });
     },
-    showRightVariant() {
+    showRightVariant(variantTrue) {
       if (this.settings.is_list && !this.postQuestion.showAllRightVariants) {
         return false;
       }
       if (this.settings.is_right_questions) {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
         this.postQuestion.variants.forEach(variant => {
-          variant.color = 'wrong'
+          if(variantTrue.id === variant.id) variant.color = 'wrong'
+          else variant.color = 'neitral'
         })
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
@@ -90,20 +91,26 @@ export default {
 
 
 .form_radio-right{
-  background-color: #caffbd!important;
+  background-color: #caffbdb3!important;
   padding: 10px;
 
   .description {
-    color: #006e12;
+    color: #696969;
+    font-weight: 500;
   }
 }
 
+.form_radio-neitral {
+  padding: 10px;
+}
+
 .form_radio-wrong{
-  background-color: rgb(255, 180, 184)!important;
+  background-color: #ffb4b894!important;
   padding: 10px;
 
   .description {
-    color: #c70000;
+    color: #696969;
+    font-weight: 500;
   }
 }
 

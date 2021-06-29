@@ -13,7 +13,7 @@
           :name="`variant${key}`"
           :value="`${JSON.stringify(variant.name)}`"
           v-model="newSelected"
-          @change="ready()"
+          @change="selectId(variant.id, $event);ready()"
           :disabled="variant.disabled"
         />
         <label class="pointer" :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
@@ -35,6 +35,7 @@ export default {
     return {
       newSelected: [],
       showRights: false,
+      selectedId: [],
     };
   },
   methods: {
@@ -46,6 +47,7 @@ export default {
 
     ready() {
       if(!this.settings.is_reanswer && this.showRights) return false
+      if(this.showRights) this.showRightVariant()
       this.$emit('ready', this.newSelected)
     },
 
@@ -53,7 +55,8 @@ export default {
       if(this.settings.is_right_questions && this.postQuestion.showAllRightVariants) {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
         this.postQuestion.variants.forEach(variant => {
-          variant.color = 'wrong'
+          if(this.selectedId.includes(variant.id)) variant.color = 'wrong'
+          else variant.color = 'neitral'
         })
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
@@ -74,6 +77,13 @@ export default {
 
     isThatDescription(variant) {
       return this.newSelected.includes(JSON.stringify(variant.name))
+    },
+
+    selectId(id, event) {
+      if(event.target.checked) this.selectedId.push(id)
+      else {
+        this.selectedId.splice(this.selectedId.indexOf(id), 1)
+      }
     }
   },
   watch: {
@@ -100,6 +110,10 @@ export default {
   background-color: rgb(255, 180, 184)!important;
 }
 
+.neitral-question-checkbox{
+  padding: 10px;
+}
+
 .checkbox {
   border-radius: 3px;
 }
@@ -123,7 +137,8 @@ export default {
 .description {
   font-family: 'Roboto', sans-serif;
   font-size: 0.9em;
-  padding-left: 26px;
+  padding-left: 37px;
   margin-top: 4px;
+  padding-bottom: 10px;
 }
 </style>

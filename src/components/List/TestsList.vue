@@ -3,9 +3,9 @@
     <div class="list-item bg-white-shadow" v-for="(test, key) in postTests" :key="test.id">
       <span class="list-item__tag">Тест</span>
       <h2 @click="goCreateTest(test)" class="mt6 mb6 pointer">{{ test.testName }}</h2>
-      <p class="list-item__description mb7">{{ test.description }}</p>
+      <p class="list-item__description mb6">{{ test.description }}</p>
       <span>Количество отправлений: {{ test.countSub }}</span>
-      <div class="list-item__panel mt8">
+      <div class="list-item__panel mt7">
         <div>
           <router-link
             :to="`/tests/${test.hash}`"

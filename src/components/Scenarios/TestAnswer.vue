@@ -1,9 +1,9 @@
 <template>
   <div class="scenario test__block bg-white-shadow mb7" :class="showEffect ? 'scenario_show-effect' : ''">
     <Loader v-if="showLoader || fakeLoader" />
-    <template v-if="scenario.header && !showLoader && !fakeLoader">
+    <template v-if="hasScenario && !showLoader && !fakeLoader">
       <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
-      <div class="scenario__description mt6" v-if="scenario.description" v-html="scenario.description"></div>
+      <div class="scenario__description" :class="scenario.header ? 'mt6' : ''" v-if="scenario.description" v-html="scenario.description"></div>
       <div class="scenario-image mt6" v-if="scenario.image">
         <div class="scenario-image__wraper">
           <img :src="scenario.image" />
@@ -61,7 +61,7 @@ import Facebook from "/public/pictures/facebook36.svg";
 
 export default {
   name: 'TestAnswer',
-  props: ['totalScores', 'hash', 'fakeLoader'],
+  props: ['totalScores', 'hash', 'fakeLoader', 'testName'],
   data() {
     return {
       scenario: {
@@ -74,6 +74,7 @@ export default {
       scenarios: [],
       showLoader: false,
       showEffect: true,
+      hasScenario: false,
     }
   },
   components: {
@@ -112,6 +113,7 @@ export default {
           }
           rangeList.forEach((range) => {
             if(this.totalScores >= range[0] && this.totalScores <= range[1]) {
+              this.hasScenario = true
               this.imageLoading = true
               this.scenario.name = scenario.name
               this.scenario.header = scenario.header
@@ -136,6 +138,9 @@ export default {
   },
   mounted() {
     this.getScenario()
+
+    this.url = "https://skyber.ru/tests/" + this.hash
+    this.title = 'Skyber - ' + this.testName
   }
 }
 

@@ -114,7 +114,7 @@
                         type="text"
                         name="names"
                         id="names"
-                        class="input input_type-option pl0"
+                        class="test__input-question-name input input_type-option pl0"
                         placeholder="Напишите свой вопрос"
                         v-model="question.name"
                       />
