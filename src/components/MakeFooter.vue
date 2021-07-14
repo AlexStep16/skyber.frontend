@@ -8,7 +8,7 @@
           type="text" 
           v-model="link"
           ref="linkInput"
-          class="make-footer__link ml4"
+          class="input_type-link ml4"
           @click="$refs.linkInput.select()"
           :style="{width: (link.length * 7.5) + 'px'}"
           readonly

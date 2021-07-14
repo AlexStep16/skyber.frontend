@@ -75,6 +75,8 @@ export default {
       showLoader: false,
       showEffect: true,
       hasScenario: false,
+      url: '',
+      title: '',
     }
   },
   components: {
@@ -136,11 +138,11 @@ export default {
 
     }
   },
-  mounted() {
+  beforeMount() {
     this.getScenario()
 
     this.url = "https://skyber.ru/tests/" + this.hash
-    this.title = 'Skyber - ' + this.testName
+    this.title = this.testName + ' | Skyber'
   }
 }
 

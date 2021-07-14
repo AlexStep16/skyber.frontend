@@ -1,10 +1,20 @@
 <template>
   <div class="list-main-wraper">
     <div class="list-item bg-white-shadow" v-for="(test, key) in postTests" :key="test.id">
-      <span class="list-item__tag">Тест</span>
+      <!-- <span class="list-item__tag">Тест</span> -->
       <h2 @click="goCreateTest(test)" class="mt6 mb6 pointer">{{ test.testName }}</h2>
       <p class="list-item__description mb6">{{ test.description }}</p>
-      <span>Количество отправлений: {{ test.countSub }}</span>
+      <div class="list-item__link mb6">
+        <span>Ссылка на тест:</span>
+        <input type="text" 
+              class="input input_type-link wd100 mt2" 
+              :value="'https://skyber.ru/tests/' + test.hash"
+              :ref="'linkInput' + test.id"
+              @click="$refs['linkInput' + test.id][0].select()"
+              readonly
+        >
+      </div>
+      <span class="list-item__counter">Количество отправлений: {{ test.countSub }}</span>
       <div class="list-item__panel mt7">
         <div>
           <router-link

@@ -52,19 +52,25 @@ export default {
     },
 
     showRightVariant() {
-      if(this.settings.is_right_questions && this.postQuestion.showAllRightVariants) {
+      if(this.postQuestion.showAllRightVariants) {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
+
         this.postQuestion.variants.forEach(variant => {
-          if(this.selectedId.includes(variant.id)) variant.color = 'wrong'
+          if(this.selectedId.includes(variant.id) && (this.settings.is_right_questions || this.settings.is_wrong_questions)) variant.color = 'wrong'
           else variant.color = 'neitral'
         })
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
-            if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
+            if (
+              typeof rightVar === 'string' 
+              && JSON.stringify(variant.name) === rightVar
+              && (this.settings.is_right_questions || this.selectedId.includes(variant.id))
+            ) {
               variant.color = 'right'
             }
           })
         })
+
         this.showRights = true
         this.postQuestion.wasSelected = true
       }

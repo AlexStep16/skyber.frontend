@@ -64,15 +64,18 @@ export default {
   data() {
     return {
       scenario: {
-        testHash: this.$route.params.hash,
+        id: this.$route.params.id,
+        testHash: null,
         name: '',
         header: '',
         description: '',
         image: [],
         imageSrc: '',
       },
+      showContent: false,
       infoMessage: {},
       imageLoading: false,
+      fingerprint: window.VISITOR_ID,
     }
   },
   components: {
@@ -132,11 +135,27 @@ export default {
       this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
     },
   },
-  mounted() {
-    if(this.isEdit) {
-      this.getScenario()
-    }
-  }
+  beforeMount() {
+    this.$store.commit('SHOW_LOADER')
+    axios.post('/scenarios/check/access/', {
+      fingerprint: this.fingerprint,
+      hash: this.$route.params.id,
+    }).then((res) => {
+      if(res.status === 200) {
+        if(this.isEdit) {
+          this.getScenario()
+        }
+        this.showContent = true
+        this.$store.commit('HIDE_LOADER')
+      }
+      else {
+        this.$router.push({name: 'List'})
+      }
+    }).catch((e) => {
+      console.log(e)
+      //this.$router.push({name: 'List'})
+    })
+  },
 };
 </script>
 

@@ -44,6 +44,10 @@
     color: #676769;
   }
 
+  &__counter {
+    font-family: 'Roboto', sans-serif!important;
+  }
+
   &__panel {
     display: flex;
     justify-content: space-between;
@@ -59,6 +63,15 @@
 
   &__tag {
     font-size: 1rem;
+  }
+
+  &__link {
+    > span {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.9em;
+      color: #444;
+      padding-left: 1px;
+    }
   }
 }
 

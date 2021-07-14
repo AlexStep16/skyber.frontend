@@ -22,11 +22,13 @@
               <youtube id="youtube" ref="youtube" :video-id="testVideoLink" class="test-video">
               </youtube>
             </div>
-            <div class="test-image mt6" v-if="image.link != null">
-              <div class="test-image__wraper">
-                <img :src="image.link" />
-                <div class="modal modal_white absolute" v-if="imageLoading">
-                  <Loader />
+            <div :class="imageLoading ? 'test-image-preloader' : ''" v-if="showImagePreloader">
+              <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
+                <Loader />
+              </div>
+              <div class="test-image mt6" v-for="(image, key) in image.data" :key="key">
+                <div class="test-image__wraper">
+                  <img :src="image.result || image.original_url" />
                 </div>
               </div>
             </div>
@@ -220,8 +222,9 @@ export default {
       selected: [],
       infoMessage: {},
       image: {
-        data: null,
+        data: {},
         link: null,
+        isLoading: false
       },
       testVideoLink: '',
       showSuccess: false,
@@ -231,6 +234,7 @@ export default {
       hash: this.$route.params.hash,
       videoLoadDone: false,
       imageLoading: false,
+      showImagePreloader: false,
       totalScores: null,
       settings: {},
       questionCounter: 0,
@@ -284,7 +288,7 @@ export default {
         return false;
       }
       this.scoresCounter()
-      if(this.settings.is_list && this.settings.is_right_questions) {
+      if(this.settings.is_list && (this.settings.is_right_questions || this.settings.is_wrong_questions)) {
         this.questions.forEach(question => {
           question.showAllRightVariants = true
         })
@@ -347,7 +351,7 @@ export default {
     answerButton() {
       return this.currentQuestion.typeAnswer === 'Несколько из списка'
              && !this.currentQuestion.wasSelected
-             && this.settings.is_right_questions
+             && (this.settings.is_right_questions || this.settings.is_wrong_questions)
     },
     nextButton() {
       return !this.answerButton() && this.questionCounter !== this.questions.length - 1
@@ -355,6 +359,7 @@ export default {
   },
   mounted() {
     this.imageLoading = true
+    this.showImagePreloader = true
 
     this.$store.commit('SHOW_LOADER')
     axios.get("test/getByHash/" + this.hash).then((res) => {
@@ -365,8 +370,12 @@ export default {
       this.testName = res.testName;
       this.testVideoLink = res.videoLink;
       this.testDescription = res.description;
-      this.image.link = res.imageLink;
+      for(let key in res.imageLink) {
+        this.image.data[key] = res.imageLink[key]
+      }
+      
       this.imageLoading = false
+      if(res.imageLink.length === 0) this.showImagePreloader = false
 
       if(res.fingerprint == window.VISITOR_ID) this.isMine = true
       else this.isMine = false

@@ -1,9 +1,9 @@
 <template>
   <div class="login">
     <div class="login__form">
-      <h1>Добро пожаловать!</h1>
+      <h1>Регистрация!</h1>
       <p>
-        Регистрация аккаунта
+        Здесь вы можете зарегистрировать аккаунт, чтобы видеть свои тесты
       </p>
       <div class="login-errors">
         <ul class="login-errors__list" v-if="showErrors">
@@ -25,28 +25,10 @@
         </div>
         <div>
           <input
-            type="text"
-            name="login"
-            id="login"
-            placeholder="Введите логин"
-            class="input input_type-index"
-            v-model="form.login"
-          />
-        </div>
-        <div>
-          <input
             type="password"
             placeholder="Введите пароль"
             class="input input_type-index mt4"
             v-model="form.password"
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Введите пароль ещё раз"
-            class="input input_type-index mt4"
-            v-model="form.confirmPassword"
           />
         </div>
         <div class="form-options mt7">
@@ -75,7 +57,7 @@
       </form>
     </div>
     <div class="login__side">
-      <img src="/pictures/Wavy_Bus-35_Single-03.jpg" width="500" />
+      <img src="/pictures/Analytics_SVG.svg" width="450" @load="$emit('onLoad')" />
     </div>
   </div>
 </template>
@@ -89,7 +71,6 @@ export default {
     return {
       form: {
         password: "",
-        confirmPassword: "",
         email: "",
         rememberMe: '',
         login: ''
@@ -107,9 +88,7 @@ export default {
       this.loginErrors = []
       if(this.form.email == '') this.loginErrors.push('Вы не ввели Email')
       else if(!this.validateEmail(this.form.email)) this.loginErrors.push('Неверный формат Email')
-      if(this.form.login == '') this.loginErrors.push('Поле логин не может быть пустым')
       if(this.form.password.length < 6) this.loginErrors.push('Пароль должен быть не меньше 6 символов')
-      if(this.form.password !== this.form.confirmPassword) this.loginErrors.push('Пароли не совпадают')
 
       if(this.loginErrors.length === 0) {
         axios.post("/register", this.form).then(() => {

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div class="scenarios-menu bg-white-border">
+    <div class="scenarios-menu bg-white-border" v-if="showContent">
       <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
         Управление сценариями
         <router-link 
@@ -138,6 +138,8 @@ export default {
       options: [],
       showSuccess: false,
       activeDeleteModal: false,
+      fingerprint: window.VISITOR_ID,
+      showContent: false,
       tempDelete: {
         id: null,
         key: null
@@ -325,10 +327,26 @@ export default {
       }
     },
   },
-  mounted() {
-    this.getScenarios();
-    this.getQuestions()
-  },
+  beforeMount() {
+    this.$store.commit('SHOW_LOADER')
+    axios.post('/scenarios/check/access/', {
+      fingerprint: this.fingerprint,
+      hash: this.$route.params.hash,
+
+    }).then((res) => {
+      if(res.status === 200) {
+        this.getScenarios();
+        this.getQuestions()
+        this.showContent = true
+        this.$store.commit('HIDE_LOADER')
+      }
+      else {
+        this.$router.push({name: 'List'})
+      }
+    }).catch(() => {
+      this.$router.push({name: 'List'})
+    })
+  }
 };
 </script>
 

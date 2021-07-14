@@ -34,6 +34,7 @@ const fpPromise = FingerprintJS.load()
   })
 })()
 
+localStorage.setItem('testSaves', JSON.stringify([]))
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {

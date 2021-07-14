@@ -3,7 +3,7 @@
     <div class="login__form">
       <h1>Добро пожаловать!</h1>
       <p>
-        Зарегистрируйтесь или войдите в свой аккаунт, чтобы создать тест или опрос
+        Войдите в аккаунт, чтобы видеть свои тесты
       </p>
       <div class="login-errors">
         <ul class="login-errors__list" v-if="showErrors">
@@ -44,7 +44,7 @@
             <label for="remember" class="checkbox-label">Запомнить меня?</label>
           </div>
           <div>
-            <router-link to="/foo" class="forget-link"
+            <router-link to="/password/recovery" class="forget-link"
               >Забыли пароль?</router-link
             >
           </div>
@@ -64,7 +64,7 @@
       </form>
     </div>
     <div class="login__side">
-      <img src="/pictures/Wavy_Bus-35_Single-03.jpg" width="500" />
+      <img src="/pictures/Analytics_SVG.svg" width="450" @load="$emit('onLoad')" />
     </div>
   </div>
 </template>

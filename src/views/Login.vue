@@ -1,7 +1,8 @@
 <template>
   <div class="container body">
     <div class="main">
-      <LoginForm />
+      <Header type="test" />
+      <LoginForm @onLoad="imageWasLoaded" />
     </div>
   </div>
 </template>
@@ -9,15 +10,20 @@
 <script>
 // @ is an alias to /src
 import LoginForm from '@/components/LoginForm.vue';
-
+import Header from "@/components/Header.vue";
 
 export default {
   name: 'Register',
   components: {
-    LoginForm
+    LoginForm, Header
   },
   methods: {
-    
+    imageWasLoaded() {
+      this.$store.commit('HIDE_LOADER')
+    }
+  },
+  mounted() {
+    this.$store.commit('SHOW_LOADER')
   }
 }
 

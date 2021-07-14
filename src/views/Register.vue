@@ -1,7 +1,8 @@
 <template>
   <div class="container body">
     <div class="main">
-      <RegisterForm />
+      <Header type="test" />
+      <RegisterForm @onLoad="imageWasLoaded" />
     </div>
   </div>
 </template>
@@ -9,17 +10,23 @@
 <script>
 // @ is an alias to /src
 import RegisterForm from '@/components/RegisterForm.vue';
-
+import Header from "@/components/Header.vue";
 
 export default {
   name: 'Register',
   components: {
-    RegisterForm
+    RegisterForm, Header
   },
   methods: {
     makeTest() {
       this.$router.push('/create');
+    },
+    imageWasLoaded() {
+      this.$store.commit('HIDE_LOADER')
     }
+  },
+  mounted() {
+    this.$store.commit('SHOW_LOADER')
   }
 }
 

@@ -21,8 +21,11 @@
               readonly
             />
           </div>
-          <div class="popup-success__copy-link ml5 mb5 pointer" @click="copy">
+          <div class="popup-success__copy-link ml5 mb5 pointer" v-if="!wasCopied" @click="copy">
             Скопировать ссылку
+          </div>
+          <div class="popup-success__copy-link ml5 mb5 pointer" v-if="wasCopied" @click="copy">
+            Cкопировано
           </div>
         </div>
         <div class="popup-success__social mt7">
@@ -92,6 +95,7 @@ export default {
     return {
       url: "",
       title: "",
+      wasCopied: false,
     };
   },
   components: {
@@ -102,6 +106,7 @@ export default {
     copy() {
       this.$refs.linkInput.select();
       document.execCommand("copy");
+      this.wasCopied = true
     },
   },
   mounted() {

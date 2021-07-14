@@ -3,20 +3,20 @@
     <Header type="test" />
     <div class="main">
       <div class="test-wrapper">
-        <Settings :hash="testHash" :settings="settings" />
+        <Settings :hash="test.hash" :settings="settings" />
 
         <div class="test inline-block mt7">
           <div class="test__block_wraper">
 
             <div class="side-panel inline-block">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
-                <div class="pointer text-center" @click="addQuestion">
-                  <AddSVG />
+                <div class="side-panel-item pointer text-center" @click="addQuestion">
+                  <AddSVG style="position:absolute" />
                 </div>
-                <div class="pointer mt6 text-center" @click="clickImage">
+                <div class="side-panel-item pointer text-center" @click="clickImage">
                   <img src="/pictures/image.svg" width="32px">
                 </div>
-                <div class="pointer mt6 text-center" @click="hideVideoBox = testVideoLink == null ? !hideVideoBox : hideVideoBox">
+                <div class="side-panel-item pointer text-center" @click="hideVideoBox = test.videoLink == null ? !hideVideoBox : hideVideoBox">
                   <img src="/pictures/video.svg" width="32px">
                 </div>
               </div>
@@ -31,7 +31,7 @@
                     id="name"
                     placeholder="Название теста"
                     class="input input_type-test input_type-test-header pb4 pt0"
-                    v-model="testName"
+                    v-model="test.name"
                   />
                 </div>
                 <div>
@@ -41,17 +41,17 @@
                     id="description"
                     placeholder="Описание теста"
                     class="input input_type-test-small mt5"
-                    v-model="testDescription"
+                    v-model="test.description"
                   />
                 </div>
-                <div class="test-video-wraper mt6" v-if="testVideoLink">
+                <div class="test-video-wraper mt6" v-if="test.videoLink">
                   <div class="modal modal_white absolute" v-if="!videoLoadDone">
                     <Loader />
                   </div>
                   <div class="test-video-menu pointer flex-center bg-white-shadow" @click="deleteVideo">
                     <img src="/pictures/trash.svg" width="21px" />
                   </div>
-                  <youtube id="youtube" ref="youtube" :video-id="testVideoLink" class="test-video">
+                  <youtube id="youtube" ref="youtube" :video-id="test.videoLink" class="test-video">
                   </youtube>
                 </div>
                 <div class="test-add-video-block flex flex-center mt5" v-if="!hideVideoBox">
@@ -62,21 +62,24 @@
                 </div>
                 <input
                   type="file"
-                  name="image"
+                  name="testImage"
                   ref="imageInput"
+                  multiple
                   @change="uploadImage"
                   hidden
                   v-if="image.link == null"
                 />
-                <div class="test-image mt6" v-if="showImagePreloader">
-                  <div class="test-image__wraper">
-                    <img :src="image.link" />
-                    <div class="modal-inner modal50 pointer flex flex-center">
-                      <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
-                    </div>
-                  </div>
-                  <div class="modal modal_white absolute" v-if="imageLoading">
+                <div :class="imageLoading ? 'test-image-preloader' : ''" v-if="showImagePreloader">
+                  <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
                     <Loader />
+                  </div>
+                  <div class="test-image mt6" v-for="(image, key) in image.data" :key="key">
+                    <div class="test-image__wraper">
+                      <img :src="image.result || image.original_url" />
+                      <div class="modal-inner modal50 pointer flex flex-center">
+                        <img src="/pictures/trash.svg" width="65px" @click="deleteImage(image)" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </form>
@@ -91,13 +94,13 @@
             >
               <div class="side-panel inline-block" v-if="question.focused">
                 <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical">
-                  <div class="pointer text-center" @click="addQuestion">
-                    <AddSVG />
+                  <div class="side-panel-item pointer" @click="addQuestion">
+                    <AddSVG style="position:absolute" />
                   </div>
-                  <div class="pointer mt6 text-center" @click="clickQuestionImage(question.id)">
+                  <div class="side-panel-item pointer" @click="clickQuestionImage(question.id)">
                     <img src="/pictures/image.svg" width="32px">
                   </div>
-                  <div class="pointer mt6 text-center" @click="clickQuestionVideo(question)">
+                  <div class="side-panel-item pointer" @click="clickQuestionVideo(question)">
                     <img src="/pictures/video.svg" width="32px">
                   </div>
                 </div>
@@ -115,7 +118,7 @@
                         name="names"
                         id="names"
                         class="test__input-question-name input input_type-option pl0"
-                        placeholder="Напишите свой вопрос"
+                        placeholder="Напишите свой вопрос..."
                         v-model="question.name"
                       />
                       <div class="flex flex-center">
@@ -244,12 +247,12 @@
         </div>
       </div>
     </div>
-    <MakeFooter type="test" :link="testLink" @save="saveTest" />
+    <MakeFooter type="test" :link="test.link" @save="saveTest" :wasChanged="wasChanged" />
     <InfoModal :message="infoMessage" />
     <SuccessModal 
       v-if="showSuccess" 
       :message="successMessage" 
-      :link="testHash" 
+      :link="test.hash" 
       type="test"
       :edit="true"
       @closeModal="showSuccess = false" 
@@ -285,7 +288,7 @@ import Settings from "@/components/Settings.vue";
 
 import draggable from 'vuedraggable'
 
-import AddSVG from '/public/Vectors/add32.svg'
+import AddSVG from '/public/Vectors/add32_new.svg'
 import InfoModal from "@/components/InfoModal.vue";
 
 export default {
@@ -294,13 +297,16 @@ export default {
   data() {
     return {
       questions: [],
-      testId: null,
-      testName: "",
-      testDescription: "",
-      testLink: "",
-      testHash: this.hash,
+      test: {
+        id: null,
+        name: "",
+        description: "",
+        link: "",
+        hash: "",
+        videoLink: "",
+      },
       image: {
-        data: null,
+        data: {},
         link: null,
         isLoading: false
       },
@@ -308,7 +314,6 @@ export default {
         position: 0
       },
       testFocused: true,
-      testVideoLink: '',
       hideVideoBox: true,
       fingerprint: window.VISITOR_ID,
       showSuccess: false,
@@ -316,12 +321,17 @@ export default {
       videoLoadDone: false,
       imageLoading: false,
       showImagePreloader: false,
+
+      fastSaveTimeoutId: '',
+      wasChanged: false,
+
       settings: {
         test_id: null,
         access_for_all: false,
         password_access: false,
         is_list: true,
         is_right_questions: false,
+        is_wrong_questions: false,
         is_resend: false,
         is_reanswer: true,
         has_statistic: true,
@@ -354,7 +364,7 @@ export default {
       let name = null;
       let standartVariants = [{ id: 0, name: "Вариант 1", hasDescription: false}]; //Стартовое количество вариантов
       let questionToPost = {
-        testId: this.testId,
+        testId: this.test.id,
         variants: standartVariants,
         name: name,
         index: this.questions.length,
@@ -405,14 +415,18 @@ export default {
       this.testFocused = false
     },
 
-    saveTest() {
+    saveTest(fastSave = false) {
       let stop = false
-      if(this.settings.password_access && this.settings.password.length < 5 && !this.settings.password_confirm) {
+      if(this.settings.password_access && this.settings.password.length < 5 && !this.settings.password_confirm && !fastSave) {
         stop = true
         this.infoMessage = {body: 'Пароль должен быть больше 4 символов', type: 'danger'}
       }
+      if(this.test.name == '' && !fastSave) {
+        stop = true
+        this.infoMessage = {body: 'Введите название теста', type: 'danger'}
+      } 
       this.questions.forEach((question) => {
-        if(!question.name) { 
+        if(!question.name && !fastSave) { 
           stop = true;
           this.questionFocus(question)
         }
@@ -428,18 +442,23 @@ export default {
       if(stop) this.infoMessage = {body: 'Введите название вопроса', type: 'danger'}
       let test = {
         questions: this.questions,
-        testName: this.testName || 'Без названия',
-        videoLink: this.testVideoLink || '',
-        testDescription: this.testDescription,
-        testId: this.testId,
+        testName: this.test.name || '',
+        videoLink: this.test.videoLink || '',
+        testDescription: this.test.description,
+        testId: this.test.id,
         fingerprint: this.fingerprint,
         settings: this.settings
       };
       if(!stop) axios.post("test/save", test).then(() => {
 
-        if(this.testHash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
-        this.successMessage = "Успешно сохранено"
-        this.showSuccess = true
+        if(!fastSave) {
+          if(this.test.hash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
+          this.successMessage = "Успешно сохранено"
+          this.showSuccess = true
+        }
+        else {
+          this.wasChanged = false
+        }
       });
     },
 
@@ -447,29 +466,44 @@ export default {
       this.showImagePreloader = true
       this.imageLoading = true
       
-      this.image.data = event.target.files[0];
+      let files = event.target.files
+      this.image.data = []
       const fd = new FormData();
-      this.image.data != undefined
-        ? fd.append("testImage", this.image.data)
-        : "";
-      fd.append("testHash", this.testHash);
+      let count = 0
+      for (let i in files) {
 
+        if (Object.prototype.hasOwnProperty.call(files,i)) {
+          fd.append(`testImage${count}`, files[i])
+          fd.append(`imageType${count}`, files[i].type.split('/')[1])
+          count++
+        }
+      }
+      
+      fd.append('countImages', count)
+      fd.append("testHash", this.test.hash)
+      
       if (!this.image.data) return;
-
+      
       axios.post("test/upload", fd).then((res) => {
+        this.image.data.push(res.data)
         this.imageLoading = false
-        this.image.link = res.data.image;
       })
       .catch(() => {
         this.showImagePreloader = false
       });
+      event.target.value = '';
     },
 
-    deleteImage() {
-      axios.post("test/upload/delete", { testHash: this.testHash }).then(() => {
-        this.image.link = null;
-        this.showImagePreloader = false
-      });
+    deleteImage(image) {
+      if(image.order) {
+        axios.post("test/upload/delete", { testHash: this.test.hash, order: image.order }).then(() => {
+          this.$delete(this.image.data, image.uuid);
+          if(this.image.data.length === 0) this.showImagePreloader = false
+        });
+      }
+      else {
+        this.image.data.splice(image.index, 1)
+      }
     },
 
     clickQuestionImage(id) {
@@ -519,11 +553,11 @@ export default {
       })
     },
     saveLink() {
-      this.testVideoLink = getIdFromUrl(this.$refs.linkInput.value)
+      this.test.videoLink = getIdFromUrl(this.$refs.linkInput.value)
       this.hideVideoBox = true
     },
     deleteVideo() {
-      this.testVideoLink = null
+      this.test.videoLink = null
     },
     //Mounted methods
     getTest(hash) {
@@ -533,21 +567,22 @@ export default {
         if(!res) {
           this.$router.push('/test/create')
         }
+        
         res = res.data.data;
         this.settings = res.settings[0]
 
-        this.testId = res.id
-        this.testName = res.testName;
-        this.testVideoLink = res.videoLink;
-        this.testDescription = res.description;
-        this.testLink = "https://skyber.ru/tests/" + res.hash;
-        this.image.link = res.imageLink;
-        if(this.image.link != null) {
-          this.imageLoading = false
+        this.test.id = res.id
+        this.test.name = res.testName;
+        this.test.videoLink = res.videoLink;
+        this.test.description = res.description;
+        this.test.link = "https://skyber.ru/tests/" + res.hash;
+        
+        for(let key in res.imageLink) {
+          this.image.data[key] = res.imageLink[key]
         }
-        else {
-          this.showImagePreloader = false
-        }
+        
+        this.imageLoading = false
+        if(res.imageLink.length === 0) this.showImagePreloader = false
       }).catch(() => {
         let hashStore = this.$store.state.testStore.draftHash
         if(hashStore != null && hash == hashStore) {
@@ -559,7 +594,7 @@ export default {
     },
     getTestQuestions() {
       axios
-        .get("test/questions/" + this.testHash)
+        .get("test/questions/" + this.test.hash)
         .then((res) => {
           res.data.data.forEach((element) => {
             let selectedVariants = JSON.parse(element.variants);
@@ -615,7 +650,7 @@ export default {
       let name = question.name;
       let standartVariants = question.standartVariants; //Стартовое количество вариантов
       let questionToPost = {
-        testId: this.testId,
+        testId: this.test.id,
         name: name || 'Без названия',
         focused: false,
         typeAnswer: question.typeAnswer,
@@ -637,10 +672,32 @@ export default {
     },
   },
 
+  watch: {
+    test: {
+      deep: true,
+      handler() {
+        this.wasChanged = true
+      }
+    },
+    questions: {
+      deep: true,
+      handler() {
+        this.wasChanged = true
+      }
+    },
+    settings: {
+      deep: true,
+      handler() {
+        this.wasChanged = true
+      }
+    }
+  },
+
   mounted() {
+    this.test.hash = this.hash
     this.$store.commit('SHOW_LOADER')
-    if (this.testHash && this.testHash !== '') {
-      this.getTest(this.testHash);
+    if (this.test.hash && this.test.hash !== '') {
+      this.getTest(this.test.hash);
       this.getTestQuestions()
     }
 
@@ -658,6 +715,11 @@ export default {
         if(this.videoLoadDone == true) clearInterval(intervalID)
       }
     })
+
+    let th = this
+    this.fastSaveTimeoutId = setInterval(() => {
+      if(th.wasChanged) th.saveTest(true)
+    }, 3500)
   },
 };
 </script>

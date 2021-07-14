@@ -82,15 +82,15 @@ export default {
     this.$store.commit('SHOW_LOADER')
     axios.post("test/get/all", {fingerprint: window.VISITOR_ID}).then((res) => {
       this.tests = res.data.data;
-      axios.get("polls/get/all").then((res) => {
+      /* axios.get("polls/get/all").then((res) => {
         this.polls = res.data.data;
         if (this.polls.length == 0 && this.tests.length == 0) {
           this.$router.push('/test/create');
         }
-      }).finally(() => {
+      }) */
+    }).finally(() => {
         this.$store.commit('HIDE_LOADER')
       });
-    });
   },
 };
 </script>

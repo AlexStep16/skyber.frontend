@@ -12,7 +12,7 @@
           :name="`radio${postQuestion.id}${variant.id}`"
           :value="`${JSON.stringify(variant.name)}`"
           v-model="postQuestion.checked"
-          @change="showRightVariant(variant)"
+          @change="selectRadio(variant.id);showRightVariant(variant)"
           v-if="!variant.disabled"
         />
         <label 
@@ -37,6 +37,7 @@ export default {
   data() {
     return {
       showRights: false,
+      selectedId: null,
     };
   },
   methods: {
@@ -45,19 +46,26 @@ export default {
         return elem.name != null;
       });
     },
-    showRightVariant(variantTrue) {
+    showRightVariant(variantTrue = {}) {
+      if(!variantTrue.id) variantTrue.id = this.selectedId
+
       if (this.settings.is_list && !this.postQuestion.showAllRightVariants) {
         return false;
       }
-      if (this.settings.is_right_questions) {
+
+      if (this.settings.is_right_questions || this.settings.is_wrong_questions) {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
         this.postQuestion.variants.forEach(variant => {
-          if(variantTrue.id === variant.id) variant.color = 'wrong'
+          if(variantTrue.id === variant.id && (this.settings.is_wrong_questions || this.settings.is_right_questions)) variant.color = 'wrong'
           else variant.color = 'neitral'
         })
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
-            if (typeof rightVar === 'string' && JSON.stringify(variant.name) === rightVar) {
+            if (
+              typeof rightVar === 'string' 
+              && JSON.stringify(variant.name) === rightVar
+              && (this.settings.is_right_questions || variantTrue.id === variant.id)
+            ) {
               variant.color = 'right'
             }
           })
@@ -73,6 +81,10 @@ export default {
     variantChecked(variant) {
       if(variant.name === JSON.parse(this.postQuestion.checked)) return true
       return false
+    },
+
+    selectRadio(id) {
+      this.selectedId = id
     }
   },
   watch: {

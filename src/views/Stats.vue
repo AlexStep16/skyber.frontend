@@ -8,12 +8,15 @@
           <span class="stats__count">Количество отправлений: {{ countSub }}</span>
         </div>
         <div class="stats-body">
+          <div class="stats-empty flex flex-center" v-if="countSub === 0">
+            <span class="stats-empty__span">На данный тест ещё нет статистики</span>
+          </div>
           <TestStatOutput :postQuestions="this.questions" v-if="type == 'test'" />
-          <PollStatOutput
+          <!-- <PollStatOutput
             :postPollAnswers="this.pollAnswers"
             :postCountPollAnswers="this.countPollAnswers"
             v-else-if="type == 'poll'"
-          />
+          /> -->
         </div>
       </div>
     </div>
@@ -25,7 +28,7 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import TestStatOutput from "@/components/Stats/TestStatOutput.vue";
-import PollStatOutput from "@/components/Stats/PollStatOutput.vue";
+//import PollStatOutput from "@/components/Stats/PollStatOutput.vue";
 
 export default {
   name: "Stats",
@@ -36,9 +39,9 @@ export default {
       type: "",
       countSub: "",
       questions: [],
-      pollAnswers: [],
+      /* pollAnswers: [],
       pollAnsType: "",
-      countPollAnswers: 0,
+      countPollAnswers: 0, */
       chartData: {},
     };
   },
@@ -46,7 +49,7 @@ export default {
 
   components: {
     Header,
-    PollStatOutput,
+    //PollStatOutput,
     TestStatOutput,
   },
 

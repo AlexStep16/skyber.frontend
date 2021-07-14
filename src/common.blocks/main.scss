@@ -114,6 +114,16 @@ input[type="submit"] {
   color: #444444;
 }
 
+.input_type-link {
+  background-color: #e9e9e9;
+  padding: 0.5em;
+  border-radius: 5px;
+  font-size: 0.9em;
+  font-family: "Roboto", sans-serif;
+  color: #444444;
+  max-width: 480px !important;
+}
+
 .input_type-test-header {
   font-weight: 500;
 }
@@ -314,6 +324,10 @@ button, .button {
 
 .absolute {
   position: absolute!important;
+}
+
+.wd100 {
+  width: 100%;
 }
 
 /* ------Colors styles start here------ */

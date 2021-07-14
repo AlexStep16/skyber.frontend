@@ -73,9 +73,9 @@
             type="checkbox"
             id="setting-2"
             name="setting-2"
-            v-model="settings.is_right_questions"
+            v-model="settings.is_wrong_questions"
           />
-          <label class="settings-item__text settings-item__before-right pointer" for="setting-2">Показывать правильные вопросы</label>
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-2">Показывать неправильные вопросы</label>
         </div>
 
         <div class="settings-item mt6">
@@ -84,9 +84,9 @@
             type="checkbox"
             id="setting-3"
             name="setting-3"
-            v-model="settings.is_resend"
+            v-model="settings.is_right_questions"
           />
-          <label class="settings-item__text settings-item__before-right pointer" for="setting-3">Перепрохождение теста</label>
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-3">Показывать правильные вопросы</label>
         </div>
 
         <div class="settings-item mt6">
@@ -95,9 +95,20 @@
             type="checkbox"
             id="setting-4"
             name="setting-4"
+            v-model="settings.is_resend"
+          />
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-4">Перепрохождение теста</label>
+        </div>
+
+        <div class="settings-item mt6">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            id="setting-5"
+            name="setting-5"
             v-model="settings.is_reanswer"
           />
-          <label class="settings-item__text settings-item__before-right pointer" for="setting-4">Перевыбор ответа</label>
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-5">Перевыбор ответа</label>
         </div>
       </div>
     </div>

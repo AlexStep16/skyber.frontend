@@ -1,7 +1,6 @@
 .stats {
   width: 600px;
   height: auto;
-  min-height: 400px;
   background-color: white;
   border-radius: 10px;
   border: 1px solid #DDDDDD;
@@ -55,6 +54,18 @@
 
 .stats-body {
   padding: 13px;
+  height: auto;
+}
+
+.stats-empty {
+  width: 100%;
+  min-height: 300px;
+
+  &__span {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    color: #444;
+  }
 }
 
 

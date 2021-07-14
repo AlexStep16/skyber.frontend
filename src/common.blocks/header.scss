@@ -52,8 +52,8 @@
   &__item {
     
     > a {
-      font-family: 'Roboto Condensed', sans-serif;
-      font-size: 0.9em;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.85em;
       color: #6e6e6e;
       border-bottom: 2px solid #fff;
       padding-bottom: 2px;
@@ -65,17 +65,17 @@
     }
 
     > a:hover {
-      color: rgb(0, 0, 0);
-      border-bottom: 2px solid rgb(112, 112, 112);
+      color: #444;
     }
+    
   }
 
   &__item-exit {
     > a {
-      padding: 10px 16px;
+      padding: 9px 14px;
       background-color: #6669fb;
       color: white;
-      border-radius: 13px;
+      border-radius: 6px;
       border-bottom: none;
       top: 0;
     }
@@ -92,8 +92,7 @@
 
   &__item_selected {
     > a {
-      color: rgb(0, 0, 0);
-      border-bottom: 2px solid rgb(112, 112, 112);
+      color: #444;
     }
   }
 

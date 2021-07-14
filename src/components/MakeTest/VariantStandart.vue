@@ -6,7 +6,7 @@
       :key="`${variant.id}${index}`"
     >
       <div class="flex flex-align-center">
-        <div class="flex flex-center">
+        <div class="flex flex-center" v-if="postQuestion.typeAnswer !== 'Выпадающий список'">
           <input
             class="custom-checkbox"
             type="checkbox"
@@ -25,17 +25,17 @@
           @focusout="checkIsEmpty(variant, index)"
         />
         <input
-          type="text"
-          class="input input_type-test-small"
-          style="width: 80px;flex-grow:0"
+          type="number"
+          class="input input_type-test-small mr6"
+          style="width: 85px;flex-grow:0"
           placeholder="баллы"
-          v-model="variant.scores"
+          v-model.number="variant.scores"
         />
         <span class="flex pointer" @click="deleteVariant(index)">
           <img src="/pictures/trash.svg" width="19px" />
         </span>
       </div>
-      <div class="test-question-description flex flex-vertical">
+      <div class="test-question-description flex flex-vertical" :class="postQuestion.typeAnswer === 'Выпадающий список' ? 'pl0' : ''">
         <span class="pointer" @click="addDescription(variant)" v-if="!variant.hasDescription">+ Добавить описание</span>
         <span class="pointer" @click="deleteDescription(variant)" v-if="variant.hasDescription">- Удалить описание</span>
         <textarea class="test-question-description__textarea mt5" v-if="variant.hasDescription" placeholder="Введите здесь описание к варианту" v-model="variant.description"></textarea>
