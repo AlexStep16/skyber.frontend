@@ -93,7 +93,6 @@
   width: 100%;
   text-align: left;
   position: relative;
-  display: flex;
   min-height: 300px;
 
   &__wraper {
@@ -102,7 +101,28 @@
 
     > img {
       max-width: 100%;
-      display: block;
+      display: inline-block;
+    }
+  }
+}
+
+.test-image-menu {
+  text-align: right;
+
+  &__inner {
+    padding: 8px;
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 10px;
+    background-color: #fff;
+    margin-bottom: 5px;
+
+    > div {
+      display: flex;
+      cursor: pointer;
+    }
+
+    > div:not(:last-child) {
+      margin-right: 13px;
     }
   }
 }

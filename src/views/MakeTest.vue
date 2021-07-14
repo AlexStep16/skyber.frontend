@@ -73,11 +73,19 @@
                   <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
                     <Loader />
                   </div>
-                  <div class="test-image mt6" v-for="(image, key) in image.data" :key="key">
-                    <div class="test-image__wraper">
-                      <img :src="image.result || image.original_url" />
+                  <div class="test-image mt6" v-for="(img, key) in image.data" :key="key">
+                    <div class="test-image-menu">
+                      <div class="test-image-menu__inner inline-flex flex-center">
+                        <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
+                        <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
+                        <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
+                        <div @click="deleteImage(img, key)"><DeleteSVG /></div>
+                      </div>
+                    </div>
+                    <div class="test-image__wraper" :style="{textAlign: img.align}">
+                      <img :src="img.result || img.original_url" />
                       <div class="modal-inner modal50 pointer flex flex-center">
-                        <img src="/pictures/trash.svg" width="65px" @click="deleteImage(image)" />
+                        <img src="/pictures/trash.svg" width="65px" @click="deleteImage(img, key)" />
                       </div>
                     </div>
                   </div>
@@ -288,7 +296,13 @@ import Settings from "@/components/Settings.vue";
 
 import draggable from 'vuedraggable'
 
+//SVGs
 import AddSVG from '/public/Vectors/add32_new.svg'
+import DeleteSVG from '/public/pictures/trash-menu.svg'
+import AlignLeftSVG from '/public/pictures/align_left.svg'
+import AlignCenterSVG from '/public/pictures/align_center.svg'
+import AlignRightSVG from '/public/pictures/align_right.svg'
+
 import InfoModal from "@/components/InfoModal.vue";
 
 export default {
@@ -353,7 +367,8 @@ export default {
     draggable,  Header, AddSVG,
     MakeFooter, SuccessModal,
     Loader, InfoModal, MultiselectIcons,
-    Settings
+    Settings, DeleteSVG, AlignLeftSVG, AlignCenterSVG,
+    AlignRightSVG
   },
   computed: {
   },
@@ -485,7 +500,10 @@ export default {
       if (!this.image.data) return;
       
       axios.post("test/upload", fd).then((res) => {
-        this.image.data.push(res.data)
+        console.log(res)
+        for(let key in res.data) {
+          this.image.data.push(res.data[key])
+        }
         this.imageLoading = false
       })
       .catch(() => {
@@ -494,10 +512,10 @@ export default {
       event.target.value = '';
     },
 
-    deleteImage(image) {
+    deleteImage(image, key) {
       if(image.order) {
         axios.post("test/upload/delete", { testHash: this.test.hash, order: image.order }).then(() => {
-          this.$delete(this.image.data, image.uuid);
+          this.$delete(this.image.data, key);
           if(this.image.data.length === 0) this.showImagePreloader = false
         });
       }
@@ -569,6 +587,7 @@ export default {
         }
         
         res = res.data.data;
+        console.log(res)
         this.settings = res.settings[0]
 
         this.test.id = res.id
@@ -670,6 +689,9 @@ export default {
         this.questionFocus(questionToPost);
       });
     },
+    imageAlign(image, direction) {
+      image.align = direction
+    }
   },
 
   watch: {

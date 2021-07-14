@@ -164,7 +164,7 @@
           </button>
           <button 
             class="button button_type-index button_theme-purple mt7" 
-            @click="sendTest"
+            @click="sendTest();showAllRightVariantsMethod()"
             v-if="questionCounter === questions.length-1"
           >
           Готово
@@ -346,7 +346,7 @@ export default {
       location.reload()
     },
     showAllRightVariantsMethod() {
-      this.currentQuestion.showAllRightVariants = true
+      if(this.answerButton()) this.currentQuestion.showAllRightVariants = true
     },
     answerButton() {
       return this.currentQuestion.typeAnswer === 'Несколько из списка'
