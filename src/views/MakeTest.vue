@@ -73,19 +73,16 @@
                   <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
                     <Loader />
                   </div>
-                  <div class="test-image mt6" v-for="(img, key) in image.data" :key="key">
-                    <div class="test-image-menu">
-                      <div class="test-image-menu__inner inline-flex flex-center">
-                        <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
-                        <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
-                        <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
-                        <div @click="deleteImage(img, key)"><DeleteSVG /></div>
-                      </div>
-                    </div>
-                    <div class="test-image__wraper" :style="{textAlign: img.align}">
+                  <div class="test-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in image.data" :key="key">
+                    <div class="test-image__wraper">
                       <img :src="img.result || img.original_url" />
-                      <div class="modal-inner modal50 pointer flex flex-center">
-                        <img src="/pictures/trash.svg" width="65px" @click="deleteImage(img, key)" />
+                      <div class="test-image-menu">
+                        <div class="test-image-menu__inner inline-flex flex-center">
+                          <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
+                          <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
+                          <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
+                          <div @click="deleteImage(img, key)"><DeleteSVG /></div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -500,9 +497,10 @@ export default {
       if (!this.image.data) return;
       
       axios.post("test/upload", fd).then((res) => {
-        console.log(res)
-        for(let key in res.data) {
-          this.image.data.push(res.data[key])
+        let images = res.data.data.imageLink
+        console.log(images)
+        for(let key in images) {
+          this.$set(this.image.data, key, images[key])
         }
         this.imageLoading = false
       })
@@ -513,14 +511,14 @@ export default {
     },
 
     deleteImage(image, key) {
-      if(image.order) {
-        axios.post("test/upload/delete", { testHash: this.test.hash, order: image.order }).then(() => {
+      if(image.id) {
+        axios.post("test/upload/delete", { testHash: this.test.hash, id: image.id }).then(() => {
           this.$delete(this.image.data, key);
           if(this.image.data.length === 0) this.showImagePreloader = false
         });
       }
       else {
-        this.image.data.splice(image.index, 1)
+        this.image.data.splice(key, 1)
       }
     },
 
@@ -597,7 +595,7 @@ export default {
         this.test.link = "https://skyber.ru/tests/" + res.hash;
         
         for(let key in res.imageLink) {
-          this.image.data[key] = res.imageLink[key]
+          this.$set(this.image.data, key, res.imageLink[key])
         }
         
         this.imageLoading = false
@@ -691,6 +689,9 @@ export default {
     },
     imageAlign(image, direction) {
       image.align = direction
+      axios.post('/test/image/alignment', {align: direction, media_id: image.id}).then((res) => {
+        console.log(res)
+      })
     }
   },
 

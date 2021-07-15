@@ -69,7 +69,7 @@ export default {
         name: '',
         header: '',
         description: '',
-        image: [],
+        images: [],
         imageSrc: '',
       },
       showContent: false,
@@ -124,14 +124,23 @@ export default {
     },
     dropImage() {
       this.imageLoading = true
-      console.log(1)
       if (!this.scenario.image || this.scenario.image.length === 0) return;
       this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
       this.imageLoading = false
     },
     uploadImage(event) {
-      this.scenario.image.push(event.target.files[0]);
-      if (!this.scenario.image[0]) return;
+      let files = event.target.files
+      let count = 0
+      let fd = []
+      this.scenario.images = files
+      for (let i in files) {
+
+        if (Object.prototype.hasOwnProperty.call(files,i)) {
+          fd.append(`testImage${count}`, files[i])
+          fd.append(`imageType${count}`, files[i].type.split('/')[1])
+          count++
+        }
+      }
       this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
     },
   },
@@ -139,9 +148,11 @@ export default {
     this.$store.commit('SHOW_LOADER')
     axios.post('/scenarios/check/access/', {
       fingerprint: this.fingerprint,
-      hash: this.$route.params.id,
+      hash: this.$route.params.hash,
+      scenario_id: this.$route.params.id,
     }).then((res) => {
       if(res.status === 200) {
+        this.scenario.testHash = this.$route.params.hash
         if(this.isEdit) {
           this.getScenario()
         }
@@ -151,9 +162,8 @@ export default {
       else {
         this.$router.push({name: 'List'})
       }
-    }).catch((e) => {
-      console.log(e)
-      //this.$router.push({name: 'List'})
+    }).catch(() => {
+      this.$router.push({name: 'List'})
     })
   },
 };

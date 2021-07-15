@@ -3,12 +3,12 @@
     <div class="scenarios-menu bg-white-border" v-if="showContent">
       <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
         Управление сценариями
-        <router-link 
-          :to="'/test/scenario/add/' + this.hash"
+        <button
+          @click.prevent="addScenario"
           class="scenarios-menu__add-scenario"
         >
           Добавить сценарий +
-        </router-link>
+        </button>
       </h3>
       <div class="scenarios-menu__main">
         <div class="scenarios-menu__empty flex flex-center" v-if="scenarios.length === 0">
@@ -326,6 +326,15 @@ export default {
         })
       }
     },
+    addScenario() {
+      const fd = new FormData();
+      fd.append('scenario', JSON.stringify({
+        testHash: this.hash,
+      }))
+      axios.post('scenarios/create', fd).then((res) => {
+        this.$router.push('/test/scenario/edit/' + res.data.data.id)
+      })
+    }
   },
   beforeMount() {
     this.$store.commit('SHOW_LOADER')
