@@ -20,6 +20,28 @@ axios.defaults.baseURL = 'http://skyber.loc/api'
 
 const fpPromise = FingerprintJS.load()
 
+Vue.mixin({
+  methods: {
+    mixin_imageMouseDown(event, img, domWidth, domHeight) {
+      img.activateOver = true
+      if(!img.width) img.width = domWidth
+      if(!img.height) img.height = domHeight
+      img.ratio = img.width < img.height ? img.width / img.height : img.height / img.width
+      img.bigger = img.width < img.height ? 'height' : 'width'
+      img.startPointX = event.pageX
+      img.startWidth = img.width
+    },
+    mixin_imageMouseMove(event, img) {
+      
+      if(img.activateOver === true) {
+        img.width = img.startWidth + (event.pageX - img.startPointX)
+
+        img.height = img.bigger === 'width' ? Math.floor(img.width * img.ratio) : Math.floor(img.width / img.ratio)
+      }
+    }
+  }
+})
+
 ;(async () => {
   const fp = await fpPromise
   const result = await fp.get()

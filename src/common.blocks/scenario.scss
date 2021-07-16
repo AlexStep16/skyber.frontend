@@ -69,19 +69,22 @@
     width: 100%;
     text-align: left;
     position: relative;
-    display: flex;
 
     &__wraper {
       position: relative;
       max-width: 100%;
+      display: inline-flex;
 
       > img {
         max-width: 100%;
-        min-width: 400px;
         display: block;
       }
     }
   }
+}
+
+.scenario-image__wraper:hover .image-menu{
+  display: inline-block;
 }
 
 .scenario-success {

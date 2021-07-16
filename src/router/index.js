@@ -76,15 +76,7 @@ const routes = [
     path: '/test/scenario/',
     name: 'Scenario',
     component: Scenario,
-    props: true,
     children: [
-      {
-        path: 'add/:hash',
-        component: MakeScenario,
-        props: {
-          isEdit: false
-        }
-      },
       {
         path: 'menu/:hash',
         component: ScenariosMenu
@@ -92,9 +84,6 @@ const routes = [
       {
         path: 'edit/:id',
         component: MakeScenario,
-        props: {
-          isEdit: true
-        }
       },
     ]
   },

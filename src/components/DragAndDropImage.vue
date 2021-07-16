@@ -1,6 +1,6 @@
 <template>
   <div ref="fileform" @dragover="over = true" @dragleave="over = false" class="drag-and-drop-slot flex flex-vertical flex-center mt5" :class="over ? 'drag-and-drop-slot_over' : ''">
-    <p v-if="!over" style="font-size: 1.15em;">Перетащите изображение сюда</p>
+    <p v-if="!over" style="font-size: 1.15em;">Перетащите изображения сюда</p>
     <p v-if="over" style="font-size: 1.15em;">Отпустите чтобы добавить</p>
     <p class="mt6">Или</p>
     <button @click.prevent="clickImage" class="button button_theme-purple flex flex-center drag-and-drop-slot__button mt6">
@@ -46,9 +46,8 @@ export default {
         }.bind(this), false);
       }.bind(this));
       this.$refs.fileform.addEventListener('drop', function(e){
-        if(e.dataTransfer.files.length === 1 && fileTypes.includes(e.dataTransfer.files[0].type)) {
-          this.files.push(e.dataTransfer.files[0]);
-          this.$emit('drop')
+        if(fileTypes.includes(e.dataTransfer.files[0].type)) {
+          this.$emit('drop', e.dataTransfer.files)
         }
         this.over = false
       }.bind(this));

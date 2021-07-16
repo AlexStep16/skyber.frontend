@@ -4,9 +4,9 @@
     <template v-if="hasScenario && !showLoader && !fakeLoader">
       <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
       <div class="scenario__description" :class="scenario.header ? 'mt6' : ''" v-if="scenario.description" v-html="scenario.description"></div>
-      <div class="scenario-image mt6" v-if="scenario.image">
+      <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
         <div class="scenario-image__wraper">
-          <img :src="scenario.image" />
+          <img :src="img.original_url" />
         </div>
         <div class="modal modal_white absolute" v-if="imageLoading">
           <Loader />
@@ -68,7 +68,7 @@ export default {
         name: '',
         description: '',
         header: '',
-        image: '',
+        images: [],
         imageLoading: false,
       },
       scenarios: [],
@@ -120,7 +120,11 @@ export default {
               this.scenario.name = scenario.name
               this.scenario.header = scenario.header
               this.scenario.description = scenario.description
-              this.scenario.image = scenario.imageLink
+              
+              for(let key in scenario.imageLink) {
+                this.$set(this.scenario.images, key, scenario.imageLink[key])
+              }
+
               this.imageLoading = false
             }
           })

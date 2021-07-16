@@ -1,5 +1,8 @@
 <template>
-  <div class="container flex flex-justify-center">
+  <div class="container flex flex-justify-center"
+       @mouseup="mixin_imageMouseUp($event, currentResizingImage)"
+       @mousemove="mixin_imageMouseMove($event, currentResizingImage)"
+  >
     <Header type="test" />
     <div class="main">
       <div class="test-wrapper">
@@ -22,7 +25,9 @@
               </div>
             </div>
             
-            <div class="test__block bg-white-shadow test__header" @click="testFocuse">
+            <div class="test__block bg-white-shadow test__header"
+                 @click="testFocuse"
+            >
               <form class="form form_type-test">
                 <div>
                   <input
@@ -73,11 +78,27 @@
                   <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
                     <Loader />
                   </div>
-                  <div class="test-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in image.data" :key="key">
-                    <div class="test-image__wraper">
-                      <img :src="img.result || img.original_url" />
-                      <div class="test-image-menu">
-                        <div class="test-image-menu__inner inline-flex flex-center">
+                  <div class="test-image mt6" 
+                       :style="{textAlign: img.align}" 
+                       v-for="(img, key) in image.data" 
+                       :key="key"
+                  >
+                    <div class="test-image__wraper" tabindex="0">
+                      <img :src="img.result || img.original_url" 
+                           :width="img.width" 
+                           :height="img.height"
+                      />
+                      <div class="image-resizer">
+                        <div class="image-resizer__circle" style="top: -10px; left: -10px"></div>
+                        <div class="image-resizer__circle" style="top: -10px; right: -10px"></div>
+                        <div class="image-resizer__circle" :ref="'imageCircleUp' + img.id + key" style="bottom: -10px; left: -10px"></div>
+                        <div class="image-resizer__circle" 
+                             style="bottom: -10px; right: -10px" 
+                             @mousedown="mixin_imageMouseDown($event, img, $refs['imageCircleUp' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
+                        ></div>
+                      </div>
+                      <div class="image-menu">
+                        <div class="image-menu__inner inline-flex flex-center">
                           <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
                           <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
                           <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
@@ -164,19 +185,25 @@
                     <input
                       type="file"
                       name="imageQuestion"
-                      :ref="'question' + question.id"
+                      :ref="'questionInput' + question.id"
                       hidden
+                      multiple
                       @change="questionImage($event, question)"
-                      v-if="question.image.link == null"
+                      v-show="question.images.length === 0"
                     />
-                    <div class="test-image" v-if="question.image.link != null || question.image.isLoading">
+                    <div class="test-image" :style="{textAlign: img.align}" v-for="(img, key) in question.images" :key="img.id">
                       <div class="test-image__wraper">
-                        <img :src="question.image.link" />
-                        <div class="modal-inner modal50 pointer flex flex-center">
-                          <img src="/pictures/trash.svg" width="65px" @click="questionImageDelete(question)" />
+                        <img :src="img.original_url" />
+                        <div class="image-menu">
+                          <div class="image-menu__inner inline-flex flex-center">
+                            <div @click="questionImageAlign(img, 'left')"><AlignLeftSVG /></div>
+                            <div @click="questionImageAlign(img, 'center')"><AlignCenterSVG /></div>
+                            <div @click="questionImageAlign(img, 'right')"><AlignRightSVG /></div>
+                            <div @click="questionImageDelete(question, img, key)"><DeleteSVG /></div>
+                          </div>
                         </div>
                       </div>
-                      <div class="modal modal_white absolute" v-if="question.image.isLoading">
+                      <div class="modal modal_white absolute" v-if="false">
                         <Loader />
                       </div>
                     </div>
@@ -213,9 +240,9 @@
                     >
                       {{ question.name }}
                     </div>
-                    <div class="test-image mt6" v-if="question.image.link != null">
+                    <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                       <div class="test-image__wraper">
-                        <img :src="question.image.link" />
+                        <img :src="img.original_url" />
                       </div>
                     </div>
                     <VariantOneOutput
@@ -257,7 +284,7 @@
     <SuccessModal 
       v-if="showSuccess" 
       :message="successMessage" 
-      :link="test.hash" 
+      :link="test.hash"
       type="test"
       :edit="true"
       @closeModal="showSuccess = false" 
@@ -350,6 +377,7 @@ export default {
         password_confirm: false,
       },
       infoMessage: {},
+      currentResizingImage: {},
     };
   },
   components: {
@@ -396,11 +424,7 @@ export default {
           standartVariants: standartVariants,
           index: this.questions.length,
           isRequire: false,
-          image: {
-            data: null,
-            link: null,
-            isLoading: false
-          },
+          images: [],
           right_variants: [],
           videoLink: '',
           hideVideoBox: true
@@ -523,12 +547,7 @@ export default {
     },
 
     clickQuestionImage(id) {
-      if(this.$refs['question' + id][0].localName == 'div') {
-        this.$refs['question' + id][1].click()
-      }
-      else {
-        this.$refs['question' + id][0].click()
-      }
+      this.$refs['questionInput' + id][0].click()
     },
     clickQuestionVideo(question) {
       if(!question.videoLink) {
@@ -543,25 +562,36 @@ export default {
       question.videoLink = null
     },
     questionImage(event, question) {
-      question.image.isLoading = true
-      let fd = new FormData();
-      fd.append("questionImage", event.target.files[0]);
+      let files = event.target.files
+      const fd = new FormData();
+      let count = 0
+      for (let i in files) {
+        if (Object.prototype.hasOwnProperty.call(files,i)) {
+          fd.append(`questionImage${count}`, files[i])
+          fd.append(`imageType${count}`, files[i].type.split('/')[1])
+          count++
+        }
+      }
+      
+      fd.append('countImages', count)
+      fd.append("testHash", this.test.hash)
       fd.append("id", question.id);
 
-      axios.post("test/question/upload", fd).then(() => {
-        question.image.data = event.target.files[0];
-        question.image.link = URL.createObjectURL(event.target.files[0]);
-        question.image.isLoading = false
+      axios.post("test/question/upload", fd).then((res) => {
+        let images = res.data.data.images
+        console.log(images)
+        for(let key in images) {
+          this.$set(question.images, key, images[key])
+        }
       });
     },
 
-    questionImageDelete(question) {
-      axios
-        .post("test/question/upload/delete", { id: question.id })
-        .then(() => {
-          question.image.link = null;
-          question.image.data = null;
+    questionImageDelete(question, image, key) {
+      if(image.id) {
+        axios.post("test/upload/delete", { testHash: this.test.hash, id: image.id }).then(() => {
+          this.$delete(question.images, key);
         });
+      }
     },
     dragEnd() {
       this.questions.forEach((question, index) => {
@@ -627,6 +657,10 @@ export default {
 
               standartVariants = selectedVariants;
             }
+            let images = []
+            for(let key in element.images) {
+              images[key] = element.images[key]
+            }
             this.questions.push({
               id: element.id,
               name: element.question,
@@ -635,11 +669,7 @@ export default {
               typeAnswer: element.typeAnswer,
               index: element.index,
               isRequire: element.isRequire,
-              image: {
-                data: null,
-                link: element.imageLink,
-                isLoading: false
-              },
+              images: images,
               right_variants: element.right_variants,
               videoLink: element.videoLink,
               hideVideoBox: element.videoLink !== null ? false : true
@@ -674,7 +704,7 @@ export default {
         standartVariants: standartVariants,
         index: this.questions.length,
         isRequire: question.isRequire,
-        image: question.image,
+        images: question.images,
         right_variants: question.right_variants,
         videoLink: question.videoLink,
         hideVideoBox: true
@@ -689,10 +719,27 @@ export default {
     },
     imageAlign(image, direction) {
       image.align = direction
-      axios.post('/test/image/alignment', {align: direction, media_id: image.id}).then((res) => {
+      axios.post('/test/image/alignment', {align: direction, media_id: image.id}).then(() => {
+        
+      })
+    },
+    questionImageAlign(image, direction) {
+      image.align = direction
+      axios.post('/test/image/alignment', {
+        align: direction,
+        media_id: image.id
+      }).then((res) => {
         console.log(res)
       })
-    }
+    },
+    mixin_imageMouseUp(event, img) {
+      if(img.activateOver) {
+        img.activateOver = false
+        axios.post('/test/image/size', img).then(res => {
+          console.log(res)
+        })
+      }
+    },
   },
 
   watch: {

@@ -15,6 +15,7 @@ body {
 * {
   box-sizing: border-box;
   outline: none;
+  user-select: none;
 }
 
 ul {
@@ -348,4 +349,50 @@ button, .button {
 
 iframe {
   width: 100%;
+}
+
+
+//Common styles
+.image-menu {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+
+  &__inner {
+    padding: 8px;
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 10px;
+    background-color: #fff;
+    margin-bottom: 5px;
+
+    > div {
+      display: flex;
+      cursor: pointer;
+    }
+
+    > div:not(:last-child) {
+      margin-right: 13px;
+    }
+  }
+}
+
+.image-resizer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 3px solid #6699ff;
+  display: none;
+
+  &__circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border: 3px solid #6699ff;
+    background-color: #fff;
+    position: absolute;
+    cursor:nwse-resize;
+  }
 }

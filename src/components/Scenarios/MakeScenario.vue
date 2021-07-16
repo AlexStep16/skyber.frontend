@@ -2,7 +2,7 @@
   <div>
     <div class="main">
       <div class="scenario bg-white-shadow">
-        <h2 class="scenario__h2 h2-default mt0">{{ isEdit ? 'Редактирование' : 'Добавление' }} сценария</h2>
+        <h2 class="scenario__h2 h2-default mt0">Редактирование сценария</h2>
         <input
           type="text"
           name="scen-name"
@@ -24,19 +24,24 @@
           placeholder="Введите здесь текст который увидит пользователь после прохождения теста"
           v-model="scenario.description" 
         />
-        <input type="file" @change="uploadImage" ref="scenarioImage" hidden>
+        <input type="file" @change="uploadImage" multiple ref="scenarioImage" hidden>
         <DragAndDropImage 
-          v-if="!scenario.imageSrc" 
-          @clickImage="clickImage" 
-          :files="scenario.image" 
-          @drop="dropImage"
+          v-if="scenario.images.length <= 10" 
+          @clickImage="clickImage"
+          :files="scenario.images"
+          @drop="dropImage($event)"
           class="mt7"
         />
-        <div class="scenario-image mt6" v-if="scenario.imageSrc">
+        <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
           <div class="scenario-image__wraper">
-            <img :src="scenario.imageSrc" />
-            <div class="modal-inner modal50 pointer flex flex-center">
-              <img src="/pictures/trash.svg" width="65px" @click="deleteImage" />
+            <img :src="img.original_url" />
+            <div class="image-menu">
+              <div class="image-menu__inner inline-flex flex-center">
+                <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
+                <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
+                <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
+                <div @click="deleteImage(img, key)"><DeleteSVG /></div>
+              </div>
             </div>
           </div>
           <div class="modal modal_white absolute" v-if="imageLoading">
@@ -58,9 +63,13 @@ import Loader from "@/components/Loader.vue";
 import DragAndDropImage from "@/components/DragAndDropImage.vue";
 import InfoModal from "@/components/InfoModal.vue";
 
+import DeleteSVG from '/public/pictures/trash-menu.svg'
+import AlignLeftSVG from '/public/pictures/align_left.svg'
+import AlignCenterSVG from '/public/pictures/align_center.svg'
+import AlignRightSVG from '/public/pictures/align_right.svg'
+
 export default {
   name: "MakeScenario",
-  props: ['isEdit'],
   data() {
     return {
       scenario: {
@@ -70,7 +79,6 @@ export default {
         header: '',
         description: '',
         images: [],
-        imageSrc: '',
       },
       showContent: false,
       infoMessage: {},
@@ -81,28 +89,18 @@ export default {
   components: {
     MakeFooter,
     Tiptap, Loader, DragAndDropImage,
-    InfoModal
+    InfoModal, DeleteSVG, AlignLeftSVG,
+    AlignCenterSVG, AlignRightSVG,
   },
   methods: {
     saveScenario() {
-      const formData = new FormData();
-      this.scenario.image.length > 0
-        ? formData.append("scenaImage", this.scenario.image[0])
-        : "";
-      formData.append("scenario", JSON.stringify(this.scenario))
       if(this.scenario.name.length === 0) {
         this.infoMessage = {body: 'Вы не ввели имя сценария', type: 'danger'}
         return false;
       }
-      if(!this.isEdit) {
-        axios.post('scenarios/create', formData).then(() => {
-          this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
-        })
-      } else {
-        axios.post('scenario/edit/' + this.$route.params.id, formData).then(() => {
-          this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
-        })
-      }
+      axios.post('scenario/edit/' + this.$route.params.id, this.scenario).then(() => {
+        this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
+      })
     },
     getScenario() {
       axios.get('scenario/' + this.$route.params.id).then(res => {
@@ -111,38 +109,66 @@ export default {
         this.scenario.description = res.description
         this.scenario.header = res.header
         this.scenario.name = res.name
-        this.scenario.imageSrc = res.imageLink
+
+        for(let key in res.imageLink) {
+          this.$set(this.scenario.images, key, res.imageLink[key])
+        }
+
         this.scenario.testHash = res.testHash
       })
     },
     clickImage() {
       this.$refs.scenarioImage.click()
     },
-    deleteImage() {
-      this.scenario.image = []
-      this.scenario.imageSrc = null
+    deleteImage(image, key) {
+      if(image.id) {
+        axios.post("scenario/upload/delete", { scenarioId: this.scenario.id, id: image.id }).then(() => {
+          this.$delete(this.scenario.images, key);
+        });
+      }
     },
-    dropImage() {
-      this.imageLoading = true
-      if (!this.scenario.image || this.scenario.image.length === 0) return;
-      this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
-      this.imageLoading = false
+    dropImage(files) {
+      let obj = {target: {files:files, value: ''}}
+      this.uploadImage(obj)
     },
     uploadImage(event) {
+      this.imageLoading = true
       let files = event.target.files
+      const fd = new FormData();
       let count = 0
-      let fd = []
-      this.scenario.images = files
       for (let i in files) {
 
         if (Object.prototype.hasOwnProperty.call(files,i)) {
-          fd.append(`testImage${count}`, files[i])
+          fd.append(`scenarioImage${count}`, files[i])
           fd.append(`imageType${count}`, files[i].type.split('/')[1])
           count++
         }
       }
-      this.scenario.imageSrc = URL.createObjectURL(this.scenario.image[0]);
+      
+      fd.append('countImages', count)
+      fd.append("scenarioId", this.scenario.id)
+      
+      if (!this.scenario.images && this.scenario.images.length === 0) return;
+      
+      axios.post("scenario/upload", fd).then((res) => {
+        let images = res.data.data.imageLink
+        console.log(images)
+        for(let key in images) {
+          this.$set(this.scenario.images, key, images[key])
+        }
+        this.imageLoading = false
+      })
+      .catch(() => {
+        //this.showImagePreloader = false
+      });
+      event.target.value = '';
     },
+    imageAlign(image, direction) {
+      image.align = direction
+      axios.post('/scenario/image/alignment', {align: direction, media_id: image.id}).then(() => {
+        
+      })
+    }
   },
   beforeMount() {
     this.$store.commit('SHOW_LOADER')
@@ -153,9 +179,7 @@ export default {
     }).then((res) => {
       if(res.status === 200) {
         this.scenario.testHash = this.$route.params.hash
-        if(this.isEdit) {
-          this.getScenario()
-        }
+        this.getScenario()
         this.showContent = true
         this.$store.commit('HIDE_LOADER')
       }
