@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="main">
+    <div class="main"
+         @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
+         @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"
+    >
       <div class="scenario bg-white-shadow">
         <h2 class="scenario__h2 h2-default mt0">Редактирование сценария</h2>
         <input
@@ -33,8 +36,23 @@
           class="mt7"
         />
         <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
-          <div class="scenario-image__wraper">
-            <img :src="img.original_url" />
+          <div class="scenario-image__wraper" tabindex="0">
+            <img :src="img.original_url" :width="img.width" :height="img.height" />
+            <div class="image-resizer">
+              <div 
+                class="image-resizer__circle image-resizer__circle-left" 
+                style="bottom: -10px; left: -10px" 
+                :style="img.align !== 'right' ? 'display:none' : ''"
+                :ref="'imageCircleUp1' + img.id + key"
+                @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
+              ></div>
+              <div class="image-resizer__circle" 
+                  style="bottom: -10px; right: -10px"
+                  :style="img.align === 'right' ? 'display:none' : ''"
+                  :ref="'imageCircleUp2' + img.id + key"
+                  @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
+              ></div>
+            </div>
             <div class="image-menu">
               <div class="image-menu__inner inline-flex flex-center">
                 <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
@@ -84,6 +102,7 @@ export default {
       infoMessage: {},
       imageLoading: false,
       fingerprint: window.VISITOR_ID,
+      currentResizingImage: {},
     }
   },
   components: {
@@ -168,7 +187,15 @@ export default {
       axios.post('/scenario/image/alignment', {align: direction, media_id: image.id}).then(() => {
         
       })
-    }
+    },
+    RESIZER_imageMouseUp(event, img) {
+      if(img.activateOver) {
+        img.activateOver = false
+        axios.post('/test/image/size', img).then(res => {
+          console.log(res)
+        })
+      }
+    },
   },
   beforeMount() {
     this.$store.commit('SHOW_LOADER')

@@ -22,7 +22,7 @@ const fpPromise = FingerprintJS.load()
 
 Vue.mixin({
   methods: {
-    mixin_imageMouseDown(event, img, domWidth, domHeight) {
+    RESIZER_imageMouseDown(event, img, domWidth, domHeight, direction = 'right') {
       img.activateOver = true
       if(!img.width) img.width = domWidth
       if(!img.height) img.height = domHeight
@@ -30,13 +30,15 @@ Vue.mixin({
       img.bigger = img.width < img.height ? 'height' : 'width'
       img.startPointX = event.pageX
       img.startWidth = img.width
+      img.direction = direction
     },
-    mixin_imageMouseMove(event, img) {
-      
+    RESIZER_imageMouseMove(event, img) {
       if(img.activateOver === true) {
-        img.width = img.startWidth + (event.pageX - img.startPointX)
-
-        img.height = img.bigger === 'width' ? Math.floor(img.width * img.ratio) : Math.floor(img.width / img.ratio)
+        let width = parseInt(img.direction === 'right' ? (img.startWidth + (event.pageX - img.startPointX)) : (img.startWidth + (img.startPointX - event.pageX)))
+        width = width < 200 ? 200 : width
+        let height = parseInt(img.bigger === 'width' ? Math.round(img.width * img.ratio) : Math.round(img.width / img.ratio))
+        img.width =  width
+        img.height = height
       }
     }
   }

@@ -11,7 +11,7 @@
   z-index: 100;
 }
 
-.make-footer__link-wrapper {
+.make-footer__link-wraper {
   font-size: 0.95em;
   font-family: "Roboto", sans-serif;
   color: #444444;
@@ -20,7 +20,7 @@
   overflow: hidden;
 }
 
-.make-footer__share-wrapper {
+.make-footer__share-wraper {
   font-size: 0.95em;
   font-family: "Roboto", sans-serif;
   color: #444444;
@@ -60,11 +60,25 @@
 }
 
 @media (max-width: 480px) {
-  .make-footer__link-wrapper {
-    font-size: 14px;
+  .make-footer__link-wraper {
+    font-size: 0.85em;
+  }
+
+  .make-footer__flex-wraper {
     flex-direction: column;
     align-items: flex-start;
-    margin-right: 14px!important;
+
+    > span {
+      position: relative;
+      bottom: 1px;
+    }
+
+    > input {
+      width: 100%!important;
+      margin-left: 0!important;
+      position: relative;
+      top: 1px;
+    }
   }
 
   .make-footer__link {

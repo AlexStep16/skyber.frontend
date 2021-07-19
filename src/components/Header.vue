@@ -28,7 +28,7 @@
           <!-- <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
             <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
           </div> -->
-          <div class="header-links-list__item header-links-list__item-margin">
+          <div class="header-links-list__item header-links-list__item-margin" :class="$route.path === '/register' ? 'header-links-list__item_selected' : ''">
             <router-link to="/register" class="flex flex-align-center"><NewUser25 v-if="false" /><span>Зарегистрироваться</span></router-link>
           </div>
           <div class="header-links-list__item header-links-list__item-exit">

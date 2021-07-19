@@ -1,7 +1,7 @@
 <template>
   <div class="container flex flex-justify-center"
-       @mouseup="mixin_imageMouseUp($event, currentResizingImage)"
-       @mousemove="mixin_imageMouseMove($event, currentResizingImage)"
+       @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
+       @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"
   >
     <Header type="test" />
     <div class="main">
@@ -89,12 +89,17 @@
                            :height="img.height"
                       />
                       <div class="image-resizer">
-                        <div class="image-resizer__circle" style="top: -10px; left: -10px"></div>
-                        <div class="image-resizer__circle" style="top: -10px; right: -10px"></div>
-                        <div class="image-resizer__circle" :ref="'imageCircleUp' + img.id + key" style="bottom: -10px; left: -10px"></div>
+                        <div class="image-resizer__circle image-resizer__circle-left" 
+                             style="bottom: -10px; left: -10px"
+                             :style="img.align !== 'right' ? 'display:none' : ''"
+                             :ref="'imageCircleUp1' + img.id + key"
+                             @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
+                        ></div>
                         <div class="image-resizer__circle" 
                              style="bottom: -10px; right: -10px" 
-                             @mousedown="mixin_imageMouseDown($event, img, $refs['imageCircleUp' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
+                             :style="img.align === 'right' ? 'display:none' : ''"
+                             :ref="'imageCircleUp2' + img.id + key"
+                             @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
                         ></div>
                       </div>
                       <div class="image-menu">
@@ -191,9 +196,23 @@
                       @change="questionImage($event, question)"
                       v-show="question.images.length === 0"
                     />
-                    <div class="test-image" :style="{textAlign: img.align}" v-for="(img, key) in question.images" :key="img.id">
-                      <div class="test-image__wraper">
-                        <img :src="img.original_url" />
+                    <div class="test-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in question.images" :key="img.id">
+                      <div class="test-image__wraper" tabindex="0">
+                        <img :src="img.original_url" :width="img.width" :height="img.height" />
+                        <div class="image-resizer">
+                          <div class="image-resizer__circle image-resizer__circle-left" 
+                               style="bottom: -10px; left: -10px"
+                               :style="img.align !== 'right' ? 'display:none' : ''"
+                               :ref="'imageCircleUp1' + img.id + key"
+                               @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
+                          ></div>
+                          <div class="image-resizer__circle" 
+                              style="bottom: -10px; right: -10px"
+                              :style="img.align === 'right' ? 'display:none' : ''"
+                              :ref="'imageCircleUp2' + img.id + key"
+                              @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
+                          ></div>
+                        </div>
                         <div class="image-menu">
                           <div class="image-menu__inner inline-flex flex-center">
                             <div @click="questionImageAlign(img, 'left')"><AlignLeftSVG /></div>
@@ -242,7 +261,7 @@
                     </div>
                     <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                       <div class="test-image__wraper">
-                        <img :src="img.original_url" />
+                        <img :src="img.original_url" :width="img.width" :height="img.height" />
                       </div>
                     </div>
                     <VariantOneOutput
@@ -615,7 +634,6 @@ export default {
         }
         
         res = res.data.data;
-        console.log(res)
         this.settings = res.settings[0]
 
         this.test.id = res.id
@@ -732,7 +750,7 @@ export default {
         console.log(res)
       })
     },
-    mixin_imageMouseUp(event, img) {
+    RESIZER_imageMouseUp(event, img) {
       if(img.activateOver) {
         img.activateOver = false
         axios.post('/test/image/size', img).then(res => {

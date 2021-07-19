@@ -26,9 +26,9 @@
               <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
                 <Loader />
               </div>
-              <div class="test-image mt6" v-for="(image, key) in image.data" :key="key">
+              <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in image.data" :key="img.id">
                 <div class="test-image__wraper">
-                  <img :src="image.result || image.original_url" />
+                  <img :src="img.original_url" :width="img.width" :height="img.height" />
                 </div>
               </div>
             </div>
@@ -51,9 +51,9 @@
                 <youtube id="youtube" ref="youtube" :video-id="question.videoLink" class="test-video">
                 </youtube>
               </div>
-              <div class="test-image mt6" v-if="question.image.link != null">
+              <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                 <div class="test-image__wraper">
-                  <img :src="question.image.link" />
+                  <img :src="img.original_url" :width="img.width" :height="img.height" />
                 </div>
               </div>
               <VariantOneOutput
@@ -371,7 +371,7 @@ export default {
       this.testVideoLink = res.videoLink;
       this.testDescription = res.description;
       for(let key in res.imageLink) {
-        this.image.data[key] = res.imageLink[key]
+        this.$set(this.image.data, key, res.imageLink[key])
       }
       
       this.imageLoading = false
@@ -398,6 +398,10 @@ export default {
       .then((res) => {
         res.data.data.forEach((element) => {
           let variants = JSON.parse(element.variants);
+          let images = []
+          for(let key in element.images) {
+            images[key] = element.images[key]
+          }
           this.questions.push({
             id: element.id,
             name: element.question,
@@ -405,10 +409,7 @@ export default {
             variants: variants,
             typeAnswer: element.typeAnswer,
             isRequire: element.isRequire,
-            image: {
-              data: null,
-              link: element.imageLink,
-            },
+            images: images,
             right_variants: element.right_variants,
             videoLink: element.videoLink,
             showAllRightVariants: false,

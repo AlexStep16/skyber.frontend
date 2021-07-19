@@ -394,5 +394,9 @@ iframe {
     background-color: #fff;
     position: absolute;
     cursor:nwse-resize;
+
+    &-left {
+      cursor: nesw-resize;
+    }
   }
 }

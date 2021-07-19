@@ -1,7 +1,7 @@
 <template>
   <div class="make-footer flex flex-center">
-    <div class="make-footer__link-wrapper flex flex-align-center mr5">
-      <div v-if="link">
+    <div class="make-footer__link-wraper flex flex-align-center">
+      <div class="make-footer__flex-wraper wd100 flex flex-center" v-if="link">
         <span v-if="type == 'test'">Ссылка на тест:</span> 
         <span v-else>Ссылка на опрос:</span> 
         <input 
@@ -10,7 +10,7 @@
           ref="linkInput"
           class="input_type-link ml4"
           @click="$refs.linkInput.select()"
-          :style="{width: (link.length * 7.5) + 'px'}"
+          style="width: 480px"
           readonly
         />
       </div>

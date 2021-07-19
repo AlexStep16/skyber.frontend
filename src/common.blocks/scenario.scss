@@ -87,6 +87,10 @@
   display: inline-block;
 }
 
+.scenario-image__wraper:focus .image-resizer{
+  display: block;
+}
+
 .scenario-success {
 
   &__message {

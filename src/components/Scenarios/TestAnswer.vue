@@ -6,7 +6,7 @@
       <div class="scenario__description" :class="scenario.header ? 'mt6' : ''" v-if="scenario.description" v-html="scenario.description"></div>
       <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
         <div class="scenario-image__wraper">
-          <img :src="img.original_url" />
+          <img :src="img.original_url" :width="img.width" :height="img.height" />
         </div>
         <div class="modal modal_white absolute" v-if="imageLoading">
           <Loader />
