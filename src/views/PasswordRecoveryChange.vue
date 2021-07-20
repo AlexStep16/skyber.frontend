@@ -3,10 +3,10 @@
     <div class="main">
       <Header type="test" />
       <div class="password-recovery bg-white-shadow">
-        <div class="login__form">
-          <h1 class="mt0">Восстановление пароля</h1>
+        <div class="login__form pr0">
+          <h1 class="mt0">Изменение пароля</h1>
           <p>
-            Вам на почту придет письмо с инструкцией о восстановлении пароля
+            Здесь вы можете изменить свой пароль
           </p>
           <div class="login-errors">
             <ul class="login-errors__list" v-if="showErrors">
@@ -22,18 +22,19 @@
           <form action="api/login" class="form form_type-main mr8">
             <div>
               <input
-                type="text"
-                name="email"
-                id="email"
-                placeholder="Введите E-Mail"
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Введите новый пароль"
+                style="max-width: 250px"
                 class="input input_type-index"
-                v-model="form.email"
+                v-model="form.password"
               />
             </div>
             <input
               type="submit"
               class="input input_type-main_submit input_theme-purple mt7"
-              value="Восстановить"
+              value="Изменить пароль"
               @click.prevent="sendRequest"
             />
           </form>
@@ -51,11 +52,12 @@ import InfoModal from "@/components/InfoModal.vue";
 import axios from "axios";
 
 export default {
-  name: "PasswordRecovery",
+  name: "PasswordRecoveryChange",
   data() {
     return {
       form: {
-        email: '',
+        password: '',
+        hash: '',
       },
       showErrors: false,
       loginErrors: [],
@@ -67,20 +69,32 @@ export default {
   },
   methods: {
     sendRequest() {
-      axios.post('/password/recovery', this.form)
-        .then(() => {
-          this.showErrors = false
-          this.infoMessage = {body: 'На вашу почту была отправлена ссылка для восстановления пароля', type: 'success'}
-          setTimeout(() => {
-            this.$router.push({name:'List'})
-          }, 3000);
-        })
-        .catch(() => {
-          this.loginErrors = ['Такого E-Mail нет в нашей системе :(']
-          this.showErrors = true
-        });
+      this.loginErrors = []
+      if(this.form.password.length < 6) this.loginErrors.push('Пароль должен быть не меньше 6 символов')
+
+      if(this.loginErrors.length === 0) {
+        this.showErrors = false
+        axios.post('/password/change', this.form)
+          .then(() => {
+            this.showErrors = false
+            this.infoMessage = {body: 'Пароль успешно изменён', type: 'success'}
+            setTimeout(() => {
+              this.$router.push({name:'Login'})
+            }, 3000);
+          })
+          .catch(() => {
+            this.loginErrors = ['Что-то пошло не так. Попробуйте отправить ссылку заново, или перезагрузите страницу']
+            this.showErrors = true
+          });
+      }
+      else {
+        this.showErrors = true
+      }
     },
   },
+  mounted() {
+    this.form.hash = this.$route.params.hash
+  }
 };
 </script>
 
@@ -107,5 +121,6 @@ export default {
 .password-recovery {
   padding: 34px;
   border-radius: 13px;
+  width: 620px;
 }
 </style>

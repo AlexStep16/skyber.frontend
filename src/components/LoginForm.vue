@@ -34,7 +34,7 @@
           />
         </div>
         <div class="form-options mt7">
-          <div>
+          <div class="flex flex-align-center">
             <input
               type="checkbox"
               class="checkbox"
@@ -43,7 +43,7 @@
             />
             <label for="remember" class="checkbox-label">Запомнить меня?</label>
           </div>
-          <div>
+          <div class="flex flex-align-center">
             <router-link to="/password/recovery" class="forget-link"
               >Забыли пароль?</router-link
             >

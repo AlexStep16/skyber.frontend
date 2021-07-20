@@ -9,6 +9,7 @@ import MakeScenario from '../components/Scenarios/MakeScenario.vue'
 import ScenariosMenu from '../components/Scenarios/ScenariosMenu.vue'
 import TestCreator from '../views/TestCreator.vue'
 import PasswordRecovery from '../views/PasswordRecovery.vue'
+import PasswordRecoveryChange from '../views/PasswordRecoveryChange.vue'
 //import PollCreator from '../views/PollCreator.vue'
 import List from '../views/List.vue'
 //import MakePoll from '../views/MakePoll.vue'
@@ -65,6 +66,12 @@ const routes = [
     path: '/password/recovery',
     name: 'PasswordRecovery',
     component: PasswordRecovery,
+  },
+  {
+    path: '/password/change/:hash',
+    name: 'PasswordRecoveryChange',
+    component: PasswordRecoveryChange,
+    props: true,
   },
   {
     path: '/test/edit/:hash',

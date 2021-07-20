@@ -310,16 +310,29 @@ hr {
 
 @media (max-width: 665px) {
   .side-panel {
+    height: 50px;
     position: fixed;
     right: 21px;
     bottom: 91px;
     left: inherit;
     z-index: 1;
+    width: auto;
+    display: flex;
+    align-items: center;
   }
 
   .side-panel-inner {
     box-shadow: none;
-    border: 1px solid rgba(150,150,150,0.4)
+    border: 1px solid rgba(150,150,150,0.4);
+    display: flex;
+    flex-direction: row;
+    padding: 13px;
+    width: auto;
+  }
+
+  .side-panel-item:not(:first-child) {
+    margin-top: 0;
+    margin-left: 13px;
   }
 
   .container {

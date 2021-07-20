@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <router-link to="/" class="header-logo">
+    <router-link to="/list" class="header-logo">
       SKYBER
       <span class="header-logo__tag" v-if="type == 'test' || type == 'poll'">
         <span class="header-logo__dot">•</span>
@@ -9,10 +9,10 @@
       </span>
     </router-link>
       <div class="header-links-list">
-        <div :class="$route.path === '/list' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+        <div class="header-links-list__item mobile-hidden" :class="$route.path === '/list' ? 'header-links-list__item_selected' : ''">
           <router-link to="/list" class="flex flex-align-center"><Home25 v-if="false" /><span>Главная</span></router-link>
         </div>
-        <div :class="$route.name === 'MakeTest' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
+        <div class="header-links-list__item mobile-hidden" :class="$route.name === 'MakeTest' ? 'header-links-list__item_selected' : ''">
           <router-link to="/test/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать тест</span></router-link>
         </div>
         <template v-if="isAuthorized">
@@ -28,7 +28,7 @@
           <!-- <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
             <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
           </div> -->
-          <div class="header-links-list__item header-links-list__item-margin" :class="$route.path === '/register' ? 'header-links-list__item_selected' : ''">
+          <div class="header-links-list__item header-links-list__item-margin header-register" :class="$route.path === '/register' ? 'header-links-list__item_selected' : ''">
             <router-link to="/register" class="flex flex-align-center"><NewUser25 v-if="false" /><span>Зарегистрироваться</span></router-link>
           </div>
           <div class="header-links-list__item header-links-list__item-exit">
@@ -64,7 +64,8 @@ export default {
   },
   props: ['type'],
   components: {
-    Home25, Add25, Exit25, NewUser25, Login25
+    Home25, Add25, Exit25,
+    NewUser25, Login25,
   },
   methods: {
     ...mapActions({
