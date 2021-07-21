@@ -15,6 +15,10 @@
   padding-bottom: 13px;
 }
 
+.svg-mobile {
+  display: none;
+}
+
 .settings-item {
   display: flex;
   align-items: center;
@@ -67,15 +71,50 @@
   }
 }
 
+.settings-group__mobile {
+  display: none;
+}
+
 //Media styles
 
 @media (max-width: 540px) {
-  .settings-item__text[data-v-47aa12d3] {
+  .settings-item__text {
     font-size: 0.85em;
   }
-  .settings-item__link[data-v-47aa12d3] {
+
+  .settings-item__link {
     font-family: 'Roboto', sans-serif;
     font-size: 0.87em;
     color: #acacac;
+  }
+
+  .settings-header__h2 {
+    font-size: 0.9em;
+  }
+
+  .settings-header {
+    padding: 10px 15px;
+  }
+
+  .settings {
+    border-radius: 0;
+  }
+
+  .svg-desktop {
+    display: none;
+  }
+
+  .svg-mobile {
+    display: block;
+  }
+}
+
+@media (max-width: 410px) {
+  .settings-group__desktop {
+    display: none;
+  }
+
+  .settings-group__mobile {
+    display: block;
   }
 }

@@ -14,13 +14,16 @@
             <div class="side-panel inline-block">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
                 <div class="side-panel-item pointer text-center" @click="addQuestion">
-                  <AddSVG style="position:absolute" />
+                  <AddSVG class="svg-desktop" style="position:absolute" />
+                  <AddSVGMobile class="svg-mobile" style="position:absolute" />
                 </div>
                 <div class="side-panel-item pointer text-center" @click="clickImage">
-                  <img src="/pictures/image.svg" width="32px">
+                  <ImageSVG class="svg-desktop" />
+                  <ImageSVGMobile class="svg-mobile" />
                 </div>
                 <div class="side-panel-item pointer text-center" @click="hideVideoBox = test.videoLink == null ? !hideVideoBox : hideVideoBox">
-                  <img src="/pictures/video.svg" width="32px">
+                  <VideoSVG class="svg-desktop"  />
+                  <VideoSVGMobile class="svg-mobile" />
                 </div>
               </div>
             </div>
@@ -126,13 +129,16 @@
               <div class="side-panel inline-block" v-if="question.focused">
                 <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical">
                   <div class="side-panel-item pointer" @click="addQuestion">
-                    <AddSVG style="position:absolute" />
+                    <AddSVG class="svg-desktop" style="position:absolute" />
+                    <AddSVGMobile class="svg-mobile" style="position:absolute" />
                   </div>
                   <div class="side-panel-item pointer" @click="clickQuestionImage(question.id)">
-                    <img src="/pictures/image.svg" width="32px">
+                    <ImageSVG class="svg-desktop" />
+                    <ImageSVGMobile class="svg-mobile" />
                   </div>
                   <div class="side-panel-item pointer" @click="clickQuestionVideo(question)">
-                    <img src="/pictures/video.svg" width="32px">
+                    <VideoSVG class="svg-desktop"  />
+                    <VideoSVGMobile class="svg-mobile" />
                   </div>
                 </div>
               </div>
@@ -341,10 +347,18 @@ import draggable from 'vuedraggable'
 
 //SVGs
 import AddSVG from '/public/Vectors/add32_new.svg'
+import ImageSVG from '/public/pictures/image.svg'
+import VideoSVG from '/public/pictures/video.svg'
 import DeleteSVG from '/public/pictures/trash-menu.svg'
 import AlignLeftSVG from '/public/pictures/align_left.svg'
 import AlignCenterSVG from '/public/pictures/align_center.svg'
 import AlignRightSVG from '/public/pictures/align_right.svg'
+
+//mobile svg
+import AddSVGMobile from '/public/pictures-mobile/add25.svg'
+import ImageSVGMobile from '/public/pictures-mobile/image27.svg'
+import VideoSVGMobile from '/public/pictures-mobile/video25.svg'
+
 
 import InfoModal from "@/components/InfoModal.vue";
 
@@ -412,7 +426,8 @@ export default {
     MakeFooter, SuccessModal,
     Loader, InfoModal, MultiselectIcons,
     Settings, DeleteSVG, AlignLeftSVG, AlignCenterSVG,
-    AlignRightSVG
+    AlignRightSVG, AddSVGMobile, ImageSVG,
+    ImageSVGMobile, VideoSVG, VideoSVGMobile
   },
   computed: {
   },

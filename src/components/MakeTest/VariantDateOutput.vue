@@ -3,6 +3,7 @@
       v-model="time1" 
       valueType="format"
       placeholder="Выберите дату"
+      class="mt6"
     >
     </date-picker>
 </template>

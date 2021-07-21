@@ -7,7 +7,7 @@
           @click.prevent="addScenario"
           class="scenarios-menu__add-scenario"
         >
-          Добавить сценарий +
+          Добавить <span class="scenarios-menu__span-hidden">сценарий</span> +
         </button>
       </h3>
       <div class="scenarios-menu__main">

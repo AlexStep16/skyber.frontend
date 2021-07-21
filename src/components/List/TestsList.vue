@@ -25,25 +25,36 @@
           </router-link>
         </div>
         <div class="flex flex-center">
-          <router-link
-            :to="`/test/edit/${test.hash}`"
-            title="Редактировать"
-          >
-            <img src="/Vectors/pen32.svg" width="30px">
-          </router-link>
-          <router-link
-            :to="`/stats/${test.hash}`"
-            title="Статистика"
-          >
-            <img src="/pictures/circle.svg" width="30px">
-          </router-link>
-          <span
-            @click="showModal(test.id, key)"
-            class="ml5"
-            title="Удалить"
-          >
-            <img src="/pictures/trash.svg" class="pointer" width="22px">
-          </span>
+          <div class="list-item__icon flex flex-center">
+            <router-link
+              :to="`/test/edit/${test.hash}`"
+              title="Редактировать"
+              class="flex flex-center"
+            >
+              <PenSVG class="svg-desktop" />
+              <PenSVGMobile class="svg-mobile" />
+            </router-link>
+          </div>
+          <div class="list-item__icon flex flex-center">
+            <router-link
+              :to="`/stats/${test.hash}`"
+              title="Статистика"
+              class="flex flex-center"
+            >
+              <img src="/pictures/circle.svg" class="svg-desktop" width="30px">
+              <img src="/pictures/circle.svg" class="svg-mobile" width="26px">
+            </router-link>
+          </div>
+          <div class="list-item__icon list-item__icon-delete flex flex-center">
+            <span
+              @click="showModal(test.id, key)"
+              class="flex flex-center"
+              title="Удалить"
+            >
+              <img src="/pictures/trash.svg" class="svg-desktop pointer" width="22px">
+              <img src="/pictures/trash.svg" class="svg-mobile pointer" width="19px">
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +76,9 @@
 import axios from "axios";
 import DeleteModal from "@/components/DeleteModal.vue";
 
+import PenSVG from '/public/Vectors/pen30.svg'
+import PenSVGMobile from '/public/pictures-mobile/pen27.svg'
+
 export default {
   name: "TestList",
   props: ["postTests"],
@@ -78,7 +92,7 @@ export default {
     }
   },
   components: {
-    DeleteModal
+    DeleteModal, PenSVG, PenSVGMobile
   },
   methods: {
     goCreateTest(test) {

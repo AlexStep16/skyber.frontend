@@ -26,6 +26,19 @@
   padding: 20px 0;
 }
 
+.svg-mobile {
+  display: none;
+}
+
+.list-item__icon {
+  width: 32px;
+  height: 32px;
+}
+
+.list-item__icon-delete {
+  margin-left: 5px;
+}
+
 .button_type-list {
   padding: 8px 13px;
   border-radius: 3px;
@@ -161,6 +174,22 @@
   .list-main-wraper {
     margin-top: 10px;
   }
+
+  .svg-desktop {
+    display: none;
+  }
+
+  .svg-mobile {
+    display: block;
+  }
+
+  .list-item__icon-delete {
+    margin-left: 3px;
+  }
+
+  .list-item > h2 {
+    font-size: 1.3em;
+  }
 }
 
 @media (max-width: 470px) {
@@ -181,5 +210,11 @@
     &__item {
       padding: 10px 0;
     }
+  }
+}
+
+@media (max-width: 380px) {
+  .create-test {
+    font-size: 14px;
   }
 }

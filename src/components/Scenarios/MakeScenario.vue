@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-wraper">
     <div class="main"
          @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
          @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"

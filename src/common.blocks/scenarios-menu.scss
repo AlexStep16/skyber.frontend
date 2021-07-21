@@ -78,3 +78,49 @@
 .scenarios-menu-item:not(:last-child) {
   margin-bottom: 13px;
 }
+
+
+//Media styles
+
+@media (max-width: 620px) {
+  .main {
+    padding-top: 0;
+    width: 100%;
+  }
+
+  .scenarios-menu {
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 460px) {
+  .scenarios-menu {
+    padding: 13px;
+  }
+
+  .scenarios-menu__h3{
+    font-size: 0.9em;
+  }
+
+  .scenarios-menu__main {
+    margin-top: 13px;
+  }
+  
+  .scenarios-menu-item__header {
+    padding: 8px 13px;
+  }
+  
+  .scenarios-menu-item {
+    font-size: 0.86em;
+  }
+}
+
+@media (max-width: 400px) {
+  .scenarios-menu__span-hidden {
+    display: none;
+  }
+}

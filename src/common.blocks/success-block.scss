@@ -62,3 +62,24 @@
     cursor: pointer;
   }
 }
+
+//media styles
+@media (max-width: 570px) {
+  .popup-success {
+    width: 100%;
+    margin-right: 0;
+  }
+  .modal-container {
+    width: 100%;
+  }
+  .make-footer__link {
+    font-size: 0.8em;
+  }
+  .popup-success__copy-link {
+    font-size: 0.85em;
+  }
+  .popup-success__message {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1em;
+  }
+}

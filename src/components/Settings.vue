@@ -2,7 +2,8 @@
   <div class="settings bg-white-border">
     <div class="settings-header flex flex-align-center flex-justify-between pointer" @click="showSettings = !showSettings">
       <h2 class="settings-header__h2">Настройки теста</h2>
-      <svg viewBox="0 0 96 96" width="20" height="20" xmlns="http://www.w3.org/2000/svg" :class="showSettings ? 'svg-down-revert' : ''"><title/><path fill="#fff" d="M81.8457,25.3876a6.0239,6.0239,0,0,0-8.45.7676L48,56.6257l-25.396-30.47a5.999,5.999,0,1,0-9.2114,7.6879L43.3943,69.8452a5.9969,5.9969,0,0,0,9.2114,0L82.6074,33.8431A6.0076,6.0076,0,0,0,81.8457,25.3876Z"/></svg>
+      <svg class="svg-desktop" viewBox="0 0 96 96" width="20" height="20" xmlns="http://www.w3.org/2000/svg" :class="showSettings ? 'svg-down-revert' : ''"><title/><path fill="#fff" d="M81.8457,25.3876a6.0239,6.0239,0,0,0-8.45.7676L48,56.6257l-25.396-30.47a5.999,5.999,0,1,0-9.2114,7.6879L43.3943,69.8452a5.9969,5.9969,0,0,0,9.2114,0L82.6074,33.8431A6.0076,6.0076,0,0,0,81.8457,25.3876Z"/></svg>
+      <svg class="svg-mobile" viewBox="0 0 96 96" width="17" height="17" xmlns="http://www.w3.org/2000/svg" :class="showSettings ? 'svg-down-revert' : ''"><title/><path fill="#fff" d="M81.8457,25.3876a6.0239,6.0239,0,0,0-8.45.7676L48,56.6257l-25.396-30.47a5.999,5.999,0,1,0-9.2114,7.6879L43.3943,69.8452a5.9969,5.9969,0,0,0,9.2114,0L82.6074,33.8431A6.0076,6.0076,0,0,0,81.8457,25.3876Z"/></svg>
     </div>
     
     <div :class="showSettings ? 'settings__main' : 'none'">
@@ -14,7 +15,8 @@
             target="_blank"
             class="settings-item__link pointer flex flex-center"
           >
-            <span class="mr3">Меню управления</span>
+            <span class="settings-group__desktop mr3">Меню управления</span>
+            <span class="settings-group__mobile mr3">Перейти</span>
             <img src="/pictures/link.svg">
           </router-link>
         </div>

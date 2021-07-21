@@ -135,3 +135,38 @@
 .tiptap[placeholder]:empty:focus::before {
   content: "";
 }
+
+//Media styles
+
+@media (max-width: 750px) {
+  .main {
+    padding-top: 34px;
+  }
+  .scenario {
+    width: 550px;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-wraper {
+    width: 100%!important;
+  }
+
+  .main {
+    padding-top: 0;
+    width: 100%!important;
+  }
+
+  .scenario {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    padding: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .drag-and-drop-slot::v-deep > p {
+    font-size: 1em!important;
+  }
+}
