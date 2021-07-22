@@ -80,10 +80,17 @@
 @media (max-width: 530px) {
   .stats {
     width: 100%;
+    min-height: 100%;
   }
-
+  .container {
+    min-height: 100%;
+  }
+  .stats-empty {
+    min-height: 100%;
+  }
   .main {
     width: 100%;
+    min-height: 100%;
     padding: 0;
   }
 
@@ -93,6 +100,7 @@
 
   .stats-body {
     font-size: 14px;
+    min-height: 100%;
   }
 
   .stats__question {

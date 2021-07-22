@@ -102,9 +102,9 @@
               <div class="test-question-name mb6">
                 {{ question.name }}
               </div>
-              <div class="test-image mt5" v-if="question.image.link != null">
+              <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                 <div class="test-image__wraper">
-                  <img :src="question.image.link" />
+                  <img :src="img.original_url" :width="img.width" :height="img.height" />
                 </div>
               </div>
               <VariantOneOutput

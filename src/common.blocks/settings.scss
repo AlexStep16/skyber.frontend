@@ -107,6 +107,14 @@
   .svg-mobile {
     display: block;
   }
+  
+  .settings-item__input {
+    max-width: 170px;
+  }
+
+  .settings-item__password-setted {
+    font-size: 0.8em;
+  }
 }
 
 @media (max-width: 410px) {
