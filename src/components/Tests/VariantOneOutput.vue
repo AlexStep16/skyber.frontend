@@ -7,19 +7,16 @@
     >
       <div>
         <input
-          :id="`radio${postQuestion.id}${variant.id}`"
+          :id="`radio${postQuestion.id + variant.id}`"
           type="radio"
-          :name="`radio${postQuestion.id}${variant.id}`"
-          :value="`${JSON.stringify(variant.name)}`"
-          v-model="postQuestion.checked"
-          @change="selectRadio(variant.id);showRightVariant(variant)"
+          :name="`radio${postQuestion.id}`"
+          @change="selectRadio(variant);showRightVariant(variant)"
           v-if="!variant.disabled"
         />
         <label 
           class="test-question-answer"
-          :for="`radio${postQuestion.id}${variant.id}`">{{
-          variant.name
-        }}
+          :for="`radio${postQuestion.id + variant.id}`"
+        >{{ variant.name }}
         </label>
       </div>
       <div class="description" v-if="variant.hasDescription && showRights && variantChecked(variant)">
@@ -83,8 +80,9 @@ export default {
       return false
     },
 
-    selectRadio(id) {
-      this.selectedId = id
+    selectRadio(variant) {
+      this.postQuestion.checked = JSON.stringify(variant.name)
+      this.selectedId = variant.id
     }
   },
   watch: {

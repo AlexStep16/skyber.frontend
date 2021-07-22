@@ -5,6 +5,7 @@
 .login {
   display: flex;
   width: 900px;
+  align-items: center;
 
   &__form {
     width: 100%;
@@ -108,4 +109,46 @@
 /* стили для чекбокса, находящегося в состоянии disabled */
 .checkbox:disabled + .checkbox-label::before {
   background-color: #e9ecef;
+}
+
+//media styles
+
+@media (max-width: 1000px) {
+  .login__side {
+    display: none;
+  }
+
+  .login {
+    width: 400px;
+  }
+
+  .login__form {
+    padding-right: 0;
+  }
+
+  .form_type-main {
+    margin-right: 0!important;
+  }
+}
+
+@media (max-width: 470px) {
+  .login {
+    width: 290px;
+  }
+
+  .login__form h1 {
+    font-size: 1.7em;
+  }
+
+  .login__form p {
+    font-size: 0.85em;
+  }
+
+  .form-options {
+    font-size: 0.9em;
+  }
+
+  .register {
+    font-size: 0.8em;
+  }
 }

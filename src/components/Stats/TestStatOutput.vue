@@ -60,14 +60,16 @@ export default {
       if(type == 'standard') {
         variants.forEach((variant) => {
           dataArr.push(variant.count);
+          if(variant.name.length > 15) variant.name = variant.name.substr(0, 15) + '...'
           labelsArr.push(variant.name);
         });
       }
 
       if(type == 'few') {
-        variants.forEach((answer) => {
-          dataArr.push(parseInt(answer.count));
-          labelsArr.push(answer.name);
+        variants.forEach((variant) => {
+          dataArr.push(parseInt(variant.count));
+          if(variant.name.length > 15) variant.name = variant.name.substr(0, 15) + '...'
+          labelsArr.push(variant.name);
         });
       }
 

@@ -81,6 +81,7 @@
 .test__item {
   display: flex;
   align-items: flex-start;
+  max-width: 100%;
 }
 
 .test__empty, .test-question-empty {
@@ -348,6 +349,7 @@ hr {
   .main {
     width: 100%;
     padding-top: 0;
+    padding-bottom: 30px;
   }
 
   .test-wrapper {
@@ -418,5 +420,17 @@ hr {
 
   .side-panel {
     bottom: 84px;
+  }
+
+  .test-question-description {
+    font-size: 0.86em;
+  }
+
+  .test__add-variant {
+    padding: 8px;
+  }
+
+  .test-require .slider {
+    margin-left: 13px!important;
   }
 }

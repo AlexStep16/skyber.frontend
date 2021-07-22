@@ -9,6 +9,10 @@
   margin-bottom: 14px;
 }
 
+.checkbox {
+  word-break: break-all;
+}
+
 /* для элемента label, связанного с .custom-checkbox */
 .custom-checkbox+label {
   display: inline-flex;

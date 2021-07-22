@@ -399,3 +399,11 @@ iframe {
     }
   }
 }
+
+//media styles
+
+@media (max-width: 470px) {
+  .input_type-index {
+    font-size: 0.85em;
+  }
+}

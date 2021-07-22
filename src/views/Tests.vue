@@ -268,7 +268,14 @@ export default {
               if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
             })
           } else if (elem.checked) {
-            let checked = elem.checked ? JSON.parse(elem.checked) : ''
+            let checked = ''
+
+            if(elem.checked && elem.checked[0] === '"') {
+              checked = JSON.parse(elem.checked)
+            }
+            else {
+              checked = elem.checked
+            }
             if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
           }
         })

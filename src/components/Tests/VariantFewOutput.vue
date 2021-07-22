@@ -11,9 +11,7 @@
           type="checkbox"
           :id="`variant${key}`"
           :name="`variant${key}`"
-          :value="`${JSON.stringify(variant.name)}`"
-          v-model="newSelected"
-          @change="selectId(variant.id, $event);ready()"
+          @change="selectId(variant, $event, key)"
           :disabled="variant.disabled"
         />
         <label class="pointer" :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
@@ -48,6 +46,10 @@ export default {
     ready() {
       if(!this.settings.is_reanswer && this.showRights) return false
       if(this.showRights) this.showRightVariant()
+      this.newSelected = []
+      this.selectedId.forEach(id => {
+        this.newSelected.push(JSON.stringify(this.postQuestion.variants[id].name))
+      })
       this.$emit('ready', this.newSelected)
     },
 
@@ -85,11 +87,14 @@ export default {
       return this.newSelected.includes(JSON.stringify(variant.name))
     },
 
-    selectId(id, event) {
-      if(event.target.checked) this.selectedId.push(id)
-      else {
-        this.selectedId.splice(this.selectedId.indexOf(id), 1)
+    selectId(variant, event) {
+      if(event.target.checked) {
+        this.selectedId.push(variant.id)
       }
+      else {
+        this.selectedId.splice(this.selectedId.indexOf(variant.id), 1)
+      }
+      this.ready()
     }
   },
   watch: {
