@@ -4,15 +4,17 @@
     <div class="modal modal_white" v-if="state">
       <Loader />
     </div>
+    <MobileMenu />
   </div>
 </template>
 
 <script>
 import Loader from "@/components/Loader.vue";
+import MobileMenu from "@/components/MobileMenu.vue";
 
 export default {
   components: {
-    Loader
+    Loader, MobileMenu
   },
   computed: {
     state() {

@@ -129,8 +129,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Montserrat", sans-serif;
-  color: #717173;
+  font-family: "Roboto", sans-serif;
+  color: #929292;
 }
 
 // Media styles
@@ -139,6 +139,10 @@
   .main {
     width: 100%;
     padding-top: 0;
+  }
+
+  .list-item__icon:not(:last-child) {
+    margin-right: 5px;
   }
 
   .pollOrTest {
@@ -168,7 +172,7 @@
   }
 
   .button_type-list {
-    padding: 11px 15px;
+    padding: 9px 13px;
   }
 
   .list-main-wraper {
