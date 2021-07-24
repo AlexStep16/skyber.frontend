@@ -54,6 +54,7 @@
   align-items: center;
 
   &__item {
+    cursor: pointer;
     
     > a {
       font-family: 'Raleway', sans-serif;
@@ -84,6 +85,11 @@
       color: #fff;
       border-bottom: #fff;
     }
+  }
+
+  &__item-save {
+    @extend .header-links-list__item-exit;
+    display: none;
   }
 
   &__item-margin {
@@ -173,5 +179,9 @@
 @media (max-width: 495px) {
   .mobile-hidden {
     display: none;
+  }
+
+  .header-links-list__item-save {
+    display: flex;
   }
 }

@@ -3,7 +3,7 @@
        @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
        @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"
   >
-    <Header type="test" />
+    <Header type="test" :save="true" @save="saveTest" />
     <div class="main">
       <div class="test-wrapper">
         <Settings :hash="test.hash" :settings="settings" />
@@ -356,9 +356,9 @@ import AlignCenterSVG from '/public/pictures/align_center.svg'
 import AlignRightSVG from '/public/pictures/align_right.svg'
 
 //mobile svg
-import AddSVGMobile from '/public/pictures-mobile/add25.svg'
-import ImageSVGMobile from '/public/pictures-mobile/image27.svg'
-import VideoSVGMobile from '/public/pictures-mobile/video25.svg'
+import AddSVGMobile from '/public/Vectors/mobile-side-panel/add25_new.svg'
+import ImageSVGMobile from '/public/Vectors/mobile-side-panel/image27.svg'
+import VideoSVGMobile from '/public/Vectors/mobile-side-panel/video25.svg'
 
 
 import InfoModal from "@/components/InfoModal.vue";

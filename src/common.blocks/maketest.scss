@@ -356,8 +356,13 @@ hr {
     width: 100%;
   }
 
+  .test {
+    margin-top: 0!important;
+  }
+
   .test__block_wraper {
     width: 100%;
+    margin-top: 13px!important;
   }
 
   .test__block-inner-div {
@@ -411,7 +416,7 @@ hr {
   }
 
   .side-panel-item:not(:first-child) {
-    margin-left: 8px;
+    margin-left: 13px;
   }
 
   .side-panel-inner {
@@ -432,5 +437,12 @@ hr {
 
   .test-require .slider {
     margin-left: 13px!important;
+  }
+}
+
+
+@media (max-width: 495px) {
+  .side-panel {
+    bottom: 65px;
   }
 }

@@ -31,8 +31,7 @@
               title="Редактировать"
               class="flex flex-center"
             >
-              <PenSVG class="svg-desktop" />
-              <PenSVGMobile class="svg-mobile" />
+              <PenSVG />
             </router-link>
           </div>
           <div class="list-item__icon flex flex-center">
@@ -41,8 +40,7 @@
               title="Статистика"
               class="flex flex-center"
             >
-              <img src="/pictures/circle.svg" class="svg-desktop" width="30px">
-              <img src="/pictures/circle.svg" class="svg-mobile" width="26px">
+              <img src="/pictures/circle.svg" width="30px">
             </router-link>
           </div>
           <div class="list-item__icon list-item__icon-delete flex flex-center">
@@ -51,8 +49,7 @@
               class="flex flex-center"
               title="Удалить"
             >
-              <img src="/pictures/trash.svg" class="svg-desktop pointer" width="22px">
-              <img src="/pictures/trash.svg" class="svg-mobile pointer" width="19px">
+              <img src="/pictures/trash.svg" class="pointer" width="22px">
             </span>
           </div>
         </div>
@@ -77,7 +74,6 @@ import axios from "axios";
 import DeleteModal from "@/components/DeleteModal.vue";
 
 import PenSVG from '/public/Vectors/pen30.svg'
-import PenSVGMobile from '/public/pictures-mobile/pen27.svg'
 
 export default {
   name: "TestList",
@@ -92,7 +88,7 @@ export default {
     }
   },
   components: {
-    DeleteModal, PenSVG, PenSVGMobile
+    DeleteModal, PenSVG
   },
   methods: {
     goCreateTest(test) {

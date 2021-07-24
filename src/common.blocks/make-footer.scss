@@ -63,8 +63,11 @@
   }
 }
 
-@media (max-width: 480px) {
-  .make-footer__link-wraper {
+@media (max-width: 495px) {
+  .make-footer {
+    display: none;
+  }
+  /* .make-footer__link-wraper {
     font-size: 0.85em;
   }
 
@@ -92,5 +95,5 @@
 
   .make-footer__save {
     font-size: 14px;
-  }
+  } */
 }
