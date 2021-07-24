@@ -238,6 +238,7 @@
 
                     <VariantStandart
                       :postQuestion="question"
+                      @postQuestionChecked="question.right_variants = $event"
                       v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Несколько из списка' || question.typeAnswer == 'Выпадающий список'"
                     />
                     <VariantInput

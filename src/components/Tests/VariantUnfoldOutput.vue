@@ -1,8 +1,10 @@
 <template>
   <div>
     <multiselect 
-      v-model="postQuestion.checked" 
-      :options="getUnfoldOptions(postQuestion.variants)"
+      v-model="cloneQuestion.checked" 
+      :options="postQuestion.variants"
+      track-by="id"
+      label="name"
       :allow-empty="false"
       :multiple="false"
       selectLabel=""
@@ -26,18 +28,22 @@ export default {
   },
   data() {
     return {
-      //
+      cloneQuestion: {
+        checked: [],
+        variants: [],
+      }
     };
   },
-  methods: {
-    getUnfoldOptions(standartVariants) {
-      let arr = [];
-
-      standartVariants.forEach(variant => {
-        arr.push(JSON.stringify(variant.name))
-      });
-      return arr;
+  watch: {
+    "cloneQuestion.checked": {
+      deep: true,
+      handler() {
+        this.postQuestion.checked = [this.cloneQuestion.checked.id]
+      }
     }
   },
+  beforeMount() {
+    this.cloneQuestion.variants = Object.assign({}, this.postQuestion).variants
+  }
 };
 </script>

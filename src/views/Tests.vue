@@ -286,7 +286,7 @@ export default {
 
     sendTest() {
       this.questions.forEach((elem) => {
-        if((elem.isRequire && elem.checked === undefined) || !elem.checked) {
+        if((elem.isRequire && elem.checked === undefined)) {
           stop = true;
         }
       });

@@ -9,7 +9,7 @@
       selectedLabel=""
       deselectLabel=""
       :placeholder="'Выберите ответ из списка'"
-      class="test__multiselect-output"
+      class="test__multiselect-output mt6"
     ></multiselect>
   </div>
 </template>

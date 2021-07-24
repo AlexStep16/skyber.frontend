@@ -11,7 +11,7 @@
             class="custom-checkbox"
             type="checkbox"
             :id="`variantSt${postQuestion.id + index}`"
-            :value="`${JSON.stringify(variant.name)}`"
+            :value="variant.id"
             v-model="postQuestion.right_variants"
           />
           <label class="test-question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
@@ -66,7 +66,10 @@ export default {
   components: {
   },
   data() {
-    return {};
+    return {
+      selectedId: [],
+      newSelected: []
+    };
   },
   methods: {
     addVariant(question) {
@@ -106,7 +109,7 @@ export default {
     deleteDescription(variant) {
       variant.hasDescription = false
       variant.description = ''
-    }
+    },
   },
 };
 </script>

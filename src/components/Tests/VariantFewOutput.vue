@@ -11,7 +11,7 @@
           type="checkbox"
           :id="`variant${key}`"
           :name="`variant${key}`"
-          @change="selectId(variant, $event, key)"
+          @change="selectId(variant, $event)"
           :disabled="variant.disabled"
         />
         <label class="pointer" :class="showRights ? `test-question-answer ${variant.color}-question-checkbox` : 'test-question-answer'" :for="`variant${key}`">{{ variant.name }}</label>
@@ -31,7 +31,6 @@ export default {
   props: ["postQuestion", "settings"],
   data() {
     return {
-      newSelected: [],
       showRights: false,
       selectedId: [],
     };
@@ -46,11 +45,7 @@ export default {
     ready() {
       if(!this.settings.is_reanswer && this.showRights) return false
       if(this.showRights) this.showRightVariant()
-      this.newSelected = []
-      this.selectedId.forEach(id => {
-        this.newSelected.push(JSON.stringify(this.postQuestion.variants[id].name))
-      })
-      this.$emit('ready', this.newSelected)
+      this.$emit('ready', this.selectedId)
     },
 
     showRightVariant() {
@@ -64,8 +59,8 @@ export default {
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
             if (
-              typeof rightVar === 'string' 
-              && JSON.stringify(variant.name) === rightVar
+              typeof rightVar === 'number' 
+              && variant.id === rightVar
               && (this.settings.is_right_questions || this.selectedId.includes(variant.id))
             ) {
               variant.color = 'right'
@@ -84,7 +79,7 @@ export default {
     },
 
     isThatDescription(variant) {
-      return this.newSelected.includes(JSON.stringify(variant.name))
+      return this.selectedId.includes(variant.id)
     },
 
     selectId(variant, event) {

@@ -59,8 +59,8 @@ export default {
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
             if (
-              typeof rightVar === 'string' 
-              && JSON.stringify(variant.name) === rightVar
+              typeof rightVar === 'number' 
+              && variant.id === rightVar
               && (this.settings.is_right_questions || variantTrue.id === variant.id)
             ) {
               variant.color = 'right'
@@ -81,7 +81,7 @@ export default {
     },
 
     selectRadio(variant) {
-      this.postQuestion.checked = JSON.stringify(variant.name)
+      this.postQuestion.checked = [variant.id]
       this.selectedId = variant.id
     }
   },
