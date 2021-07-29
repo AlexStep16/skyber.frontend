@@ -16,7 +16,7 @@ require('@/store/subscriber')
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://skyber.loc/api'
+axios.defaults.baseURL = 'http://192.168.1.102:81/api'
 
 const fpPromise = FingerprintJS.load()
 
@@ -25,20 +25,20 @@ Vue.mixin({
     RESIZER_imageMouseDown(event, img, domWidth, domHeight, direction = 'right') {
       img.activateOver = true
       if(!img.width) img.width = domWidth
-      if(!img.height) img.height = domHeight
       img.ratio = img.width < img.height ? img.width / img.height : img.height / img.width
       img.bigger = img.width < img.height ? 'height' : 'width'
-      img.startPointX = event.pageX
+      let pageX = event.pageX ? event.pageX : event.touches[0].pageX;
+      img.startPointX = pageX
       img.startWidth = img.width
       img.direction = direction
     },
     RESIZER_imageMouseMove(event, img) {
       if(img.activateOver === true) {
-        let width = parseInt(img.direction === 'right' ? (img.startWidth + (event.pageX - img.startPointX)) : (img.startWidth + (img.startPointX - event.pageX)))
+        let pageX = event.pageX ? event.pageX : event.touches[0].pageX;
+        let width = parseInt(img.direction === 'right' ? (img.startWidth + (pageX - img.startPointX)) : (img.startWidth + (img.startPointX - pageX)))
         width = width < 200 ? 200 : width
-        let height = parseInt(img.bigger === 'width' ? Math.round(img.width * img.ratio) : Math.round(img.width / img.ratio))
+        //let height = parseInt(img.bigger === 'width' ? Math.round(img.width * img.ratio) : Math.round(img.width / img.ratio))
         img.width =  width
-        img.height = height
       }
     }
   }

@@ -1,123 +1,126 @@
 <template>
-  <div class="main">
-    <div class="scenarios-menu bg-white-border" v-if="showContent">
-      <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
-        Управление сценариями
-        <button
-          @click.prevent="addScenario"
-          class="scenarios-menu__add-scenario"
-        >
-          Добавить <span class="scenarios-menu__span-hidden">сценарий</span> +
-        </button>
-      </h3>
-      <div class="scenarios-menu__main">
-        <div class="scenarios-menu__empty flex flex-center" v-if="scenarios.length === 0">
-          У вас пока нет сценариев
-        </div>
-        <div
-          class="scenarios-menu-item"
-          v-for="(scenario, index) in scenarios"
-          :key="scenario.id"
-        >
-          <div class="scenarios-menu-item__header flex flex-align-center">
-            <div class="inline-flex flex-align-center">
-              <ListSVG />
-              <span class="ml4">{{ scenario.name }}</span>
-            </div>
-            <div>
-              <router-link :to="`/test/scenario/edit/${scenario.id}`" title="Редактировать">
-                <img
-                  style="vertical-align: bottom"
-                  src="/Vectors/pen32_white.svg"
-                  width="26px"
-                />
-              </router-link>
-              <img
-                class="ml5 pointer"
-                style="vertical-align: bottom"
-                src="/pictures/trash_white.svg"
-                height="24px"
-                @click="showDeleteModal(scenario.id, index)"
-              />
-            </div>
+  <div class="container flex flex-justify-center">
+    <Header type="тесты" :save="true" @save="save" />
+    <div class="main">
+      <div class="scenarios-menu bg-white-border" v-if="showContent">
+        <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
+          Управление сценариями
+          <button
+            @click.prevent="addScenario"
+            class="scenarios-menu__add-scenario"
+          >
+            Добавить <span class="scenarios-menu__span-hidden">сценарий</span> +
+          </button>
+        </h3>
+        <div class="scenarios-menu__main">
+          <div class="scenarios-menu__empty flex flex-center" v-if="scenarios.length === 0">
+            У вас пока нет сценариев
           </div>
-          <div class="scenarios-menu-item__options flex flex-vertical">
-            <div class="flex flex-align-center mt4">
-              <input
-                class="custom-checkbox"
-                type="checkbox"
-                :id="'option-1' + scenario.id"
-                name="option-1"
-                v-model="scenario.conditions.first.checked"
-              />
-              <label :for="'option-1' + scenario.id"></label>
-              <span class="scenarios-menu-item__option">
-                <span>Пользователь набрал </span>
+          <div
+            class="scenarios-menu-item"
+            v-for="(scenario, index) in scenarios"
+            :key="scenario.id"
+          >
+            <div class="scenarios-menu-item__header flex flex-align-center">
+              <div class="inline-flex flex-align-center">
+                <ListSVG />
+                <span class="ml4">{{ scenario.name.length > 0 ? scenario.name : 'Без названия' }}</span>
+              </div>
+              <div>
+                <router-link :to="`/test/scenario/edit/${scenario.id}`" title="Редактировать">
+                  <img
+                    style="vertical-align: bottom"
+                    src="/Vectors/pen32_white.svg"
+                    width="26px"
+                  />
+                </router-link>
+                <img
+                  class="ml5 pointer"
+                  style="vertical-align: bottom"
+                  src="/pictures/trash_white.svg"
+                  height="24px"
+                  @click="showDeleteModal(scenario.id, index)"
+                />
+              </div>
+            </div>
+            <div class="scenarios-menu-item__options flex flex-vertical">
+              <div class="flex flex-align-center mt4">
                 <input
-                  class="scenarios-menu-item__input ml5 mr5"
-                  v-model.number="scenario.conditions.first.scores"
-                  type="text"
-                /><span>баллов</span>
-              </span>
-            </div>
+                  class="custom-checkbox"
+                  type="checkbox"
+                  :id="'option-1' + scenario.id"
+                  name="option-1"
+                  v-model="scenario.conditions.first.checked"
+                />
+                <label :for="'option-1' + scenario.id"></label>
+                <span class="scenarios-menu-item__option">
+                  <span>Пользователь набрал </span>
+                  <input
+                    class="scenarios-menu-item__input ml5 mr5"
+                    v-model.number="scenario.conditions.first.scores"
+                    type="text"
+                  /><span>баллов</span>
+                </span>
+              </div>
 
-            <div class="flex flex-align-center mt4">
-              <input
-                class="custom-checkbox"
-                type="checkbox"
-                :id="'option-2' + scenario.id"
-                name="option-2"
-                v-model="scenario.conditions.second.checked"
-              />
-              <label :for="'option-2' + scenario.id"></label>
-              <span class="scenarios-menu-item__option" :for="'option-2' + scenario.id">
-                <span>Пользователь набрал больше </span
-                ><input
-                  class="scenarios-menu-item__input ml5 mr5"
-                  v-model.number="scenario.conditions.second.scores"
-                  type="text"
-                /><span>баллов</span>
-              </span>
-            </div>
+              <div class="flex flex-align-center mt4">
+                <input
+                  class="custom-checkbox"
+                  type="checkbox"
+                  :id="'option-2' + scenario.id"
+                  name="option-2"
+                  v-model="scenario.conditions.second.checked"
+                />
+                <label :for="'option-2' + scenario.id"></label>
+                <span class="scenarios-menu-item__option" :for="'option-2' + scenario.id">
+                  <span>Пользователь набрал больше </span
+                  ><input
+                    class="scenarios-menu-item__input ml5 mr5"
+                    v-model.number="scenario.conditions.second.scores"
+                    type="text"
+                  /><span>баллов</span>
+                </span>
+              </div>
 
-            <div class="flex flex-align-center mt4">
-              <input
-                class="custom-checkbox"
-                type="checkbox"
-                :id="'option-3' + scenario.id"
-                name="option-3"
-                v-model="scenario.conditions.third.checked"
-              />
-              <label :for="'option-3' + scenario.id"></label>
-              <span class="scenarios-menu-item__option" :for="'option-3' + scenario.id">
-                <span>Пользователь набрал меньше </span
-                ><input
-                  class="scenarios-menu-item__input ml5 mr5"
-                  v-model.number="scenario.conditions.third.scores"
-                  type="text"
-                /><span>баллов</span>
-              </span>
+              <div class="flex flex-align-center mt4">
+                <input
+                  class="custom-checkbox"
+                  type="checkbox"
+                  :id="'option-3' + scenario.id"
+                  name="option-3"
+                  v-model="scenario.conditions.third.checked"
+                />
+                <label :for="'option-3' + scenario.id"></label>
+                <span class="scenarios-menu-item__option" :for="'option-3' + scenario.id">
+                  <span>Пользователь набрал меньше </span
+                  ><input
+                    class="scenarios-menu-item__input ml5 mr5"
+                    v-model.number="scenario.conditions.third.scores"
+                    type="text"
+                  /><span>баллов</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <DeleteModal 
+        v-if="activeDeleteModal"
+        message="Вы действительно хотите удалить сценарий?" 
+        redMessage="Удалить" 
+        blueMessage="Отмена"
+        @action="deleteScenario($event)"
+      />
+      <MakeFooter type="scenario" @save="save" />
+      <SuccessModal
+        message="Успешно сохранено"
+        v-if="showSuccess"
+        type="test"
+        :justSave="true"
+        @go="$router.push('/test/edit/' + hash)"
+      />
+      <InfoModal :message="infoMessage" />
     </div>
-    <DeleteModal 
-      v-if="activeDeleteModal"
-      message="Вы действительно хотите удалить сценарий?" 
-      redMessage="Удалить" 
-      blueMessage="Отмена"
-      @action="deleteScenario($event)"
-    />
-    <MakeFooter type="scenario" @save="save" />
-    <SuccessModal
-      message="Успешно сохранено"
-      v-if="showSuccess"
-      type="test"
-      :justSave="true"
-      @go="$router.push('/test/edit/' + hash)"
-    />
-    <InfoModal :message="infoMessage" />
   </div>
 </template>
 
@@ -128,6 +131,7 @@ import SuccessModal from "@/components/SuccessModal.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import InfoModal from "@/components/InfoModal.vue";
 import ListSVG from '/public/Vectors/list32-white.svg'
+import Header from "@/components/Header.vue";
 
 export default {
   name: "ScenariosMenu",
@@ -148,7 +152,7 @@ export default {
     };
   },
   components: {
-    MakeFooter, SuccessModal,
+    MakeFooter, SuccessModal, Header,
     DeleteModal, InfoModal, ListSVG
   },
   methods: {

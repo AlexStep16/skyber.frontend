@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="test-unfolding-list">
     <multiselect 
       v-model="cloneQuestion.checked" 
       :options="postQuestion.variants"

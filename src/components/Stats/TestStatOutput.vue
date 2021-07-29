@@ -1,24 +1,22 @@
 <template>
   <div>
     <div v-for="question in postQuestions" :key="question.id">
-      <div class="stats__question">{{ question.question }}: </div>
+      <div class="stats__question">{{ question.question || 'Вопрос' }}: </div>
       <div v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Выпадающий список'"
            style="z-index:0"
       >
         <DoughnutChart
-          :chartData="getChartData(question.variants)"
+          :chartData="getChartData(question.answers)"
           :options="getOptions()"
-          :styles="{ position: 'relative', height: '300px', justifyContent: 'left' }"
-          class="chart-wraper mt6"
+          class="stats__doughnut chart-wraper mt6"
         />
       </div>
 
       <div v-if="question.typeAnswer == 'Несколько из списка'" style="z-index:0">
         <BarChart
-          :chartData="getChartData(question.answers, 'few')"
+          :chartData="getChartData(question.answers)"
           :options="getOptions2()"
-          :styles="{ position: 'relative', height: 'auto', justifyContent: 'left' }"
-          class="chart-wraper mt6"
+          class="stats__bar chart-wraper mt6"
         />
       </div>
       <div
@@ -29,7 +27,7 @@
         "
         class="mt5 mb5"
       >
-        <div v-for="(answer, key) in question.answers" :key="key" class="test-stats__simple-answer mr5">
+        <div v-for="(answer, key) in question.answers" :key="key" class="stats__simple-answer mr5">
           {{ answer.name }} - {{ answer.count }}
         </div>
       </div>
@@ -54,24 +52,14 @@ export default {
     DoughnutChart, BarChart
   },
   methods: {
-    getChartData(variants, type = 'standard') {
+    getChartData(answers) {
       let dataArr = [];
       let labelsArr = [];
-      if(type == 'standard') {
-        variants.forEach((variant) => {
-          dataArr.push(variant.count);
-          if(variant.name.length > 15) variant.name = variant.name.substr(0, 15) + '...'
-          labelsArr.push(variant.name);
-        });
-      }
-
-      if(type == 'few') {
-        variants.forEach((variant) => {
-          dataArr.push(parseInt(variant.count));
-          if(variant.name.length > 15) variant.name = variant.name.substr(0, 15) + '...'
-          labelsArr.push(variant.name);
-        });
-      }
+      answers.forEach((answer) => {
+        dataArr.push(answer.count);
+        if(answer.name.length > 15) answer.name = answer.name.substr(0, 15) + '...'
+        labelsArr.push(answer.name);
+      });
 
       let chartData = {
         datasets: [
@@ -94,18 +82,6 @@ export default {
         ],
         labels: labelsArr,
       };
-      if(type == 'few') {
-        chartData.datasets[0].backgroundColor = [
-          'rgba(2, 142, 155, 0.65)',
-          'rgba(255, 65, 0, 0.65)',
-          'rgba(255, 183, 0, 0.65)',
-          'rgba(0, 187, 63, 0.65)',
-          'rgba(102, 105, 251, 0.65)',
-          'rgba(203, 0, 119, 0.65)',
-          'rgba(73, 213, 219, 0.65)',
-          'rgba(201, 203, 207, 0.65)'
-        ]
-      }
       return chartData;
     },
 
@@ -127,9 +103,8 @@ export default {
       },
         skipNull: true
       }
-    }
+    },
   },
-  mounted() {},
 };
 </script>
 

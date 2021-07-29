@@ -3,14 +3,14 @@
     <div>
       <input
         type="text"
-        class="input input_type-test-small"
-        placeholder="Текстовое поле"
-        disabled
+        class="input input_type-test-small mt6"
+        placeholder="Введите свой ответ здесь"
+        style="cursor: default"
       />
     </div>
-    <div class="test-require mt7 flex flex-align-center">
+    <div class="test-require mt6 flex flex-align-center">
       <label class="slider">
-        <input type="checkbox">
+        <input type="checkbox" v-model="postQuestion.isRequire">
         <span class="slider__circle slider__round"></span>
       </label>
       <span class="test-require__text ml5">Обязательный вопрос</span>

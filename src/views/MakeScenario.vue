@@ -1,79 +1,88 @@
 <template>
-  <div class="main-wraper">
-    <div class="main"
-         @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
-         @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"
-    >
-      <div class="scenario bg-white-shadow">
-        <h2 class="scenario__h2 h2-default mt0">Редактирование сценария</h2>
-        <input
-          type="text"
-          name="scen-name"
-          id="scena-name"
-          placeholder="Введите имя сценария"
-          class="scenario__input input"
-          v-model="scenario.name"
-        /><br>
-        <input
-          type="text"
-          name="scena-header"
-          id="scena-header"
-          placeholder="Заголовок результата"
-          class="scenario__header input mt5"
-          v-model="scenario.header"
-        /><br />
-        <tiptap 
-          class="tiptap mt5"
-          placeholder="Введите здесь текст который увидит пользователь после прохождения теста"
-          v-model="scenario.description" 
-        />
-        <input type="file" @change="uploadImage" multiple ref="scenarioImage" hidden>
-        <DragAndDropImage 
-          v-if="scenario.images.length <= 10" 
-          @clickImage="clickImage"
-          :files="scenario.images"
-          @drop="dropImage($event)"
-          class="mt7"
-        />
-        <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
-          <div class="scenario-image__wraper" tabindex="0">
-            <img :src="img.original_url" :width="img.width" :height="img.height" />
-            <div class="image-resizer">
-              <div 
-                class="image-resizer__circle image-resizer__circle-left" 
-                style="bottom: -10px; left: -10px" 
-                :style="img.align !== 'right' ? 'display:none' : ''"
-                :ref="'imageCircleUp1' + img.id + key"
-                @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
-              ></div>
-              <div class="image-resizer__circle" 
-                  style="bottom: -10px; right: -10px"
-                  :style="img.align === 'right' ? 'display:none' : ''"
-                  :ref="'imageCircleUp2' + img.id + key"
-                  @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
-              ></div>
-            </div>
-            <div class="image-menu">
-              <div class="image-menu__inner inline-flex flex-center">
-                <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
-                <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
-                <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
-                <div @click="deleteImage(img, key)"><DeleteSVG /></div>
+  <div class="container flex flex-justify-center"
+        @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
+        @touchend="RESIZER_imageMouseUp($event, currentResizingImage)"
+        @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"
+        @touchmove="RESIZER_imageMouseMove($event, currentResizingImage)"
+  >
+    <Header type="тесты" :save="true" @save="saveScenario" />
+    <div class="main-wraper">
+      <div class="main">
+        <div class="scenario bg-white-shadow">
+          <h2 class="scenario__h2 h2-default mt0">Редактирование сценария</h2>
+          <input
+            type="text"
+            name="scen-name"
+            id="scena-name"
+            placeholder="Введите имя сценария"
+            class="scenario__input input"
+            v-model="scenario.name"
+          /><br>
+          <input
+            type="text"
+            name="scena-header"
+            id="scena-header"
+            placeholder="Заголовок результата"
+            class="scenario__header input mt5"
+            v-model="scenario.header"
+          /><br />
+          <tiptap 
+            class="tiptap mt5"
+            placeholder="Введите здесь текст который увидит пользователь после прохождения теста"
+            v-model="scenario.description" 
+          />
+          <input type="file" @change="uploadImage" multiple ref="scenarioImage" hidden>
+          <DragAndDropImage 
+            v-if="scenario.images.length <= 10" 
+            @clickImage="clickImage"
+            :files="scenario.images"
+            @drop="dropImage($event)"
+            class="mt7"
+          />
+
+          <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
+            <div class="scenario-image__wraper" tabindex="0">
+              <img :src="img.original_url" :width="img.width" />
+              <div class="image-resizer">
+                <div 
+                  class="image-resizer__circle image-resizer__circle-left" 
+                  style="bottom: -10px; left: -10px" 
+                  :style="img.align !== 'right' ? 'display:none' : ''"
+                  :ref="'imageCircleUp1' + img.id + key"
+                  @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
+                  @touchstart="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
+                ></div>
+                <div class="image-resizer__circle" 
+                    style="bottom: -10px; right: -10px"
+                    :style="img.align === 'right' ? 'display:none' : ''"
+                    :ref="'imageCircleUp2' + img.id + key"
+                    @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
+                    @touchstart="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
+                ></div>
+              </div>
+              <div class="image-menu">
+                <div class="image-menu__inner inline-flex flex-center">
+                  <div @click="imageAlign(img, 'left')"><AlignLeftSVG /></div>
+                  <div @click="imageAlign(img, 'center')"><AlignCenterSVG /></div>
+                  <div @click="imageAlign(img, 'right')"><AlignRightSVG /></div>
+                  <div @click="deleteImage(img, key)"><DeleteSVG /></div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="modal modal_white absolute" v-if="imageLoading">
-            <Loader />
+            <div class="modal modal_white absolute" v-if="imageLoading">
+              <Loader />
+            </div>
           </div>
         </div>
       </div>
+      <MakeFooter type="scenario" @save="saveScenario" />
+      <InfoModal :message="infoMessage" />
     </div>
-    <MakeFooter type="scenario" @save="saveScenario" />
-    <InfoModal :message="infoMessage" />
   </div>
 </template>
 
 <script>
+import Header from "@/components/Header.vue";
 import axios from "axios";
 import MakeFooter from "@/components/MakeFooter.vue";
 import Tiptap from '@/components/TipTap.vue'
@@ -106,7 +115,7 @@ export default {
     }
   },
   components: {
-    MakeFooter,
+    MakeFooter, Header,
     Tiptap, Loader, DragAndDropImage,
     InfoModal, DeleteSVG, AlignLeftSVG,
     AlignCenterSVG, AlignRightSVG,

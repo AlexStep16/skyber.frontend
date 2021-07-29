@@ -1,7 +1,7 @@
 <template>
   <input
     type="text"
-    class="input input_type-test-small"
+    class="input input_type-test-small mt6"
     placeholder="Введите свой ответ здесь"
     style="cursor: default"
   />

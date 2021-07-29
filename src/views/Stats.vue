@@ -1,6 +1,6 @@
 <template>
   <div class="container flex flex-justify-center">
-    <Header />
+    <Header type="статистика" />
     <div class="main">
       <div class="stats bg-white-shadow">
         <div class="stats-header flex flex-align-center">
@@ -8,10 +8,10 @@
           <span class="stats__count">Количество отправлений: {{ countSub }}</span>
         </div>
         <div class="stats-body">
-          <div class="stats-empty flex flex-center" v-if="countSub === 0">
+          <div class="stats-empty flex flex-center" v-if="questionsFilter().length === 0">
             <span class="stats-empty__span">На данный тест ещё нет статистики</span>
           </div>
-          <TestStatOutput :postQuestions="this.questions" v-if="type == 'test'" />
+          <TestStatOutput :postQuestions="questionsFilter()" v-if="type == 'test'" />
           <!-- <PollStatOutput
             :postPollAnswers="this.pollAnswers"
             :postCountPollAnswers="this.countPollAnswers"
@@ -45,7 +45,6 @@ export default {
       chartData: {},
     };
   },
-  computed: {},
 
   components: {
     Header,
@@ -101,7 +100,6 @@ export default {
     getPollAnswers() {
       axios.get("pollAnswers/" + this.id).then((res) => {
         res = res.data;
-
         let sortAnswers = this.sortPollAnswers(res);
 
         this.pollAnsType = res.type;
@@ -117,42 +115,14 @@ export default {
         this.answers = res;
         this.questions.forEach((question) => {
           let answersArray = res.filter((answer) => {
-            return answer.questionId == question.id;
+            return answer.questionId === question.id;
           });
-          if (
-            question.typeAnswer == "Один из списка" ||
-            question.typeAnswer == "Выпадающий список"
-          ) {
-            this.variantsTypeOne(answersArray, question);
-          } else if (question.typeAnswer == "Несколько из списка") {
-            this.variantsTypeFew(answersArray, question);
-          } else if (
-            question.typeAnswer == "Ввод текста" ||
-            question.typeAnswer == "Дата" ||
-            question.typeAnswer == "Время"
-          ) {
-            this.variantsTypeInput(answersArray, question);
-          }
+          this.variantsPreparation(answersArray, question);
         });
       });
     },
 
-    variantsTypeOne(answersArray, question) {
-      question.variants.forEach((variant) => {
-        let countVariantFreq = answersArray.filter((answer) => {
-          return answer.checked[0] == JSON.stringify(variant.name);
-        }).length;
-        
-        variant.percent = (
-          (countVariantFreq / answersArray.length) *
-          100
-        ).toFixed(1);
-        variant.count = countVariantFreq;
-        answersArray.length == 0 ? (variant.percent = 0) : "";
-      });
-    },
-
-    variantsTypeFew(answersArray, question) {
+    variantsPreparation(answersArray, question) {
       let simpleAnswersArr = [];
       let countedAnsArr = [];
 
@@ -161,35 +131,43 @@ export default {
           let index = simpleAnswersArr.indexOf(elem);
           if (index === -1) {
             simpleAnswersArr.push(elem);
-            countedAnsArr.push({ name: elem, count: 1 });
+            countedAnsArr.push({
+              name: typeof elem === 'number' ? this.getVariantNameById(question, elem) : elem,
+              count: 1
+            });
           } else {
             countedAnsArr[index].count += 1;
           }
         });
       });
+
       question.answers = countedAnsArr;
     },
 
-    variantsTypeInput(answersArray, question) {
-      let simpleAnswersArr = [];
-      let countedAnsArr = [];
+    getVariantNameById(question, id) {
+      let name = ''
+      question.variants.forEach((variant) => {
+        if(variant.id === id) name = variant.name
+      })
+      return name
+    },
 
-      answersArray.forEach((answer) => {
-        let index = simpleAnswersArr.indexOf(answer.checked[0]);
-
-        if (index !== -1) {
-          countedAnsArr[index].count += 1;
-        } else {
-          simpleAnswersArr.push(answer.checked[0]);
-          countedAnsArr.push({ name: answer.checked[0], count: 1 });
+    questionsFilter() {
+      let arr = []
+      this.questions.forEach((question) => {
+        let total = 0
+        if(question.answers) {
+          question.answers.forEach((answer) => {
+            total += answer.count
+          })
         }
-      });
-
-      question.answers = countedAnsArr;
-    },
+        if(total > 0) arr.push(question)
+      })
+      return arr
+    }
   },
 
-  mounted() {
+  beforeMount() {
     this.$store.commit('SHOW_LOADER')
     axios
       .post("stats/", {hash: this.$route.params.hash, fingerprint: window.VISITOR_ID})

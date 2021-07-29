@@ -7,7 +7,7 @@
     >
       <div>
         <input
-          :id="`radio${postQuestion.id + variant.id}`"
+          :id="`radio${postQuestion.id + '' + variant.id}`"
           type="radio"
           :name="`radio${postQuestion.id}`"
           @change="selectRadio(variant);showRightVariant(variant)"
@@ -15,7 +15,7 @@
         />
         <label 
           class="test-question-answer"
-          :for="`radio${postQuestion.id + variant.id}`"
+          :for="`radio${postQuestion.id + '' + variant.id}`"
         >{{ variant.name }}
         </label>
       </div>
@@ -71,12 +71,12 @@ export default {
       }
       if (!this.settings.is_reanswer) {
         this.postQuestion.variants.forEach((variant) => {
-          if(this.postQuestion.checked !== JSON.stringify(variant.name)) variant.disabled = true
+          if(this.postQuestion.checked[0] !== variant.id) variant.disabled = true
         })
       }
     },
     variantChecked(variant) {
-      if(variant.name === JSON.parse(this.postQuestion.checked)) return true
+      if(variant.id === this.postQuestion.checked[0]) return true
       return false
     },
 

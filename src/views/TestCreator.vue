@@ -23,7 +23,8 @@ export default {
           this.$store.commit('HIDE_LOADER')
           this.$router.replace({ name: "MakeTest", params: {hash: res.data.data.hash} });
         })
-        .catch(() => {
+        .catch((er) => {
+          alert(er)
           this.$router.replace({ name: "Home" });
         })
     }

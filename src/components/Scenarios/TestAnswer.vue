@@ -1,52 +1,60 @@
 <template>
-  <div class="scenario test__block bg-white-shadow mb7" :class="showEffect ? 'scenario_show-effect' : ''">
-    <Loader v-if="showLoader || fakeLoader" />
-    <template v-if="hasScenario && !showLoader && !fakeLoader">
-      <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
-      <div class="scenario__description" :class="scenario.header ? 'mt6' : ''" v-if="scenario.description" v-html="scenario.description"></div>
-      <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
-        <div class="scenario-image__wraper">
-          <img :src="img.original_url" :width="img.width" :height="img.height" />
+  <div class="scenario test__block bg-white-shadow mb7" :style="(showLoader || fakeLoader) ? 'min-height: 250px' : ''">
+    <div class="modal modal_white absolute" v-if="showLoader || fakeLoader">
+      <Loader />
+    </div>
+    <div v-if="!showLoader && !fakeLoader">
+      <template v-if="hasScenario">
+        <div class="scenario__result mb6">Результат теста - вы набрали 50 из 100 баллов</div>
+        <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
+        <div class="scenario__description" :class="scenario.header ? 'mt6' : ''" v-if="scenario.description" v-html="scenario.description"></div>
+        <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
+          <div class="scenario-image__wraper">
+            <img :src="img.original_url" :width="img.width" />
+          </div>
+          <div class="modal modal_white absolute" v-if="imageLoading">
+            <Loader />
+          </div>
         </div>
-        <div class="modal modal_white absolute" v-if="imageLoading">
-          <Loader />
+      </template>
+      <template v-else>
+        <div class="scenario-success">
+          <h2
+            class="scenario-success__message flex flex-align-center"
+          >
+            <SuccessSVG />Успешно отправлено
+          </h2>
         </div>
-      </div>
-    </template>
-    <template v-else-if="!showLoader && !fakeLoader">
-      <div class="scenario-success">
-        <h2
-          class="scenario-success__message flex flex-align-center"
+      </template>
+      <div class="scenario-share mt7">
+        <div class="scenario-share__text">
+          Поделиться в соцсетях:
+        </div>
+        <ShareNetwork
+          network="vk"
+          :url="url"
+          :title="title"
+          hashtags="skyber,tests,тесты"
         >
-          <SuccessSVG />Успешно отправлено
-        </h2>
+          <Vk />
+        </ShareNetwork>
+        <ShareNetwork
+          network="twitter"
+          :url="url"
+          :title="title"
+          hashtags="skyber,tests,тесты"
+        >
+          <Twitter />
+        </ShareNetwork>
+        <ShareNetwork
+          network="facebook"
+          :url="url"
+          :title="title"
+          hashtags="skyber,tests,тесты"
+        >
+          <Facebook />
+        </ShareNetwork>
       </div>
-    </template>
-    <div class="scenario-share mt7" v-if="!showLoader && !fakeLoader">
-      <ShareNetwork
-        network="vk"
-        :url="url"
-        :title="title"
-        hashtags="skyber,tests,тесты"
-      >
-        <Vk />
-      </ShareNetwork>
-      <ShareNetwork
-        network="twitter"
-        :url="url"
-        :title="title"
-        hashtags="skyber,tests,тесты"
-      >
-        <Twitter />
-      </ShareNetwork>
-      <ShareNetwork
-        network="facebook"
-        :url="url"
-        :title="title"
-        hashtags="skyber,tests,тесты"
-      >
-        <Facebook />
-      </ShareNetwork>
     </div>
   </div>
 </template>
@@ -72,8 +80,7 @@ export default {
         imageLoading: false,
       },
       scenarios: [],
-      showLoader: false,
-      showEffect: true,
+      showLoader: true,
       hasScenario: false,
       url: '',
       title: '',
@@ -129,11 +136,6 @@ export default {
             }
           })
         })
-
-        let th = this
-        setTimeout(() => {
-          th.showEffect = false
-        }, 2000);
       }).finally(() => {
         this.showLoader = false
       })

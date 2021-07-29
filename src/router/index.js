@@ -4,9 +4,8 @@ import store from '../store'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import MakeTest from '../views/MakeTest.vue'
-import Scenario from '../views/Scenario.vue'
-import MakeScenario from '../components/Scenarios/MakeScenario.vue'
-import ScenariosMenu from '../components/Scenarios/ScenariosMenu.vue'
+import MakeScenario from '../views/MakeScenario.vue'
+import ScenariosMenu from '../views/ScenariosMenu.vue'
 import TestCreator from '../views/TestCreator.vue'
 import PasswordRecovery from '../views/PasswordRecovery.vue'
 import PasswordRecoveryChange from '../views/PasswordRecoveryChange.vue'
@@ -80,19 +79,14 @@ const routes = [
     props: true,
   },
   {
-    path: '/test/scenario/',
-    name: 'Scenario',
-    component: Scenario,
-    children: [
-      {
-        path: 'menu/:hash',
-        component: ScenariosMenu
-      },
-      {
-        path: 'edit/:id',
-        component: MakeScenario,
-      },
-    ]
+    path: '/test/scenario/menu/:hash',
+    name: 'ScenariosMenu',
+    component: ScenariosMenu,
+  },
+  {
+    path: '/test/scenario/edit/:id',
+    name: 'MakeScenario',
+    component: MakeScenario,
   },
   {
     path: '/test/create',

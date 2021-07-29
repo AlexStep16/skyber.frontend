@@ -26,8 +26,8 @@
       </div> -->
       <div class="list">
         <div class="create-test bg-white-shadow pointer" @click="makeTest()">
-          <img src="/pictures/plus.svg" width="22" class="mr5">
-          <span>Создать новый тест</span>
+          <img src="/pictures/plus.svg" width="20" class="mr5">
+          <span>Создать тест</span>
         </div>
         <!-- <div class="create-test bg-white-shadow pointer" v-if="listSelected == 'polls'" @click="makePoll()">
           <img src="/pictures/plus.svg" width="22" class="mr5">

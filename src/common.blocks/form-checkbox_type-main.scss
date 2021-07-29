@@ -17,6 +17,7 @@
 .custom-checkbox+label {
   display: inline-flex;
   align-items: center;
+  word-break: break-word;
   user-select: none;
 }
 
@@ -30,7 +31,7 @@
   flex-grow: 0;
   border: 1px solid #adb5bd;
   border-radius: 0.25em;
-  margin-right: 0.5em;
+  margin-right: 0.7rem;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 50% 50%;

@@ -2,10 +2,9 @@
   <div class="header">
     <router-link to="/list" class="header-logo">
       SKYBER
-      <span class="header-logo__tag" v-if="type == 'test' || type == 'poll'">
+      <span class="header-logo__tag" v-if="type === 'тесты' || type === 'статистика'">
         <span class="header-logo__dot">•</span>
-        <span v-if="type == 'test'">тесты</span>
-        <span v-else-if="type == 'poll'">опросы</span>
+        <span>{{ type }}</span>
       </span>
     </router-link>
       <div class="header-links-list">
@@ -38,6 +37,9 @@
         <div class="header-links-list__item header-links-list__item-save" v-if="save">
           <a to="#" @click.prevent="$emit('save')" class="flex flex-align-center"><span>Сохранить</span></a>
         </div>
+        <div class="header-links-list__item header-links-list__item-save" v-if="send && !isAlreadySent">
+          <a to="#" @click.prevent="$emit('send')" class="flex flex-align-center"><span>Отправить</span></a>
+        </div>
       </div>
     </div>
 </template>
@@ -56,7 +58,7 @@ export default {
       },
     };
   },
-  props: ['type', 'save'],
+  props: ['type', 'save', 'send', 'isAlreadySent'],
   components: {
   },
   methods: {

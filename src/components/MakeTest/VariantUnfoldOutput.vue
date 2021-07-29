@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="test-unfolding-list">
     <multiselect 
       v-model="checked" 
       :options="getUnfoldOptions(postQuestion.standartVariants)"
@@ -9,7 +9,7 @@
       selectedLabel=""
       deselectLabel=""
       :placeholder="'Выберите ответ из списка'"
-      class="test__multiselect-output mt6"
+      class="mt6"
     ></multiselect>
   </div>
 </template>
@@ -40,15 +40,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .test__multiselect-output {
-    min-width: 300px;
-  }
-
-  @media (max-width: 540px) {
-    .test__multiselect-output {
-      min-width: 100%;
-    }
-  }
-</style>

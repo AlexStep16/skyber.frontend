@@ -1,25 +1,33 @@
 <template>
   <div class="container flex flex-justify-center">
-    <Header type='test' />
+    <Header type='тесты' :send="settings.is_list ? true : false" @send="sendTest" :isAlreadySent="alreadySentCondition()" />
     <div class="main">
-      <LinkClosed v-if="!settings.access_for_all" from="test" type="link" />
-      <LinkClosed v-else-if="settings.password_access" from="test" type="password" @openTest="openTest" />
-      <div class="test" v-if="settings.access_for_all && !settings.password_access">
+      <div class="link-closed bg-white-border flex flex-center" v-if="alreadySentCondition()">
+        <div class="flex mr5">
+          <SuccessSVG />
+        </div>
+        <h4 class="link-closed__h4">
+          Ваши результаты отправлены
+        </h4>
+      </div>
+      <LinkClosed v-if="!settings.access_for_all && !alreadySentCondition()" from="test" type="link" />
+      <LinkClosed v-else-if="settings.password_access && !alreadySentCondition()" from="test" type="password" @openTest="openTest" @wrongPassword="infoMessage  = {body: 'Неверный пароль', type: 'danger'}" />
+      <div class="test" v-if="settings.access_for_all && !settings.password_access && !alreadySentCondition()">
         <TestAnswer :fakeLoader="fakeLoader" 
                     :totalScores="totalScores" 
                     :hash="hash" 
                     v-if="totalScores !== null"
-                    :testName="testName"
+                    :testName="test.name"
         />
         <div class="test__block_wraper">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
-            <h1 class="h1-test mt0 mb0">{{ testName }}</h1>
-            <div class="test__description mt6" v-if="testDescription">{{ testDescription }}</div>
-            <div class="test-video-wraper mt6" v-if="testVideoLink">
+            <h1 class="h1-test mt0 mb0">{{ test.name }}</h1>
+            <div class="test__description mt6" v-if="test.description">{{ test.description }}</div>
+            <div class="test-video-wraper mt6" v-if="test.videoLink">
               <div class="modal modal_white absolute" v-if="!videoLoadDone">
                 <Loader />
               </div>
-              <youtube id="youtube" ref="youtube" :video-id="testVideoLink" class="test-video">
+              <youtube id="youtube" ref="youtube" :video-id="test.videoLink" class="test-video">
               </youtube>
             </div>
             <div :class="imageLoading ? 'test-image-preloader' : ''" v-if="showImagePreloader">
@@ -28,7 +36,7 @@
               </div>
               <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in image.data" :key="img.id">
                 <div class="test-image__wraper">
-                  <img :src="img.original_url" :width="img.width" :height="img.height" />
+                  <img :src="img.original_url" :width="img.width" />
                 </div>
               </div>
             </div>
@@ -42,7 +50,7 @@
           >
             <div style="display: flex; flex-direction: column; width: 100%">
               <div class="test-question-name mb0">
-                {{ question.name }}
+                {{ question.name ? question.name : 'Вопрос' }}
               </div>
               <div class="test-video-wraper mt6" v-if="question.videoLink">
                 <!-- <div class="modal modal_white absolute" v-if="!videoLoadDone">
@@ -53,7 +61,7 @@
               </div>
               <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                 <div class="test-image__wraper">
-                  <img :src="img.original_url" :width="img.width" :height="img.height" />
+                  <img :src="img.original_url" :width="img.width" />
                 </div>
               </div>
               <VariantOneOutput
@@ -99,8 +107,8 @@
             v-show="key == questionCounter"
           >
             <div style="display: flex; flex-direction: column; width: 100%">
-              <div class="test-question-name mb6">
-                {{ question.name }}
+              <div class="test-question-name mb0">
+                {{ question.name ? question.name : 'Вопрос' }}
               </div>
               <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                 <div class="test-image__wraper">
@@ -140,7 +148,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-justify-between" v-if="!settings.is_list">
+        <div class="test-control-panel flex flex-justify-between" v-if="!settings.is_list">
           <button 
             class="button button_type-index button_theme-purple mt7" 
             @click="backQuestion"
@@ -186,7 +194,7 @@
       v-if="this.settings.is_list && this.settings.access_for_all && !this.settings.password_access"
       :link="hash"
       type="test"
-      :testName="testName"
+      :testName="test.name"
       :isMine="isMine"
       :isAlreadySent="isAlreadySent"
       @send="sendTest"
@@ -206,6 +214,8 @@ import VariantTimeOutput from "@/components/Tests/VariantTimeOutput.vue";
 import Header from "@/components/Header.vue";
 import InfoModal from "@/components/InfoModal.vue";
 import LinkClosed from "@/components/LinkClosed.vue";
+import SuccessSVG from "/public/pictures/success.svg";
+
 /* import SuccessModal from "@/components/SuccessModal.vue"; */
 import SendFooter from "@/components/SendFooter.vue";
 import Loader from "@/components/Loader.vue";
@@ -216,22 +226,23 @@ export default {
   data() {
     return {
       questions: [],
-      testId: "",
-      testName: "",
-      testDescription: "",
+      test: {
+        name: "",
+        description: '',
+        videoLink: '',
+      },
       selected: [],
       infoMessage: {},
       image: {
         data: {},
         link: null,
-        isLoading: false
+        isLoading: false,
       },
-      testVideoLink: '',
       showSuccess: false,
       successMessage: '',
-      isMine: true,
-      isAlreadySent: true,
-      hash: this.$route.params.hash,
+      isMine: false,
+      isAlreadySent: false,
+      hash: '',
       videoLoadDone: false,
       imageLoading: false,
       showImagePreloader: false,
@@ -239,7 +250,8 @@ export default {
       settings: {},
       questionCounter: 0,
       currentQuestion: {},
-      fakeLoader: false,
+      fakeLoader: true,
+      successSended: false,
     };
   },
   components: {
@@ -250,7 +262,7 @@ export default {
     VariantDateOutput, VariantTimeOutput,
     Header, InfoModal, /* SuccessModal, */
     SendFooter, Loader, LinkClosed,
-    TestAnswer
+    TestAnswer, SuccessSVG
   },
   methods: {
     getRadioArray(variant) {
@@ -264,19 +276,16 @@ export default {
         elem.variants.forEach((variant) => {
           if (elem.checked && Array.isArray(elem.checked)) {
             elem.checked.forEach((el) => {
-              let checked = el ? JSON.parse(el) : ''
-              if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
+              let checked = el
+              if(checked == variant.id && variant.scores) totalScores += parseInt(variant.scores)
             })
           } else if (elem.checked) {
             let checked = ''
 
-            if(elem.checked && elem.checked[0] === '"') {
-              checked = JSON.parse(elem.checked)
-            }
-            else {
+            if(elem.checked) {
               checked = elem.checked
             }
-            if(checked == variant.name && variant.scores) totalScores += parseInt(variant.scores)
+            if(checked == variant.id && variant.scores) totalScores += parseInt(variant.scores)
           }
         })
         
@@ -285,6 +294,7 @@ export default {
     },
 
     sendTest() {
+      if(this.successSended) return false;
       this.questions.forEach((elem) => {
         if((elem.isRequire && elem.checked === undefined)) {
           stop = true;
@@ -320,7 +330,7 @@ export default {
       axios
         .post("answers/send", {
           questions: questions,
-          testId: this.testId,
+          hash: this.hash,
           fingerprint: window.VISITOR_ID,
           hasStatistic: this.settings.has_statistic
         })
@@ -330,8 +340,7 @@ export default {
           setTimeout(() => {
             th.fakeLoader = false
           }, 3500)
-          /* this.successMessage = "Успешно отправлено"
-          this.showSuccess = true */
+          this.successSended = true
         });
       scroll({
         top: 0,
@@ -362,21 +371,39 @@ export default {
     },
     nextButton() {
       return !this.answerButton() && this.questionCounter !== this.questions.length - 1
+    },
+    alreadySentCondition() {
+      if(this.isAlreadySent && !this.settings.is_resend) {
+        return true
+      }
+      return false
     }
   },
-  mounted() {
+  beforeMount() {
+    this.hash = this.$route.params.hash
     this.imageLoading = true
     this.showImagePreloader = true
-
+    axios
+      .post('test/dispatch/check', {
+        hash: this.hash,
+        fingerprint: window.VISITOR_ID,
+      })
+      .then((res) => {
+        if(!res.data) {
+          this.isAlreadySent = false
+        }
+        else {
+          this.isAlreadySent = true
+        }
+      })
     this.$store.commit('SHOW_LOADER')
     axios.get("test/getByHash/" + this.hash).then((res) => {
       res = res.data.data;
       this.settings = res.settings[0]
 
-      this.testId = res.id;
-      this.testName = res.testName;
-      this.testVideoLink = res.videoLink;
-      this.testDescription = res.description;
+      this.test.name = res.testName;
+      this.test.videoLink = res.videoLink;
+      this.test.description = res.description;
       for(let key in res.imageLink) {
         this.$set(this.image.data, key, res.imageLink[key])
       }
@@ -387,17 +414,6 @@ export default {
       if(res.fingerprint == window.VISITOR_ID) this.isMine = true
       else this.isMine = false
 
-      axios.post('test/dispatch/check', {
-        testId: this.testId,
-        fingerprint: window.VISITOR_ID,
-      }).then((res) => {
-        if(!res.data) {
-          this.isAlreadySent = false
-        }
-        else {
-          this.isAlreadySent = true
-        }
-      })
     });
 
     axios
@@ -456,4 +472,6 @@ export default {
 @import "@/common.blocks/index.scss";
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
+@import "@/common.blocks/link-closed.scss";
+
 </style>

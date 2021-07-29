@@ -2,8 +2,10 @@
   <div class="container flex flex-justify-center"
        @mouseup="RESIZER_imageMouseUp($event, currentResizingImage)"
        @mousemove="RESIZER_imageMouseMove($event, currentResizingImage)"
+       @touchend="RESIZER_imageMouseUp($event, currentResizingImage)"
+       @touchmove="RESIZER_imageMouseMove($event, currentResizingImage)"
   >
-    <Header type="test" :save="true" @save="saveTest" />
+    <Header type="тесты" :save="true" @save="saveTest" />
     <div class="main">
       <div class="test-wrapper">
         <Settings :hash="test.hash" :settings="settings" />
@@ -13,7 +15,7 @@
 
             <div class="side-panel inline-block">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
-                <div class="side-panel-item pointer text-center" @click="addQuestion">
+                <div class="side-panel-item pointer text-center" @click="addQuestion(questions.length - 1)">
                   <AddSVG class="svg-desktop" style="position:absolute" />
                   <AddSVGMobile class="svg-mobile" style="position:absolute" />
                 </div>
@@ -89,19 +91,20 @@
                     <div class="test-image__wraper" tabindex="0">
                       <img :src="img.result || img.original_url" 
                            :width="img.width" 
-                           :height="img.height"
                       />
                       <div class="image-resizer">
                         <div class="image-resizer__circle image-resizer__circle-left" 
                              style="bottom: -10px; left: -10px"
                              :style="img.align !== 'right' ? 'display:none' : ''"
                              :ref="'imageCircleUp1' + img.id + key"
+                             @touchstart="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
                              @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
                         ></div>
                         <div class="image-resizer__circle" 
                              style="bottom: -10px; right: -10px" 
                              :style="img.align === 'right' ? 'display:none' : ''"
                              :ref="'imageCircleUp2' + img.id + key"
+                             @touchstart="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
                              @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
                         ></div>
                       </div>
@@ -128,7 +131,7 @@
             >
               <div class="side-panel inline-block" v-if="question.focused">
                 <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical">
-                  <div class="side-panel-item pointer" @click="addQuestion">
+                  <div class="side-panel-item pointer" @click="addQuestion(key)">
                     <AddSVG class="svg-desktop" style="position:absolute" />
                     <AddSVGMobile class="svg-mobile" style="position:absolute" />
                   </div>
@@ -204,18 +207,20 @@
                     />
                     <div class="test-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in question.images" :key="img.id">
                       <div class="test-image__wraper" tabindex="0">
-                        <img :src="img.original_url" :width="img.width" :height="img.height" />
+                        <img :src="img.original_url" :width="img.width" />
                         <div class="image-resizer">
                           <div class="image-resizer__circle image-resizer__circle-left" 
                                style="bottom: -10px; left: -10px"
                                :style="img.align !== 'right' ? 'display:none' : ''"
                                :ref="'imageCircleUp1' + img.id + key"
+                               @touchstart="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
                                @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp1' + img.id + key][0].offsetParent.clientHeight, 'left'); currentResizingImage = img"
                           ></div>
                           <div class="image-resizer__circle" 
                               style="bottom: -10px; right: -10px"
                               :style="img.align === 'right' ? 'display:none' : ''"
                               :ref="'imageCircleUp2' + img.id + key"
+                              @touchstart="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
                               @mousedown="RESIZER_imageMouseDown($event, img, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientWidth, $refs['imageCircleUp2' + img.id + key][0].offsetParent.clientHeight); currentResizingImage = img"
                           ></div>
                         </div>
@@ -246,9 +251,11 @@
                       v-if="question.typeAnswer == 'Ввод текста'"
                     />
                     <VariantDate 
+                      :postQuestion="question"
                       v-if="question.typeAnswer == 'Дата'"
                     />
                     <VariantTime
+                      :postQuestion="question"
                       v-if="question.typeAnswer == 'Время'"
                     />
                   </div>
@@ -259,16 +266,15 @@
                 <div class="test__block test__item bg-white-shadow">
                   <div
                     class="test__block-inner-div"
-                    v-if="question.name != null"
                   >
                     <div
                       class="test-question-name mb0"
                     >
-                      {{ question.name }}
+                      {{ question.name ? question.name : 'Вопрос' }}
                     </div>
                     <div class="test-image mt6" :style="{textAlign: img.align}" v-for="img in question.images" :key="img.id">
                       <div class="test-image__wraper">
-                        <img :src="img.original_url" :width="img.width" :height="img.height" />
+                        <img :src="img.original_url" :width="img.width" />
                       </div>
                     </div>
                     <VariantOneOutput
@@ -294,7 +300,7 @@
                       v-if="question.typeAnswer == 'Время'"
                     />
                   </div>
-                  <div class="test-question-empty" v-else>Пустой вопрос</div>
+                  <div class="test-question-empty" v-if="false">Пустой вопрос</div>
                 </div>
               </template>
             </div>
@@ -435,7 +441,7 @@ export default {
   methods: {
     ...mapMutations(["SET_TEST_DRAFT", "CLEAR_TEST_DRAFT"]),
 
-    addQuestion() {
+    addQuestion(index) {
       let name = null;
       let standartVariants = [{ id: 0, name: "Вариант 1", hasDescription: false}]; //Стартовое количество вариантов
       let questionToPost = {
@@ -453,7 +459,7 @@ export default {
       axios.post("test/question", questionToPost).then((res) => {
         let question = {
           id: res.data,
-          name: name || 'Без названия',
+          name: name || '',
           focused: false,
           typeAnswer: "Один из списка",
           standartVariants: standartVariants,
@@ -465,8 +471,17 @@ export default {
           hideVideoBox: true
         };
 
-        this.questions.push(question);
+        this.questions.splice(index + 1, 0, question).join();
         this.questionFocus(question);
+
+        if(index === (this.questions.length - 2)) {
+          setTimeout(() => {
+            scroll({
+              top: document.body.scrollHeight,
+              behavior: "smooth"
+            });
+          }, 50)
+        }
       });
     },
 
@@ -487,20 +502,7 @@ export default {
     },
 
     saveTest(fastSave = false) {
-      let stop = false
-      if(this.settings.password_access && this.settings.password.length < 5 && !this.settings.password_confirm && !fastSave) {
-        stop = true
-        this.infoMessage = {body: 'Пароль должен быть больше 4 символов', type: 'danger'}
-      }
-      if(this.test.name == '' && !fastSave) {
-        stop = true
-        this.infoMessage = {body: 'Введите название теста', type: 'danger'}
-      } 
       this.questions.forEach((question) => {
-        if(!question.name && !fastSave) { 
-          stop = true;
-          this.questionFocus(question)
-        }
         switch (question.typeAnswer) {
           case "Ввод текста":
             question.selectedVariants = [];
@@ -510,18 +512,16 @@ export default {
             break;
         }
       });
-      if(stop) this.infoMessage = {body: 'Введите название вопроса', type: 'danger'}
       let test = {
         questions: this.questions,
         testName: this.test.name || '',
         videoLink: this.test.videoLink || '',
         testDescription: this.test.description,
-        testId: this.test.id,
+        testHash: this.test.hash,
         fingerprint: this.fingerprint,
         settings: this.settings
       };
-      if(!stop) axios.post("test/save", test).then(() => {
-
+      axios.post("test/save", test).then(() => {
         if(!fastSave) {
           if(this.test.hash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
           this.successMessage = "Успешно сохранено"
@@ -529,6 +529,16 @@ export default {
         }
         else {
           this.wasChanged = false
+        }
+      }).catch((error) => {
+        switch(error.response.data) {
+          case 'Not identified':
+            this.$router.replace('/list')
+            break;
+          default:
+            this.infoMessage = {body: 'Что-то пошло не так. Попробуйте перезагрузить страницу', type: 'warning'}
+            clearInterval(this.fastSaveTimeoutId)
+            break;
         }
       });
     },
@@ -557,7 +567,6 @@ export default {
       
       axios.post("test/upload", fd).then((res) => {
         let images = res.data.data.imageLink
-        console.log(images)
         for(let key in images) {
           this.$set(this.image.data, key, images[key])
         }
@@ -614,7 +623,6 @@ export default {
 
       axios.post("test/question/upload", fd).then((res) => {
         let images = res.data.data.images
-        console.log(images)
         for(let key in images) {
           this.$set(question.images, key, images[key])
         }
@@ -648,6 +656,7 @@ export default {
         if(!res) {
           this.$router.push('/test/create')
         }
+        this.getTestQuestions()
         
         res = res.data.data;
         this.settings = res.settings[0]
@@ -664,18 +673,27 @@ export default {
         
         this.imageLoading = false
         if(res.imageLink.length === 0) this.showImagePreloader = false
-      }).catch(() => {
+      }).catch((error) => {
         let hashStore = this.$store.state.testStore.draftHash
         if(hashStore != null && hash == hashStore) {
           this.CLEAR_TEST_DRAFT()
         }
-      }).finally(() => {
-        this.$store.commit('HIDE_LOADER')
-      });
+        switch(error.response.data) {
+          case 'Not identified':
+            this.$router.replace('/list')
+            break;
+          case 'Not Found':
+            this.$router.push('/test/create')
+            break;
+          default:
+            this.infoMessage = {body: 'Что-то пошло не так. Попробуйте зайти позже', type: 'warning'}
+            break;
+        }
+      })
     },
     getTestQuestions() {
       axios
-        .get("test/questions/" + this.test.hash)
+        .post("test/questions/", {hash: this.test.hash, fingerprint: this.fingerprint })
         .then((res) => {
           res.data.data.forEach((element) => {
             let selectedVariants = JSON.parse(element.variants);
@@ -709,9 +727,17 @@ export default {
               hideVideoBox: element.videoLink !== null ? false : true
             });
           });
+          this.$store.commit('HIDE_LOADER')
         })
-        .catch((e) => {
-          console.log(e);
+        .catch((error) => {
+          switch(error.response.data) {
+            case 'Not identified':
+              this.$router.replace('/list')
+              break;
+            default:
+              this.infoMessage = {body: 'Что-то пошло не так. Попробуйте перезагрузить страницу', type: 'warning'}
+              break;
+          }
         });
     },
     
@@ -732,7 +758,7 @@ export default {
       let standartVariants = question.standartVariants; //Стартовое количество вариантов
       let questionToPost = {
         testId: this.test.id,
-        name: name || 'Без названия',
+        name: name || '',
         focused: false,
         typeAnswer: question.typeAnswer,
         standartVariants: standartVariants,
@@ -762,15 +788,15 @@ export default {
       axios.post('/test/image/alignment', {
         align: direction,
         media_id: image.id
-      }).then((res) => {
-        console.log(res)
+      }).catch(() => {
+        this.infoMessage = {body: 'Что-то пошло не так. Попробуйте позже', type: 'warning'}
       })
     },
     RESIZER_imageMouseUp(event, img) {
       if(img.activateOver) {
         img.activateOver = false
-        axios.post('/test/image/size', img).then(res => {
-          console.log(res)
+        axios.post('/test/image/size', img).catch(() => {
+          this.infoMessage = {body: 'Что-то пошло не так. Попробуйте позже', type: 'warning'}
         })
       }
     },
@@ -802,7 +828,6 @@ export default {
     this.$store.commit('SHOW_LOADER')
     if (this.test.hash && this.test.hash !== '') {
       this.getTest(this.test.hash);
-      this.getTestQuestions()
     }
 
     this.$nextTick(function() {
@@ -825,6 +850,10 @@ export default {
       if(th.wasChanged) th.saveTest(true)
     }, 3500)
   },
+
+  destroyed(){
+    clearInterval(this.fastSaveTimeoutId)
+  }
 };
 </script>
 

@@ -14,7 +14,7 @@
             :value="variant.id"
             v-model="postQuestion.right_variants"
           />
-          <label class="test-question-answer mr5 right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
+          <label class="test-question-answer right-question-checkbox" :for="`variantSt${postQuestion.id + index}`"></label>
         </div>
         
         <input

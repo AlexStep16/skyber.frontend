@@ -1,0 +1,42 @@
+
+.link-closed {
+  width: 700px;
+  height: 200px;
+  padding: 21px;
+
+  &__h4 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    color: #444;
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  &__password {
+    border-radius: 3px;
+    border: 1px solid rgba(150,150,150,0.3);
+  }
+
+  &__button {
+    font-size: 0.8em!important;
+  }
+}
+
+@media (max-width: 740px) {
+  .link-closed {
+    width: 550px;
+  }
+}
+
+@media (max-width: 660px) {
+  .link-closed {
+    width: 400px;
+  }
+}
+
+@media (max-width: 540px) {
+  .link-closed {
+    width: 100%;
+  }
+}

@@ -50,4 +50,10 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
+@media (max-width: 495px) {
+  .main {
+    padding-bottom: 55px;
+  }
+}
 </style>

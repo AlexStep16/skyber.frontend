@@ -3,8 +3,8 @@
     <div class="main">
       <Header type="test" />
       <div class="password-recovery bg-white-shadow">
-        <div class="login__form pr0">
-          <h1 class="mt0">Изменение пароля</h1>
+        <div class="login__form password-recovery__form">
+          <h1 class="password-recovery__h1 mt0">Изменение пароля</h1>
           <p>
             Здесь вы можете изменить свой пароль
           </p>
@@ -19,14 +19,13 @@
               </li>
             </ul>
           </div>
-          <form action="api/login" class="form form_type-main mr8">
+          <form action="api/login" class="form form_type-main">
             <div>
               <input
                 type="password"
                 name="password"
                 id="password"
                 placeholder="Введите новый пароль"
-                style="max-width: 250px"
                 class="input input_type-index"
                 v-model="form.password"
               />
@@ -116,11 +115,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.password-recovery {
-  padding: 34px;
-  border-radius: 13px;
-  width: 620px;
 }
 </style>

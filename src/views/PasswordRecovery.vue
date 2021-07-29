@@ -3,8 +3,8 @@
     <div class="main">
       <Header type="test" />
       <div class="password-recovery bg-white-shadow">
-        <div class="login__form">
-          <h1 class="mt0">Восстановление пароля</h1>
+        <div class="login__form password-recovery__form">
+          <h1 class="password-recovery__h1 mt0">Восстановление пароля</h1>
           <p>
             Вам на почту придет письмо с инструкцией о восстановлении пароля
           </p>
@@ -19,7 +19,7 @@
               </li>
             </ul>
           </div>
-          <form action="api/login" class="form form_type-main mr8">
+          <form action="api/login" class="form form_type-main">
             <div>
               <input
                 type="text"
@@ -102,10 +102,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.password-recovery {
-  padding: 34px;
-  border-radius: 13px;
 }
 </style>

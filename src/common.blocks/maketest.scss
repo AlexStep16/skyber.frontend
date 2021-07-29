@@ -254,7 +254,7 @@ hr {
   width: 55px;
   height: 55px;
   position: absolute;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
 }
 
@@ -297,6 +297,12 @@ hr {
 
 .svg-mobile {
   display: none;
+}
+
+.test-unfolding-list {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1em;
+  color: #444;
 }
 
 // Media styles
@@ -434,15 +440,19 @@ hr {
   .test__add-variant {
     padding: 8px;
   }
-
-  .test-require .slider {
-    margin-left: 13px!important;
-  }
 }
 
 
 @media (max-width: 495px) {
   .side-panel {
     bottom: 65px;
+  }
+
+  .main {
+    padding-bottom: 80px;
+  }
+
+  .test-control-panel {
+    padding: 0 16px;
   }
 }
