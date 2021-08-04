@@ -1,7 +1,7 @@
 <template>
   <div class="container flex flex-justify-center">
     <Header type='тесты' :send="settings.is_list ? true : false" @send="sendTest" :isAlreadySent="alreadySentCondition()" />
-    <div class="main">
+    <div class="main" ref="main">
       <div class="link-closed bg-white-border flex flex-center" v-if="alreadySentCondition()">
         <div class="flex mr5">
           <SuccessSVG />
@@ -19,10 +19,10 @@
                     v-if="totalScores !== null"
                     :testName="test.name"
         />
-        <div class="test__block_wraper">
+        <div class="test__block_wraper" v-show="!startTest || this.settings.is_list">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
-            <h1 class="h1-test mt0 mb0">{{ test.name }}</h1>
-            <div class="test__description mt6" v-if="test.description">{{ test.description }}</div>
+            <h1 class="h1-test mt0 mb0">{{ test.name || 'Без названия' }}</h1>
+            <div class="test__description mt6" v-if="test.description" v-html="test.description"></div>
             <div class="test-video-wraper mt6" v-if="test.videoLink">
               <div class="modal modal_white absolute" v-if="!videoLoadDone">
                 <Loader />
@@ -40,6 +40,11 @@
                 </div>
               </div>
             </div>
+            <button 
+              class="test-start-button button button_type-index button_theme-purple mt7" 
+              @click="startTest = true"
+              v-if="!startTest"
+            >Начать тест</button>
           </div>
         </div>
         <div v-if="this.settings.is_list">
@@ -99,7 +104,10 @@
         </div>
 
 
-        <div v-if="!this.settings.is_list">
+        <div v-if="!this.settings.is_list" v-show="startTest">
+          <div class="test-progress-bar mt6" :title="(questionCounter + 1) + ' из ' + questions.length">
+            <div class="test-progress-bar__slider" :style="{width: getProgressWidth() + 'px'}"></div>
+          </div>
           <div
             class="test__block test__block_wraper bg-white-shadow test__item mt6"
             v-for="(question, key) in questions"
@@ -148,7 +156,7 @@
             </div>
           </div>
         </div>
-        <div class="test-control-panel flex flex-justify-between" v-if="!settings.is_list">
+        <div class="test-control-panel flex flex-justify-between" v-if="!settings.is_list" v-show="startTest">
           <button 
             class="button button_type-index button_theme-purple mt7" 
             @click="backQuestion"
@@ -161,7 +169,7 @@
             @click="nextQuestion"
             v-if="nextButton()"
           >
-          Дальше
+          Дальше ({{(questionCounter + 1) + ' из ' + questions.length}})
           </button>
           <button
             class="button button_type-index button_theme-purple mt7" 
@@ -252,6 +260,7 @@ export default {
       currentQuestion: {},
       fakeLoader: true,
       successSended: false,
+      startTest: false,
     };
   },
   components: {
@@ -377,6 +386,9 @@ export default {
         return true
       }
       return false
+    },
+    getProgressWidth() {
+      return Math.round(this.$refs['main'].clientWidth / this.questions.length) * (this.questionCounter + 1)
     }
   },
   beforeMount() {
@@ -400,7 +412,8 @@ export default {
     axios.get("test/getByHash/" + this.hash).then((res) => {
       res = res.data.data;
       this.settings = res.settings[0]
-
+      if(this.settings.is_list) this.startTest = true
+      
       this.test.name = res.testName;
       this.test.videoLink = res.videoLink;
       this.test.description = res.description;
@@ -450,19 +463,19 @@ export default {
       });
 
       this.$nextTick(function() {
-      if(this.$refs.youtube) {
-        this.videoLoadDone = true
-      }
-      else {
-        let th = this
-        let intervalID = setInterval(function() {
-          if(th.$refs.youtube) {
-            th.videoLoadDone = true
-          }
-        }, 1000)
-        if(this.videoLoadDone == true) clearInterval(intervalID)
-      }
-    })
+        if(this.$refs.youtube) {
+          this.videoLoadDone = true
+        }
+        else {
+          let th = this
+          let intervalID = setInterval(function() {
+            if(th.$refs.youtube) {
+              th.videoLoadDone = true
+            }
+          }, 1000)
+          if(this.videoLoadDone == true) clearInterval(intervalID)
+        }
+      })
   },
 };
 </script>

@@ -68,10 +68,13 @@
   }
 
   &__description {
-    font-size: 1.07em;
+    font-size: 1.1em;
     font-family: 'Roboto', sans-serif;
     color: #676769;
+    word-break: break-word;
     margin: 0;
+    overflow: hidden;
+    max-height: 300px;
   }
 
   &__tag {
@@ -84,6 +87,23 @@
       font-size: 0.9em;
       color: #444;
       padding-left: 1px;
+    }
+  }
+}
+
+::v-deep {
+  .list-item__description {
+    p {
+      margin: 0
+    }
+
+    p:empty::after {
+      content: "\00A0";
+    }
+
+    li {
+      display: flex;
+      align-items: center;
     }
   }
 }

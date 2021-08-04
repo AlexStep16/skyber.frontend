@@ -5,7 +5,7 @@
     </div>
     <div v-if="!showLoader && !fakeLoader">
       <template v-if="hasScenario">
-        <div class="scenario__result mb6">Результат теста - вы набрали 50 из 100 баллов</div>
+        <div class="scenario__result mb6">Результат теста</div>
         <h2 class="scenario__header-preview mt0 mb0">{{ scenario.header }}</h2>
         <div class="scenario__description" :class="scenario.header ? 'mt6' : ''" v-if="scenario.description" v-html="scenario.description"></div>
         <div class="scenario-image mt6" :style="{textAlign: img.align}" v-for="(img, key) in scenario.images" :key="key">
@@ -156,4 +156,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/scenario.scss";
+
+::v-deep {
+  .scenario__description li {
+    display: flex;
+    align-items: center;
+  }
+}
 </style>

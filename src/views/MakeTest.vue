@@ -33,7 +33,7 @@
             <div class="test__block bg-white-shadow test__header"
                  @click="testFocuse"
             >
-              <form class="form form_type-test">
+              <div class="form form_type-test">
                 <div>
                   <input
                     type="text"
@@ -45,13 +45,10 @@
                   />
                 </div>
                 <div>
-                  <input
-                    type="text"
-                    name="description"
-                    id="description"
-                    placeholder="Описание теста"
-                    class="input input_type-test-small mt5"
-                    v-model="test.description"
+                  <tip-tap-empty
+                    class="tiptap mt5"
+                    placeholder="Введите описание теста (доступен редактор)"
+                    v-model="test.description" 
                   />
                 </div>
                 <div class="test-video-wraper mt6" v-if="test.videoLink">
@@ -119,7 +116,7 @@
                     </div>
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
           <draggable v-model="questions" @end="dragEnd" handle=".drag">
@@ -306,7 +303,7 @@
             </div>
           </draggable>
           <div class="test__block test__empty bg-white-shadow mt6" v-if="questions.length == 0">
-            Нет вопросов
+            Нет вопросов. Добавьте его нажав на кнопку + в панеле слева
           </div>
         </div>
       </div>
@@ -351,6 +348,7 @@ import SuccessModal from "@/components/SuccessModal.vue";
 import Settings from "@/components/Settings.vue";
 
 import draggable from 'vuedraggable'
+import TipTapEmpty from '@/components/TipTapEmpty.vue';
 
 //SVGs
 import AddSVG from '/public/Vectors/add32_new.svg'
@@ -434,7 +432,8 @@ export default {
     Loader, InfoModal, MultiselectIcons,
     Settings, DeleteSVG, AlignLeftSVG, AlignCenterSVG,
     AlignRightSVG, AddSVGMobile, ImageSVG,
-    ImageSVGMobile, VideoSVG, VideoSVGMobile
+    ImageSVGMobile, VideoSVG, VideoSVGMobile,
+    TipTapEmpty, 
   },
   computed: {
   },
@@ -488,6 +487,7 @@ export default {
     deleteQuestion(key, questionId) {
       axios.get("test/question/delete/" + questionId).then(() => {
         this.$delete(this.questions, key);
+        this.testFocused = true
       });
     },
 
@@ -502,6 +502,18 @@ export default {
     },
 
     saveTest(fastSave = false) {
+      let stop = false
+      let regexHtml = /(<([^>]+)>)/ig;
+      if(this.test.description && this.test.description.replace(regexHtml, "").length > 5000) {
+        this.infoMessage = {body: 'Описание не может быть больше 5000 символов. Текущая длина: ' + this.test.description.replace(regexHtml, "").length, type: 'danger'}
+        this.wasChanged = false
+        stop = true
+      }
+      if(this.test.name && this.test.name.length > 200) {
+        this.infoMessage = {body: 'Название не может быть больше 200 символов. Текущая длина: ' + this.test.name.length, type: 'danger'}
+        this.wasChanged = false
+        stop = true
+      }
       this.questions.forEach((question) => {
         switch (question.typeAnswer) {
           case "Ввод текста":
@@ -521,26 +533,28 @@ export default {
         fingerprint: this.fingerprint,
         settings: this.settings
       };
-      axios.post("test/save", test).then(() => {
-        if(!fastSave) {
-          if(this.test.hash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
-          this.successMessage = "Успешно сохранено"
-          this.showSuccess = true
-        }
-        else {
-          this.wasChanged = false
-        }
-      }).catch((error) => {
-        switch(error.response.data) {
-          case 'Not identified':
-            this.$router.replace('/list')
-            break;
-          default:
-            this.infoMessage = {body: 'Что-то пошло не так. Попробуйте перезагрузить страницу', type: 'warning'}
-            clearInterval(this.fastSaveTimeoutId)
-            break;
-        }
-      });
+      if(!stop) {
+        axios.post("test/save", test).then(() => {
+          if(!fastSave) {
+            if(this.test.hash == this.$store.state.testStore.draftHash) this.CLEAR_TEST_DRAFT()
+            this.successMessage = "Успешно сохранено"
+            this.showSuccess = true
+          }
+          else {
+            this.wasChanged = false
+          }
+        }).catch((error) => {
+          switch(error.response.data) {
+            case 'Not identified':
+              this.$router.replace('/list')
+              break;
+            default:
+              this.infoMessage = {body: 'Что-то пошло не так. Попробуйте перезагрузить страницу', type: 'warning'}
+              clearInterval(this.fastSaveTimeoutId)
+              break;
+          }
+        });
+      }
     },
 
     uploadImage(event) {
@@ -863,6 +877,6 @@ export default {
 @import "@/common.blocks/maketest.scss";
 @import "@/common.blocks/form-radio_type-main.scss";
 @import "@/common.blocks/custom-multiselect.scss";
+@import "@/common.blocks/tiptap.scss";
 
 </style>
-

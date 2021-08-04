@@ -1,19 +1,5 @@
 <template>
   <div>
-    <div class="tiptap-menu flex flex-align-center">
-      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bold') ? 'tiptap-menu__button_is-active' : ''">
-        <BoldSVG />
-      </button>
-      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3" :class="editor.isActive('italic') ? 'tiptap-menu__button_is-active' : ''">
-        <CursiveSVG />
-      </button>
-      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3" :class="editor.isActive('strike') ? 'tiptap-menu__button_is-active' : ''">
-        <StrikeSVG />
-      </button>
-      <button @click="editor.chain().focus().toggleBulletList().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bulletList') ? 'tiptap-menu__button_is-active' : ''">
-        <ListSVG />
-      </button>
-    </div>
     <bubble-menu
       class="bubble-menu"
       :tippy-options="{ duration: 100 }"
@@ -98,7 +84,9 @@ export default {
       ],
       content: this.value,
       onUpdate: () => {
-        this.$emit('input', this.editor.getHTML())
+        let answer = this.editor.getHTML()
+        if(answer === '<p></p>') answer = ''
+        this.$emit('input', answer)
       },
     })
   },
@@ -111,9 +99,12 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/tiptap-settings.scss";
+.tiptap {
+  border: none!important;
+}
 .tiptap::v-deep .ProseMirror {
-  min-height: 200px;
-  padding: 13px;
+  height: auto;
+  padding: 5px 0;
   color: #5a5a5a;
 }
 </style>
@@ -171,7 +162,7 @@ export default {
 
       svg path {
         fill: #444;
-        stroke: #444;
+        stroke: #fff;
       }
     }
 
@@ -180,7 +171,6 @@ export default {
 
       svg path {
         fill: #fff!important;
-        stroke: #fff!important;
       }
     }
   }

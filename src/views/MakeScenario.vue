@@ -231,5 +231,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/common.blocks/scenario.scss";
+@import "@/common.blocks/tiptap.scss";
 @import "@/common.blocks/index.scss";
 </style>

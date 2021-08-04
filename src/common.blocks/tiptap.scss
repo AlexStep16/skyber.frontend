@@ -1,0 +1,17 @@
+
+.tiptap {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.05em;
+  padding-left: 0;
+  border-radius: 2px;
+  border: 2px solid #eceaea;
+}
+
+.tiptap[placeholder]:empty::before {
+  content: attr(placeholder);
+  color: #555; 
+}
+
+.tiptap[placeholder]:empty:focus::before {
+  content: "";
+}

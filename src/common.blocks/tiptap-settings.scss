@@ -1,0 +1,45 @@
+.tiptap::v-deep .ProseMirror {
+  color: #5a5a5a;
+  
+  p {
+    margin: 0;
+  }
+  > * + * {
+    margin-top: 0.75em;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+  }
+
+  ul,
+  ol {
+    padding: 0;
+  }
+
+  blockquote {
+    padding-left: 1rem;
+    border-left: 2px solid rgba(#0D0D0D, 0.1);
+  }
+}
+
+::v-deep {
+  /* Placeholder (at the top) */
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: rgb(153, 153, 153);
+    pointer-events: none;
+    height: 0;
+  }
+
+  /* Placeholder (on every new line) */
+  /*.ProseMirror p.is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #ced4da;
+    pointer-events: none;
+    height: 0;
+  }*/
+}

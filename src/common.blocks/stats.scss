@@ -20,13 +20,13 @@
 
 
 .stats__question {
-  font-family: 'Montserat', sans-serif;
-  font-size: .95em;
-  padding: 12px 19px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1em;
+  padding: 12px 0;
   display: inline-block;
-  background-color: rgba(232, 232, 232, 0.7);
-  border: 1px solid rgb(216, 216, 216);
-  border-radius: 20px;
+  width: 100%;
+  color: #444;
+  border-bottom: 1px solid #dedede;
 }
 
 .stats__simple-answer {
@@ -50,6 +50,7 @@
     display: inline-block;
     font-weight: bold;
     color: white;
+    font-size: 1em;
   }
 }
 
@@ -112,10 +113,6 @@
 
   .stats-body {
     font-size: 14px;
-  }
-
-  .stats__question {
-    padding: 9px 15px;
   }
 }
 
