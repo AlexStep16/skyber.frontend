@@ -53,8 +53,8 @@
   border: 1px solid #eceaea;
   padding: 21px 34px;
   > h2, > span {
-    font-family: 'Montserrat', sans-serif;
-    color: #676769;
+    font-family: 'Roboto', sans-serif;
+    color: #5c5c5c;
   }
 
   &__counter {
@@ -68,7 +68,7 @@
   }
 
   &__description {
-    font-size: 1.1em;
+    font-size: 1em;
     font-family: 'Roboto', sans-serif;
     color: #676769;
     word-break: break-word;

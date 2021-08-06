@@ -7,16 +7,17 @@ import axios from 'axios'
 import VueYoutube from 'vue-youtube'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
 import VueSocialSharing from 'vue-social-sharing'
-
+import VueMeta from 'vue-meta'
 
 Vue.use(VueYoutube)
 Vue.use(VueSocialSharing)
+Vue.use(VueMeta)
 
 require('@/store/subscriber')
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://192.168.1.102:81/api'
+axios.defaults.baseURL = 'http://skyber.loc/api'
 
 const fpPromise = FingerprintJS.load()
 

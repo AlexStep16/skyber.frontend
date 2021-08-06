@@ -3,7 +3,7 @@
     <div class="list-item bg-white-shadow" v-for="(test, key) in postTests" :key="test.id">
       <!-- <span class="list-item__tag">Тест</span> -->
       <h2 @click="goCreateTest(test)" class="mt6 mb6 pointer">{{ test.testName || 'Без названия' }}</h2>
-      <div class="list-item__description mb6" v-html="sliceDescription(test.description)"></div>
+      <div class="list-item__description mb6" v-if="test.description" v-html="sliceDescription(test.description)"></div>
       <div class="list-item__link mb6">
         <span>Ссылка на тест:</span>
         <input type="text" 

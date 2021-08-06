@@ -27,11 +27,10 @@
         "
         class="mt5 mb5"
       >
-        <div v-for="(answer, key) in question.answers" :key="key" class="stats__simple-answer mr5">
+        <div v-for="(answer, key) in question.answers" :key="key" class="stats__simple-answer mr5 mb5">
           {{ answer.name }} - {{ answer.count }}
         </div>
       </div>
-      <br />
     </div>
   </div>
 </template>

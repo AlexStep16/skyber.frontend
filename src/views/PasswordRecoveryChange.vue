@@ -93,6 +93,18 @@ export default {
   },
   mounted() {
     this.form.hash = this.$route.params.hash
+  },
+  metaInfo() {
+    return { 
+        title: "Изменение пароля | Skyber",
+        meta: [
+            { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
+            { property: 'og:title', content: "Изменение пароля | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,nofollow'} 
+        ]
+    }
   }
 };
 </script>

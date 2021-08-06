@@ -57,7 +57,7 @@
 }
 
 .test__block {
-  width: 100%;
+  width: 700px;
   height: auto;
   border-radius: 5px;
   padding: 28px 34px;
@@ -88,7 +88,7 @@
 .test__empty, .test-question-empty {
   font-family: "Roboto", sans-serif;
   font-size: 1em;
-  color: #686669;
+  color: #858585;
 }
 
 .test-question {
@@ -179,6 +179,7 @@
   font-family: 'Roboto', sans-serif;
   font-size: 1.05em;
   color: rgb(90, 90, 90);
+  word-break: break-all;
 }
 
 ::v-deep {
@@ -191,7 +192,7 @@
     }
     li {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
   }
 }
@@ -341,10 +342,18 @@ hr {
   .test__block_wraper {
     width: 600px;
   }
+  
+  .test__block {
+    width: 600px;
+  }
 }
 
 @media (max-width: 775px) {
   .test__block_wraper {
+    width: 500px;
+  }
+
+  .test__block {
     width: 500px;
   }
 }

@@ -27,7 +27,7 @@
             v-model="scenario.header"
           /><br />
           <tiptap 
-            class="tiptap mt5"
+            class="tiptap dashed-list mt5"
             placeholder="Введите здесь текст который увидит пользователь после прохождения теста"
             v-model="scenario.description" 
           />

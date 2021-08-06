@@ -359,6 +359,18 @@ export default {
     }).catch(() => {
       this.$router.push({name: 'List'})
     })
+  },
+  metaInfo() {
+    return { 
+        title: "Создание сценария | Skyber",
+        meta: [
+            { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
+            { property: 'og:title', content: "Создание сценария | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,nofollow'} 
+        ]
+    }
   }
 };
 </script>

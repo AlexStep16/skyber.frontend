@@ -52,6 +52,16 @@
 .register {
   font-size: 0.85em;
   color: #6b696a;
+
+  &__privacy {
+    font-size: 0.9em!important;
+    color: #949494!important;
+
+    > a {
+      text-decoration: underline;
+      color: #6769fc;
+    }
+  }
 }
 
 .login-errors {

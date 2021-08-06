@@ -48,6 +48,9 @@
           value="Регистрация"
           @click.prevent="submit"
         />
+        <p class="register__privacy">
+          Нажимая кнопку "Регистрация" вы соглашаетесь с <router-link to="/privacy" target="_blank">политикой конфиденциальности</router-link>
+        </p>
         <div class="register mt7">
           У вас уже аккаунт?
           <router-link to="/login" class="register-link"

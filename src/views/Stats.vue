@@ -111,7 +111,7 @@ export default {
     getTestAnswers() {
       axios.get("answer/" + this.id).then((res) => {
         res = res.data.data;
-        
+
         this.answers = res;
         this.questions.forEach((question) => {
           let answersArray = res.filter((answer) => {
@@ -194,6 +194,18 @@ export default {
         this.$store.commit('HIDE_LOADER')
       });
   },
+  metaInfo() {
+    return { 
+        title: "Статистика | Skyber",
+        meta: [
+            { name: 'description', content:  'Создавайте тесты и получите подробную статистику по каждому вопросу в красивых диаграммах!'},
+            { property: 'og:title', content: "Статистика | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,follow'} 
+        ]
+    }
+  }
 };
 </script>
 

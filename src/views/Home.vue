@@ -24,6 +24,18 @@ export default {
       this.$router.push("/create");
     },
   },
+  metaInfo() {
+    return { 
+        title: "Главная | Skyber",
+        meta: [
+            { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
+            { property: 'og:title', content: "Главная | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,follow'} 
+        ]
+    }
+  }
 };
 </script>
 

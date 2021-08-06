@@ -22,7 +22,7 @@
         <div class="test__block_wraper" v-show="!startTest || this.settings.is_list">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
             <h1 class="h1-test mt0 mb0">{{ test.name || 'Без названия' }}</h1>
-            <div class="test__description mt6" v-if="test.description" v-html="test.description"></div>
+            <div class="test__description dashed-list mt6" v-if="test.description" v-html="test.description"></div>
             <div class="test-video-wraper mt6" v-if="test.videoLink">
               <div class="modal modal_white absolute" v-if="!videoLoadDone">
                 <Loader />
@@ -414,7 +414,7 @@ export default {
       this.settings = res.settings[0]
       if(this.settings.is_list) this.startTest = true
       
-      this.test.name = res.testName;
+      this.test.name = res.testName ?? 'Без названия';
       this.test.videoLink = res.videoLink;
       this.test.description = res.description;
       for(let key in res.imageLink) {
@@ -477,6 +477,18 @@ export default {
         }
       })
   },
+  metaInfo() {
+    return { 
+        title: `${this.test.name} | Skyber`,
+        meta: [
+            { name: 'description', content:  `${this.test.description}`},
+            { property: 'og:title', content: `${this.test.name} | Skyber`},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,nofollow'} 
+        ]
+    }
+  }
 };
 </script>
 

@@ -46,7 +46,7 @@
                 </div>
                 <div>
                   <tip-tap-empty
-                    class="tiptap mt5"
+                    class="tiptap dashed-list mt5"
                     placeholder="Введите описание теста (доступен редактор)"
                     v-model="test.description" 
                   />
@@ -867,6 +867,18 @@ export default {
 
   destroyed(){
     clearInterval(this.fastSaveTimeoutId)
+  },
+  metaInfo() {
+    return { 
+        title: "Создание теста | Skyber",
+        meta: [
+            { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
+            { property: 'og:title', content: "Создание теста | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,follow'} 
+        ]
+    }
   }
 };
 </script>

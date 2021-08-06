@@ -24,6 +24,18 @@ export default {
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
+  },
+  metaInfo() {
+    return { 
+        title: "Войти | Skyber",
+        meta: [
+            { name: 'description', content:  'Войдите в систему чтобы увидеть созданные вами тесты!'},
+            { property: 'og:title', content: "Войти | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,follow'} 
+        ]
+    }
   }
 }
 

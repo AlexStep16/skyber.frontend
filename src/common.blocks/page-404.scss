@@ -1,0 +1,19 @@
+.page-404 {
+  width: 100%;
+  height: 100%;
+
+  &__header {
+    font-family: 'Roboto', sans-serif;
+    font-size: 5em;
+    color: #6669fE;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #2f33f8;
+  }
+
+  &__description {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #6669fE;
+    font-size: 1.4em;
+  }
+}

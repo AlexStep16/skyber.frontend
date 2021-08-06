@@ -81,6 +81,18 @@ export default {
         });
     },
   },
+  metaInfo() {
+    return { 
+        title: "Восстановление пароля | Skyber",
+        meta: [
+            { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
+            { property: 'og:title', content: "Восстановление пароля | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,nofollow'} 
+        ]
+    }
+  }
 };
 </script>
 

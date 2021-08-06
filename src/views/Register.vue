@@ -27,6 +27,18 @@ export default {
   },
   mounted() {
     this.$store.commit('SHOW_LOADER')
+  },
+  metaInfo() {
+    return { 
+        title: "Регистрация | Skyber",
+        meta: [
+            { name: 'description', content:  'Зарегистрируйтесь в системе, чтобы навсегда сохранить свои тесты и иметь доступ с любого устройства!'},
+            { property: 'og:title', content: "Регистрация | Skyber"},
+            { property: 'og:site_name', content: 'Skyber'},
+            {property: 'og:type', content: 'website'},    
+            {name: 'robots', content: 'index,follow'} 
+        ]
+    }
   }
 }
 

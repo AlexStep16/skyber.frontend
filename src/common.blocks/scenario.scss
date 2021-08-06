@@ -30,6 +30,7 @@
     font-family: 'Roboto', sans-serif;
     font-size: 1em;
     color: #444;
+    word-break: break-all;
   }
 
   &__input {
@@ -92,6 +93,11 @@
   }
   .scenario__description p:empty::after {
     content: "\00A0";
+  }
+
+  .scenario__description li {
+    display: flex;
+    align-items: flex-start;
   }
 }
 

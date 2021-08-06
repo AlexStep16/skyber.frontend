@@ -1,5 +1,6 @@
 .tiptap::v-deep .ProseMirror {
   color: #5a5a5a;
+  word-break: break-all;
   
   p {
     margin: 0;
@@ -10,7 +11,7 @@
 
   li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 
   ul,

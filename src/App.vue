@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <SlideUp />
     <router-view/>
     <div class="modal modal_white" v-if="state">
       <Loader />
@@ -11,10 +12,11 @@
 <script>
 import Loader from "@/components/Loader.vue";
 import MobileMenu from "@/components/MobileMenu.vue";
+import SlideUp from "@/components/SlideUp.vue";
 
 export default {
   components: {
-    Loader, MobileMenu
+    Loader, MobileMenu, SlideUp
   },
   computed: {
     state() {
