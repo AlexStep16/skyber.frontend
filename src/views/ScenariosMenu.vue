@@ -23,10 +23,14 @@
           >
             <div class="scenarios-menu-item__header flex flex-align-center">
               <div class="inline-flex flex-align-center">
-                <ListSVG />
-                <span class="ml4">{{ scenario.name.length > 0 ? scenario.name : 'Без названия' }}</span>
+                <div class="flex flex-center" style="width:28px">
+                  <ListSVG />
+                </div>
+                <div style="max-width: 100%;word-break:break-word;" class="ml5">
+                  <span>{{ scenario.name.length > 0 ? scenario.name : 'Без названия' }}</span>
+                </div>
               </div>
-              <div>
+              <div style="flex-shrink: 0;" class="ml5">
                 <router-link :to="`/test/scenario/edit/${scenario.id}`" title="Редактировать">
                   <img
                     style="vertical-align: bottom"

@@ -59,4 +59,16 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
+@media (max-height: 565px) {
+  .main {
+    padding-top: 21px;
+    align-items: flex-start;
+  }
+  .container {
+    min-height: 100%;
+    height: auto;
+    padding-bottom: 90px;
+  }
+}
 </style>

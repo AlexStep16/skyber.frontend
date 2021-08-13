@@ -17,19 +17,22 @@
             placeholder="Введите имя сценария"
             class="scenario__input input"
             v-model="scenario.name"
-          /><br>
-          <input
+            maxlength="200"
+          />
+          <textarea-autosize
             type="text"
             name="scena-header"
             id="scena-header"
             placeholder="Заголовок результата"
             class="scenario__header input mt5"
             v-model="scenario.header"
+            rows="1"
+            maxlength="300"
           /><br />
           <tiptap 
             class="tiptap dashed-list mt5"
-            placeholder="Введите здесь текст который увидит пользователь после прохождения теста"
-            v-model="scenario.description" 
+            placeholder="Введите описание результата"
+            v-model="scenario.description"
           />
           <input type="file" @change="uploadImage" multiple ref="scenarioImage" hidden>
           <DragAndDropImage 
@@ -126,6 +129,18 @@ export default {
         this.infoMessage = {body: 'Вы не ввели имя сценария', type: 'danger'}
         return false;
       }
+      if(this.scenario.name.length > 200) {
+        this.infoMessage = {body: 'Имя сценария не может быть больше 200 символов', type: 'danger'}
+        return false;
+      }
+      if(this.scenario.header.length > 300) {
+        this.infoMessage = {body: 'Заголовок результата не может быть больше 300 символов', type: 'danger'}
+        return false;
+      }
+      if(this.scenario.description.replace(/<[^<>]+>/g, "").length > 3000) {
+        this.infoMessage = {body: 'Описание не может быть больше 3000 символов', type: 'danger'}
+        return false;
+      }
       axios.post('scenario/edit/' + this.$route.params.id, this.scenario).then(() => {
         this.$router.push('/test/scenario/menu/' + this.scenario.testHash)
       })
@@ -134,9 +149,9 @@ export default {
       axios.get('scenario/' + this.$route.params.id).then(res => {
         res = res.data.data
         this.scenario.id = res.id
-        this.scenario.description = res.description
-        this.scenario.header = res.header
-        this.scenario.name = res.name
+        this.scenario.description = res.description || ''
+        this.scenario.header = res.header || ''
+        this.scenario.name = res.name || ''
 
         for(let key in res.imageLink) {
           this.$set(this.scenario.images, key, res.imageLink[key])
@@ -166,6 +181,10 @@ export default {
       let count = 0
       for (let i in files) {
 
+        if(files[i].size > 5999999) {
+          this.infoMessage = {body: 'Файл не должен превышать 5мб', type: 'danger'}
+          continue
+        }
         if (Object.prototype.hasOwnProperty.call(files,i)) {
           fd.append(`scenarioImage${count}`, files[i])
           fd.append(`imageType${count}`, files[i].type.split('/')[1])
@@ -188,6 +207,7 @@ export default {
       })
       .catch(() => {
         //this.showImagePreloader = false
+        this.infoMessage = {body: 'Не удалось загрузить изображения. Попробуйте позже', type: 'danger'}
       });
       event.target.value = '';
     },

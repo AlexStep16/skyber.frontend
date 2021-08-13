@@ -1,5 +1,5 @@
 <template>
-  <div class="link-closed bg-white-border flex flex-vertical flex-center">
+  <div class="link-closed bg-white-shadow flex flex-vertical flex-center">
     <div class="flex flex-center" v-if="type == 'link'">
       <div class="flex mr5"><ClosedSVG /></div>
       <h4 class="link-closed__h4">Доступ к тесту по ссылке закрыт</h4>

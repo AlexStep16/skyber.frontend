@@ -137,10 +137,6 @@ input[type="submit"] {
   max-width: 480px !important;
 }
 
-.input_type-test-header {
-  font-weight: 500;
-}
-
 .input_type-test-small {
   @extend .input_type-test;
   font-size: 1em;

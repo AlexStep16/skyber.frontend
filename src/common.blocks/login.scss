@@ -185,4 +185,13 @@
   .register {
     font-size: 0.8em;
   }
+
+  .login-errors__item {
+    font-size: 0.9em;
+
+    > span {
+      position: relative;
+      right: 5px;
+    }
+  }
 }

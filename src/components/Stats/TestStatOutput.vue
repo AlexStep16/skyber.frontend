@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="postQuestions.length > 0">
     <div v-for="question in postQuestions" :key="question.id">
       <div class="stats__question">{{ question.question || 'Вопрос' }}: </div>
       <div v-if="question.typeAnswer == 'Один из списка' || question.typeAnswer == 'Выпадающий список'"

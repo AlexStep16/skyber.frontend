@@ -11,7 +11,7 @@
 .scenario {
   width: 700px;
   height: auto;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 21px;
 
   &_effect {
@@ -52,6 +52,7 @@
     padding:13px;
     padding-left: 0;
     width: 100%;
+    border:none;
   }
 
   &__header::placeholder {

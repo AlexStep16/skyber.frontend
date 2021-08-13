@@ -34,19 +34,21 @@
                  @click="testFocuse"
             >
               <div class="form form_type-test">
-                <div>
-                  <input
+                <div class="flex">
+                  <textarea-autosize
                     type="text"
                     name="name"
                     id="name"
                     placeholder="Название теста"
-                    class="input input_type-test input_type-test-header pb4 pt0"
+                    class="input input_type-test textarea_type-test-header pb0 pt0"
                     v-model="test.name"
+                    rows="1"
+                    maxlength="300"
                   />
                 </div>
-                <div>
+                <div class="mt5">
                   <tip-tap-empty
-                    class="tiptap dashed-list mt5"
+                    class="tiptap dashed-list"
                     placeholder="Введите описание теста (доступен редактор)"
                     v-model="test.description" 
                   />
@@ -150,13 +152,15 @@
                     :ref="'question' + question.id"
                   >
                     <div class="question-flex">
-                      <input
+                      <textarea-autosize
                         type="text"
                         name="names"
                         id="names"
-                        class="test__input-question-name input input_type-option pl0"
                         placeholder="Напишите свой вопрос..."
+                        class="test__input-question-name input input_type-option pl0 pr6"
                         v-model="question.name"
+                        rows="1"
+                        maxlength="300"
                       />
                       <div class="flex flex-center">
                         <span>
@@ -503,18 +507,34 @@ export default {
 
     saveTest(fastSave = false) {
       let stop = false
-      let regexHtml = /(<([^>]+)>)/ig;
+      let regexHtml = /<[^<>]+>/g;
       if(this.test.description && this.test.description.replace(regexHtml, "").length > 5000) {
-        this.infoMessage = {body: 'Описание не может быть больше 5000 символов. Текущая длина: ' + this.test.description.replace(regexHtml, "").length, type: 'danger'}
+        this.infoMessage = {body: 'Описание не может быть больше 5000 символов' + this.test.description.replace(regexHtml, "").length, type: 'danger'}
         this.wasChanged = false
         stop = true
+        return true
       }
-      if(this.test.name && this.test.name.length > 200) {
-        this.infoMessage = {body: 'Название не может быть больше 200 символов. Текущая длина: ' + this.test.name.length, type: 'danger'}
+      if(this.test.name && this.test.name.length > 300) {
+        this.infoMessage = {body: 'Название не может быть больше 300 символов', type: 'danger'}
         this.wasChanged = false
         stop = true
+        return true
       }
       this.questions.forEach((question) => {
+        if(question.name && (question.name.length > 300)) {
+          this.infoMessage = {body: 'Название вопроса не может быть больше 300 символов', type: 'danger'}
+          this.wasChanged = false
+          stop = true
+          return true
+        }
+        question.standartVariants.forEach((variant) => {
+          if(variant.name && (variant.name.length > 1000)) {
+            this.infoMessage = {body: 'Вариант не может быть больше 1000 символов', type: 'danger'}
+            this.wasChanged = false
+            stop = true
+            return true
+          }
+        })
         switch (question.typeAnswer) {
           case "Ввод текста":
             question.selectedVariants = [];
@@ -566,7 +586,10 @@ export default {
       const fd = new FormData();
       let count = 0
       for (let i in files) {
-
+        if(files[i].size > 5999999) {
+          this.infoMessage = {body: 'Файл не должен превышать 5мб', type: 'danger'}
+          continue
+        }
         if (Object.prototype.hasOwnProperty.call(files,i)) {
           fd.append(`testImage${count}`, files[i])
           fd.append(`imageType${count}`, files[i].type.split('/')[1])
@@ -588,6 +611,7 @@ export default {
       })
       .catch(() => {
         this.showImagePreloader = false
+        this.infoMessage = {body: 'Не удалось загрузить изображения. Попробуйте позже', type: 'danger'}
       });
       event.target.value = '';
     },
@@ -624,6 +648,10 @@ export default {
       const fd = new FormData();
       let count = 0
       for (let i in files) {
+        if(files[i].size > 5999999) {
+          this.infoMessage = {body: 'Файл не должен превышать 5мб', type: 'danger'}
+          continue
+        }
         if (Object.prototype.hasOwnProperty.call(files,i)) {
           fd.append(`questionImage${count}`, files[i])
           fd.append(`imageType${count}`, files[i].type.split('/')[1])
@@ -640,6 +668,8 @@ export default {
         for(let key in images) {
           this.$set(question.images, key, images[key])
         }
+      }).catch(() => {
+        this.infoMessage = {body: 'Не удалось загрузить изображения. Попробуйте позже', type: 'danger'}
       });
     },
 
@@ -676,9 +706,9 @@ export default {
         this.settings = res.settings[0]
 
         this.test.id = res.id
-        this.test.name = res.testName;
+        this.test.name = res.testName || '';
         this.test.videoLink = res.videoLink;
-        this.test.description = res.description;
+        this.test.description = res.description || '';
         this.test.link = "https://skyber.ru/tests/" + res.hash;
         
         for(let key in res.imageLink) {
@@ -875,8 +905,8 @@ export default {
             { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
             { property: 'og:title', content: "Создание теста | Skyber"},
             { property: 'og:site_name', content: 'Skyber'},
-            {property: 'og:type', content: 'website'},    
-            {name: 'robots', content: 'index,follow'} 
+            { property: 'og:type', content: 'website'},    
+            { name: 'robots', content: 'index,follow'} 
         ]
     }
   }

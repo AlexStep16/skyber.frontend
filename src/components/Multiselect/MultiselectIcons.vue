@@ -10,7 +10,7 @@
     :searchable="false"
     deselectLabel=""
     :placeholder="'Выберите тип ответа'"
-    class="mt5 mb5"
+    class="mt6 mb5"
     @select="clearRights(question)"
   >
     <template slot="singleLabel" slot-scope="props">

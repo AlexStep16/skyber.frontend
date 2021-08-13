@@ -68,4 +68,16 @@ export default {
     padding-bottom: 55px;
   }
 }
+
+@media (max-height: 565px) {
+  .main {
+    padding-top: 21px;
+    align-items: flex-start;
+  }
+  .container {
+    min-height: 100%;
+    height: auto;
+    padding-bottom: 40px;
+  }
+}
 </style>

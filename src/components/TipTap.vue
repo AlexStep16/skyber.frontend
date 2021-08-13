@@ -1,18 +1,21 @@
 <template>
   <div>
-    <div class="tiptap-menu flex flex-align-center">
-      <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bold') ? 'tiptap-menu__button_is-active' : ''">
-        <BoldSVG />
-      </button>
-      <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3" :class="editor.isActive('italic') ? 'tiptap-menu__button_is-active' : ''">
-        <CursiveSVG />
-      </button>
-      <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3" :class="editor.isActive('strike') ? 'tiptap-menu__button_is-active' : ''">
-        <StrikeSVG />
-      </button>
-      <button @click="editor.chain().focus().toggleBulletList().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bulletList') ? 'tiptap-menu__button_is-active' : ''">
-        <ListSVG />
-      </button>
+    <div class="tiptap-menu flex flex-align-center flex-justify-between">
+      <div class="flex">
+        <button @click="editor.chain().focus().toggleBold().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bold') ? 'tiptap-menu__button_is-active' : ''">
+          <BoldSVG />
+        </button>
+        <button @click="editor.chain().focus().toggleItalic().run()" class="tiptap-menu__button ml3" :class="editor.isActive('italic') ? 'tiptap-menu__button_is-active' : ''">
+          <CursiveSVG />
+        </button>
+        <button @click="editor.chain().focus().toggleStrike().run()" class="tiptap-menu__button ml3" :class="editor.isActive('strike') ? 'tiptap-menu__button_is-active' : ''">
+          <StrikeSVG />
+        </button>
+        <button @click="editor.chain().focus().toggleBulletList().run()" class="tiptap-menu__button ml3" :class="editor.isActive('bulletList') ? 'tiptap-menu__button_is-active' : ''">
+          <ListSVG />
+        </button>
+      </div>
+      <div class="tiptap-menu__counter mr6">{{getCount() + '/ 3000'}}</div>
     </div>
     <bubble-menu
       class="bubble-menu"
@@ -103,6 +106,12 @@ export default {
     })
   },
 
+  methods: {
+    getCount() {
+      return this.editor.getHTML().replace(/<[^<>]+>/g, "").length
+    }
+  },
+
   beforeDestroy() {
     this.editor.destroy()
   },
@@ -186,6 +195,12 @@ export default {
   }
   &__button:hover {
     background-color: #77777750;
+  }
+
+  &__counter {
+    font-family: 'Roboto', sans-serif;
+    color: #999;
+    font-size: 0.9em;
   }
 }
 </style>

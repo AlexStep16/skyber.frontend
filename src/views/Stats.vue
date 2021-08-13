@@ -4,13 +4,13 @@
     <div class="main">
       <div class="stats bg-white-shadow">
         <div class="stats-header flex flex-align-center">
-          <div class="stats-header__name h1-default mr5">{{ name }}</div>
-          <span class="stats__count">Количество отправлений: {{ countSub }}</span>
+          <div class="stats-header__name h1-default mr5">Статистика для теста: {{ name || 'Без названия' }}</div>
         </div>
         <div class="stats-body">
           <div class="stats-empty flex flex-center" v-if="questionsFilter().length === 0">
             <span class="stats-empty__span">На данный тест ещё нет статистики</span>
           </div>
+          <div class="stats-body__counter mt5" v-if="questionsFilter().length !== 0">Количество отправлений теста: {{countSub}}</div>
           <TestStatOutput :postQuestions="questionsFilter()" v-if="type == 'test'" />
           <!-- <PollStatOutput
             :postPollAnswers="this.pollAnswers"

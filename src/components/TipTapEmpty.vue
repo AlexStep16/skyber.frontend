@@ -107,6 +107,12 @@ export default {
   padding: 5px 0;
   color: #5a5a5a;
 }
+
+@media (max-width: 405px) {
+  .tiptap::v-deep .ProseMirror p.is-editor-empty:first-child::before {
+    content: 'Введите описание теста';
+  }
+}
 </style>
 
 <style lang="scss">

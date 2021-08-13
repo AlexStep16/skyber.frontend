@@ -22,6 +22,7 @@
           class="input input_type-test-small"
           placeholder="Напишите здесь вариант ответа"
           v-model="variant.name"
+          maxlength="1000"
           @focusout="checkIsEmpty(variant, index)"
         />
         <input

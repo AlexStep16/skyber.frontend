@@ -99,4 +99,13 @@ export default {
     top: 70px;
   }
 }
+
+@media (max-width: 495px) {
+  .slide-up {
+    width: 140px;
+    height: 36px;
+    left: calc(50% - 70px);
+    font-size: 0.97em;
+  }
+}
 </style>

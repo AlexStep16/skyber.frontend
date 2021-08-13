@@ -2,7 +2,7 @@
   <div class="container flex flex-justify-center">
     <Header type='тесты' :send="settings.is_list ? true : false" @send="sendTest" :isAlreadySent="alreadySentCondition()" />
     <div class="main" ref="main">
-      <div class="link-closed bg-white-border flex flex-center" v-if="alreadySentCondition()">
+      <div class="link-closed bg-white-shadow flex flex-center" v-if="alreadySentCondition()">
         <div class="flex mr5">
           <SuccessSVG />
         </div>
@@ -19,7 +19,7 @@
                     v-if="totalScores !== null"
                     :testName="test.name"
         />
-        <div class="test__block_wraper" v-show="!startTest || this.settings.is_list">
+        <div class="test__block_wraper test__fact-header" v-show="!startTest || this.settings.is_list">
           <div class="test__block bg-white-shadow test__header pt7 pb7">
             <h1 class="h1-test mt0 mb0">{{ test.name || 'Без названия' }}</h1>
             <div class="test__description dashed-list mt6" v-if="test.description" v-html="test.description"></div>
@@ -455,12 +455,14 @@ export default {
         if(this.questions.length > 0) {
           this.$set(this, 'currentQuestion', this.questions[0])
         }
+        setTimeout(() => {
+          this.$store.commit('HIDE_LOADER')
+        },100)
       })
       .catch((e) => {
         console.log(e)
-      }).finally(() => {
         this.$store.commit('HIDE_LOADER')
-      });
+      })
 
       this.$nextTick(function() {
         if(this.$refs.youtube) {

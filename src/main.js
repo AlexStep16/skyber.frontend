@@ -8,10 +8,12 @@ import VueYoutube from 'vue-youtube'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
 import VueSocialSharing from 'vue-social-sharing'
 import VueMeta from 'vue-meta'
+import TextareaAutosize from 'vue-textarea-autosize'
 
 Vue.use(VueYoutube)
 Vue.use(VueSocialSharing)
 Vue.use(VueMeta)
+Vue.use(TextareaAutosize)
 
 require('@/store/subscriber')
 
@@ -19,7 +21,7 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://skyber.loc/api'
 
-const fpPromise = FingerprintJS.load()
+const fpPromise = FingerprintJS.load() //{token: 'tBBOBWl7ucK1ISF13dGL'}
 
 Vue.mixin({
   methods: {
@@ -44,12 +46,11 @@ Vue.mixin({
     }
   }
 })
-
 ;(async () => {
   const fp = await fpPromise
   const result = await fp.get()
   window.VISITOR_ID = result.visitorId;
-
+  
   store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
     new Vue({
       router,

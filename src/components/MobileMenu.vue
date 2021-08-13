@@ -14,8 +14,8 @@
         <ExitSVGPurple class="d-none" />
       </div>
       <router-link to="/login" @click.prevent="logout" v-if="!$store.getters['auth/authenticated']" class="mobile-menu-item flex flex-center">
-        <LoginSVG />
-        <LoginSVGPurple class="d-none" />
+        <LoginSVG :class="($route.name !== 'Login' && $route.name !== 'Register') ? '' : 'd-none'" />
+        <LoginSVGPurple :class="($route.name === 'Login' || $route.name === 'Register') ? '' : 'd-none'" />
       </router-link>
     </div>
   </div>

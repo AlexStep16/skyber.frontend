@@ -13,8 +13,6 @@
 }
 
 .main {
-  align-items: flex-start;
-  flex-direction: column;
   padding: 60px 0;
 }
 
@@ -51,12 +49,20 @@
     font-weight: bold;
     color: white;
     font-size: 1em;
+    word-break: break-word;
   }
 }
 
 .stats-body {
   padding: 13px;
   height: auto;
+
+  &__counter {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    color: rgb(92, 92, 92);
+    font-size: 0.9em;
+  }
 }
 
 .stats-empty {
@@ -66,7 +72,7 @@
   &__span {
     font-family: 'Roboto', sans-serif;
     font-size: 1em;
-    color: #444;
+    color: #969696;
   }
 }
 
@@ -91,9 +97,9 @@
   }
 }
 
-@media (max-width: 530px) {
+@media (max-width: 540px) {
   .stats {
-    width: 100%;
+    width: 95%;
   }
   .container {
     min-height: 100%;
@@ -104,7 +110,9 @@
   .main {
     width: 100%;
     min-height: 100%;
-    padding: 0;
+    padding: 13px 0;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   .stats-header {
