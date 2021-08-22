@@ -19,7 +19,7 @@ require('@/store/subscriber')
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://skyber.loc/api'
+axios.defaults.baseURL = 'http://api.skyber.ru/api'
 
 const fpPromise = FingerprintJS.load() //{token: 'tBBOBWl7ucK1ISF13dGL'}
 
