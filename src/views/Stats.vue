@@ -177,7 +177,7 @@ export default {
 
         this.name = name;
         this.id = res.id;
-        this.type = res.testName ? "test" : "poll";
+        this.type = "test";
         this.countSub = res.countSub;
 
         if (this.type == "test") {
