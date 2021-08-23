@@ -60,6 +60,9 @@
                   <div class="test-video-menu pointer flex-center bg-white-shadow" @click="deleteVideo">
                     <img src="/pictures/trash.svg" width="21px" />
                   </div>
+                  <div class="test-video-delete-mobile mb2" :style="isTouchScreen ? 'display: block!important' : ''" @click="deleteVideo">
+                    <button class="button button-clasic button_theme-red">Удалить видео</button>
+                  </div>
                   <youtube id="youtube" ref="youtube" :video-id="test.videoLink" class="test-video">
                   </youtube>
                 </div>
@@ -420,6 +423,7 @@ export default {
       },
       infoMessage: {},
       currentResizingImage: {},
+      isTouchScreen: false,
     };
   },
   components: {
@@ -844,6 +848,11 @@ export default {
         })
       }
     },
+    isTouchScreenMethod() {
+      return (('ontouchstart' in window) ||
+      (navigator.maxTouchPoints > 0) ||
+      (navigator.msMaxTouchPoints > 0));
+    }
   },
 
   watch: {
@@ -893,6 +902,8 @@ export default {
     this.fastSaveTimeoutId = setInterval(() => {
       if(th.wasChanged) th.saveTest(true)
     }, 3500)
+
+    this.isTouchScreen = this.isTouchScreenMethod()
   },
 
   destroyed(){

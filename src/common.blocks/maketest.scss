@@ -297,6 +297,11 @@ hr {
   right: 20px;
 }
 
+.test-video-delete-mobile {
+  display: none;
+  text-align: right;
+}
+
 .test-video-wraper:hover .test-video-menu {
   display: flex;
 }
@@ -501,6 +506,10 @@ hr {
 
 
 @media (max-width: 495px) {
+  .test-video-delete-mobile {
+    display:block;
+  }
+
   .side-panel {
     bottom: 65px;
   }
@@ -511,5 +520,30 @@ hr {
 
   .test-control-panel {
     padding: 0 16px;
+  }
+}
+
+@media (max-width: 455px) {
+  .test-add-video-block__modal {
+    flex-direction: column;
+  }
+
+  .test-add-video-block__input {
+    margin: 0;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .test-add-video-block__modal {
+    width: 200px;
+  }
+
+  .test-add-video-block__input {
+    min-width: 0;
+  }
+
+  .test-add-video-block__button {
+    padding: 8px 0;
   }
 }

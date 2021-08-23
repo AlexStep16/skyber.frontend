@@ -308,6 +308,9 @@ export default {
         if((elem.isRequire && elem.checked === undefined)) {
           stop = true;
         }
+        if(elem.typeAnswer === "Ввод текста") {
+          if(elem.checked.length > 250) elem.checked = elem.checked.substr(0, 249)
+        }
       });
       if (stop) {
         this.infoMessage = {body: 'Вы ответили не на все вопросы', type: 'danger'}
