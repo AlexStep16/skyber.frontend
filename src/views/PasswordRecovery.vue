@@ -60,6 +60,7 @@ export default {
       showErrors: false,
       loginErrors: [],
       infoMessage: {},
+      timeoutId: null,
     }
   },
   components: {
@@ -71,7 +72,7 @@ export default {
         .then(() => {
           this.showErrors = false
           this.infoMessage = {body: 'На вашу почту была отправлена ссылка для восстановления пароля', type: 'success'}
-          setTimeout(() => {
+          this.timeoutId = setTimeout(() => {
             this.$router.push({name:'List'})
           }, 3000);
         })
@@ -92,6 +93,9 @@ export default {
             {name: 'robots', content: 'index,nofollow'} 
         ]
     }
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeoutId)
   }
 };
 </script>
