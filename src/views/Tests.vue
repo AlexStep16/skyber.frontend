@@ -354,7 +354,7 @@ export default {
           let th = this
           setTimeout(() => {
             th.fakeLoader = false
-          }, 3500)
+          }, 35000)
           this.successSended = true
         }).finally(() => {
           this.showSendMiniLoader = false
