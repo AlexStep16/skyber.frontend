@@ -49,12 +49,12 @@
             >
           </div>
         </div>
-        <input
-          type="submit"
-          class="input input_type-main_submit input_theme-purple mt7"
-          value="Войти"
+        <button
+          class="input input_type-main_submit input_theme-purple flex mt7"
           @click.prevent="submit"
-        />
+        >
+          <span>Войти</span><LoaderMini class="ml5" v-if="showEnterLoaderMini" />
+        </button>
         <div class="register mt7">
           У вас нет аккаунта?
           <router-link to="/register" class="register-link"
@@ -72,6 +72,7 @@
 <script>
 //import axios from "axios"
 import { mapActions } from "vuex";
+import LoaderMini from "@/components/Loaders/LoaderMini.vue";
 
 export default {
   name: "LoginForm",
@@ -82,8 +83,12 @@ export default {
         email: "",
       },
       showErrors: false,
-      loginErrors: []
+      loginErrors: [],
+      showEnterLoaderMini: false,
     };
+  },
+  components: {
+    LoaderMini
   },
   methods: {
     ...mapActions({
@@ -91,6 +96,7 @@ export default {
     }),
 
     submit() {
+      this.showEnterLoaderMini = true
       this.login(this.form)
         .then(() => {
           this.showErrors = false
@@ -101,6 +107,8 @@ export default {
         .catch(() => {
           this.loginErrors = ['Вы ввели неверный E-Mail или пароль']
           this.showErrors = true
+        }).finally(() => {
+          this.showEnterLoaderMini = false
         });
     },
   },

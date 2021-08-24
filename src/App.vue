@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 import MobileMenu from "@/components/MobileMenu.vue";
 import SlideUp from "@/components/SlideUp.vue";
 

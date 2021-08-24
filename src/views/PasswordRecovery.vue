@@ -30,12 +30,12 @@
                 v-model="form.email"
               />
             </div>
-            <input
-              type="submit"
-              class="input input_type-main_submit input_theme-purple mt7"
-              value="Восстановить"
+            <button
+              class="input input_type-main_submit input_theme-purple flex mt7"
               @click.prevent="sendRequest"
-            />
+            >
+              <span>Восстановить</span><LoaderMini class="ml5" v-if="showRecoveryMiniLoader" />
+            </button>
           </form>
         </div>
       </div>
@@ -48,6 +48,7 @@
 // @ is an alias to /src
 import Header from "@/components/Header.vue";
 import InfoModal from "@/components/InfoModal.vue";
+import LoaderMini from "@/components/Loaders/LoaderMini.vue";
 import axios from "axios";
 
 export default {
@@ -61,17 +62,20 @@ export default {
       loginErrors: [],
       infoMessage: {},
       timeoutId: null,
+      showRecoveryMiniLoader: false,
     }
   },
   components: {
-    Header, InfoModal
+    Header, InfoModal, LoaderMini
   },
   methods: {
     sendRequest() {
+      this.showRecoveryMiniLoader = true
       axios.post('/password/recovery', this.form)
         .then(() => {
           this.showErrors = false
           this.infoMessage = {body: 'На вашу почту была отправлена ссылка для восстановления пароля', type: 'success'}
+          this.showRecoveryMiniLoader = false
           this.timeoutId = setTimeout(() => {
             this.$router.push({name:'List'})
           }, 3000);

@@ -62,7 +62,7 @@
 <script>
 import SuccessSVG from "/public/pictures/success.svg";
 import axios from "axios";
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 import Vk from "/public/pictures/vk36.svg";
 import Twitter from "/public/pictures/twitter36.svg";
 import Facebook from "/public/pictures/facebook36.svg";

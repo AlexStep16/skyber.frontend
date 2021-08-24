@@ -54,7 +54,7 @@
                   />
                 </div>
                 <div class="test-video-wraper mt6" v-if="test.videoLink">
-                  <div class="modal modal_white absolute" v-if="!videoLoadDone">
+                  <div class="modal modal_white modal-z-medium absolute" v-if="!videoLoadDone">
                     <Loader />
                   </div>
                   <div class="test-video-menu pointer flex-center bg-white-shadow" @click="deleteVideo">
@@ -82,7 +82,7 @@
                   v-if="image.link == null"
                 />
                 <div :class="imageLoading ? 'test-image-preloader' : ''" v-if="showImagePreloader">
-                  <div class="test-image-loader modal modal_white absolute" v-if="imageLoading">
+                  <div class="test-image-loader modal modal_white modal-z-medium absolute" v-if="imageLoading">
                     <Loader />
                   </div>
                   <div class="test-image mt6" 
@@ -237,9 +237,6 @@
                           </div>
                         </div>
                       </div>
-                      <div class="modal modal_white absolute" v-if="false">
-                        <Loader />
-                      </div>
                     </div>
                     <!-- Конец блока с изображением -->
 
@@ -309,13 +306,20 @@
               </template>
             </div>
           </draggable>
-          <div class="test__block test__empty bg-white-shadow mt6" v-if="questions.length == 0">
+
+          <div class="test__block bg-white-shadow mt7 flex" style="min-height:261px" v-if="showAddQuestionLoader">
+            <div class="modal modal_white modal-z-medium absolute">
+              <Loader />
+            </div>
+          </div>
+
+          <div class="test__block test__empty bg-white-shadow mt6" v-if="questions.length === 0 && !showAddQuestionLoader">
             Нет вопросов. Добавьте его нажав на кнопку + в панеле слева
           </div>
         </div>
       </div>
     </div>
-    <MakeFooter type="test" :link="test.link" @save="saveTest" :wasChanged="wasChanged" />
+    <MakeFooter type="test" :link="test.link" @save="saveTest" :showSaveMiniLoader="showSaveMiniLoader" :wasChanged="wasChanged" />
     <InfoModal :message="infoMessage" />
     <SuccessModal 
       v-if="showSuccess" 
@@ -331,7 +335,7 @@
 <script>
 import axios from "axios";
 import { mapMutations } from "vuex";
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 
 import MultiselectIcons from "@/components/Multiselect/MultiselectIcons";
 import { getIdFromUrl } from 'vue-youtube'
@@ -424,6 +428,8 @@ export default {
       infoMessage: {},
       currentResizingImage: {},
       isTouchScreen: false,
+      showSaveMiniLoader: false,
+      showAddQuestionLoader: false,
     };
   },
   components: {
@@ -449,6 +455,7 @@ export default {
     ...mapMutations(["SET_TEST_DRAFT", "CLEAR_TEST_DRAFT"]),
 
     addQuestion(index) {
+      this.showAddQuestionLoader = true
       let name = null;
       let standartVariants = [{ id: 0, name: "Вариант 1", hasDescription: false}]; //Стартовое количество вариантов
       let questionToPost = {
@@ -478,6 +485,7 @@ export default {
           hideVideoBox: true
         };
 
+        this.showAddQuestionLoader = false,
         this.questions.splice(index + 1, 0, question).join();
         this.questionFocus(question);
 
@@ -493,9 +501,10 @@ export default {
     },
 
     deleteQuestion(key, questionId) {
-      axios.get("test/question/delete/" + questionId).then(() => {
-        this.$delete(this.questions, key);
-        this.testFocused = true
+      this.$delete(this.questions, key);
+      this.testFocused = true
+      axios.get("test/question/delete/" + questionId).catch(() => {
+        this.infoMessage = {body: 'Что-то пошло не так. Попробуйте перезагрузить страницу', type: 'warning'}
       });
     },
 
@@ -510,6 +519,7 @@ export default {
     },
 
     saveTest(fastSave = false) {
+      this.showSaveMiniLoader = true
       let stop = false
       let regexHtml = /<[^<>]+>/g;
       if(this.test.description && this.test.description.replace(regexHtml, "").length > 5000) {
@@ -577,6 +587,8 @@ export default {
               clearInterval(this.fastSaveTimeoutId)
               break;
           }
+        }).finally(() => {
+          this.showSaveMiniLoader = false
         });
       }
     },

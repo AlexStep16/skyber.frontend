@@ -20,10 +20,10 @@
         <EyeSVG />
       </div>
       <button
-        class="button button_type-index button_theme-blue ml7"
+        class="button button_type-index button_theme-blue flex ml7"
         @click="save"
       >
-        Сохранить
+        <span>Сохранить</span><LoaderMini class="ml5" v-if="showSaveMiniLoader" />
       </button>
     </div>
   </div>    
@@ -31,12 +31,13 @@
 
 <script>
 import EyeSVG from '/public/pictures/eye.svg'
+import LoaderMini from "@/components/Loaders/LoaderMini.vue";
 
 export default {
   name: 'MakeFooter',
-  props: ["link", "type"],
+  props: ["link", "type", "showSaveMiniLoader"],
   components: {
-    EyeSVG
+    EyeSVG, LoaderMini
   },
   methods: {
     save() {

@@ -205,6 +205,7 @@
       :testName="test.name"
       :isMine="isMine"
       :isAlreadySent="isAlreadySent"
+      :showSendMiniLoader="showSendMiniLoader"
       @send="sendTest"
     />
   </div>
@@ -226,7 +227,7 @@ import SuccessSVG from "/public/pictures/success.svg";
 
 /* import SuccessModal from "@/components/SuccessModal.vue"; */
 import SendFooter from "@/components/SendFooter.vue";
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 import TestAnswer from "@/components/Scenarios/TestAnswer.vue";
 
 export default {
@@ -261,6 +262,7 @@ export default {
       fakeLoader: true,
       successSended: false,
       startTest: false,
+      showSendMiniLoader: false,
     };
   },
   components: {
@@ -303,6 +305,7 @@ export default {
     },
 
     sendTest() {
+      this.showSendMiniLoader = true
       if(this.successSended) return false;
       this.questions.forEach((elem) => {
         if((elem.isRequire && elem.checked === undefined)) {
@@ -353,6 +356,8 @@ export default {
             th.fakeLoader = false
           }, 3500)
           this.successSended = true
+        }).finally(() => {
+          this.showSendMiniLoader = false
         });
       scroll({
         top: 0,

@@ -89,7 +89,7 @@ import Header from "@/components/Header.vue";
 import axios from "axios";
 import MakeFooter from "@/components/MakeFooter.vue";
 import Tiptap from '@/components/TipTap.vue'
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 import DragAndDropImage from "@/components/DragAndDropImage.vue";
 import InfoModal from "@/components/InfoModal.vue";
 

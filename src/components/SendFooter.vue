@@ -6,10 +6,11 @@
     <div class="make-footer__save flex">
       <button
         class="test-send"
+        style="display:flex!important"
         @click="send"
         
       ><!-- v-if="!isAlreadySent" -->
-        Отправить
+        <span>Отправить</span><LoaderMini class="ml5" v-if="showSendMiniLoader" />
       </button>
       <router-link
         class="test-send"
@@ -24,10 +25,11 @@
 </template>
 
 <script>
+import LoaderMini from "@/components/Loaders/LoaderMini.vue";
 
 export default {
   name: 'SendFooter',
-  props: ["link", "type", "name", "isAlreadySent", "isMine"],
+  props: ["link", "type", "name", "isAlreadySent", "isMine", "showSendMiniLoader"],
   data() {
     return {
       url: '',
@@ -35,6 +37,7 @@ export default {
     }
   },
   components: {
+    LoaderMini
   },
   methods: {
     send() {

@@ -132,7 +132,7 @@
 import axios from "axios";
 import { mapMutations } from "vuex";
 import { getIdFromUrl } from 'vue-youtube'
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 
 import Header from "@/components/Header.vue";
 import MultiselectPollIcons from "@/components/Multiselect/MultiselectPollIcons";

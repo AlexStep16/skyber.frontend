@@ -25,7 +25,7 @@
   }
 
   &_white {
-    background-color: rgba(250, 250, 250, 1);
+    background-color: rgb(255, 255, 255);
   }
 }
 
@@ -56,6 +56,10 @@
 .modal50:hover {
   background-color: rgba(0, 0, 0, 0.6);
   opacity: 1;
+}
+
+.modal-z-medium {
+  z-index: 90;
 }
 
 @keyframes fadeOut {

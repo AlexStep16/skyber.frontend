@@ -19,7 +19,7 @@
             <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
           </div> -->
           <div class="header-links-list__item header-links-list__item-margin header-links-list__item-exit mobile-hidden">
-            <a href="#" @click.prevent="logout" class="flex flex-align-center"><span>Выход</span></a>
+            <a href="#" @click.prevent="logout" class="flex flex-align-center"><span>Выход</span><LoaderMini class="ml5" v-if="showLogoutMiniLoader" /></a>
           </div>
         </template>
         <template v-else>
@@ -47,6 +47,7 @@
 <script>
 import store from '../store'
 import { mapActions } from "vuex";
+import LoaderMini from "@/components/Loaders/LoaderMini.vue";
 
 export default {
   data() {
@@ -56,10 +57,12 @@ export default {
       userAvatarStyle: {
         backgroundImage: 'url(/pictures/man.png)'
       },
+      showLogoutMiniLoader: false,
     };
   },
   props: ['type', 'save', 'send', 'isAlreadySent'],
   components: {
+    LoaderMini
   },
   methods: {
     ...mapActions({
@@ -67,7 +70,9 @@ export default {
     }),
 
     logout() {
+      this.showLogoutMiniLoader = true
       this.signOutAction().then(() => {
+        this.showLogoutMiniLoader = false
         if(this.$route.name == 'MakeTest') location.reload()
         else this.$router.push({ name: "Login" });
       });
