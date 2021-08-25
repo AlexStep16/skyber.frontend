@@ -1,3 +1,7 @@
+var path = require('path')
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
+
 module.exports = {
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
@@ -11,4 +15,20 @@ module.exports = {
       .use('vue-svg-loader')
       .loader('vue-svg-loader');
   },
+  configureWebpack: {
+    plugins: [
+      new PrerenderSPAPlugin({
+        staticDir: path.join(__dirname, 'dist'),
+        routes: [ '/privacy' ],
+  
+        renderer: new Renderer({
+          inject: {
+            foo: 'bar'
+          },
+          headless: true,
+          renderAfterDocumentEvent: 'render-event'
+        })
+      })
+    ]
+  }
 };
