@@ -18,7 +18,7 @@
           <!-- <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">
             <router-link to="/poll/create" class="flex flex-align-center"><Add25 v-if="false" /><span>Создать опрос</span></router-link>
           </div> -->
-          <div class="header-links-list__item header-links-list__item-margin header-links-list__item-exit mobile-hidden">
+          <div class="header-links-list__item header-links-list__item-margin header-links-list__item-exit" :class="showLoginButton() ? '' : 'mobile-hidden'">
             <a href="#" @click.prevent="logout" class="flex flex-align-center"><span>Выход</span><LoaderMini class="ml5" v-if="showLogoutMiniLoader" /></a>
           </div>
         </template>
@@ -30,7 +30,7 @@
           <div class="header-links-list__item header-links-list__item-margin header-register" :class="$route.path === '/register' ? 'header-links-list__item_selected' : ''">
             <router-link to="/register" class="flex flex-align-center"><span>Зарегистрироваться</span></router-link>
           </div>
-          <div class="header-links-list__item header-links-list__item-exit mobile-hidden">
+          <div class="header-links-list__item header-links-list__item-exit" :class="showLoginButton() ? '' : 'mobile-hidden'">
             <router-link to="/login" class="flex flex-align-center"><span>Войти</span></router-link>
           </div>
         </template>
@@ -85,6 +85,11 @@ export default {
     toggleMenu() {
       this.isMenuHide = !this.isMenuHide;
     },
+
+    showLoginButton() {
+      if(this.$route.path === '/list' || this.$route.path === '/privacy') return true
+      return false
+    }
   },
   mounted() {
     if (store.getters['auth/authenticated']) this.isAuthorized = true

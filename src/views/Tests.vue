@@ -312,7 +312,8 @@ export default {
           stop = true;
         }
         if(elem.typeAnswer === "Ввод текста") {
-          if(elem.checked.length > 250) elem.checked = elem.checked.substr(0, 249)
+          if(elem.checked && elem.checked.length > 250) elem.checked = elem.checked.substr(0, 249)
+          if(elem.checked && elem.checked.length === 0 && elem.isRequire) stop = true
         }
       });
       if (stop) {

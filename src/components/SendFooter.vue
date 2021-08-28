@@ -5,7 +5,7 @@
     </div>
     <div class="make-footer__save flex">
       <button
-        class="test-send"
+        class="test-send mr4"
         style="display:flex!important"
         @click="send"
         

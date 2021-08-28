@@ -82,18 +82,14 @@
 
 //Media styles
 
-@media (max-width: 620px) {
+@media (max-width: 550px) {
   .main {
-    padding-top: 0;
-    width: 100%;
+    width: 95%;
+    padding-top: 16px;
   }
 
   .scenarios-menu {
     width: 100%;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-radius: 0;
   }
 }
 

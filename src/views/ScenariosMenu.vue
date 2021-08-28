@@ -2,7 +2,7 @@
   <div class="container flex flex-justify-center">
     <Header type="тесты" :save="true" @save="save" />
     <div class="main">
-      <div class="scenarios-menu bg-white-border" v-if="showContent">
+      <div class="scenarios-menu bg-white-shadow" v-if="showContent">
         <h3 class="scenarios-menu__h3 h3-default flex flex-justify-between mb0">
           Управление сценариями
           <button

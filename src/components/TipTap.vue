@@ -15,7 +15,7 @@
           <ListSVG />
         </button>
       </div>
-      <div class="tiptap-menu__counter mr6">{{getCount() + '/ 3000'}}</div>
+      <div class="tiptap-menu__counter mr6">{{getCount() + ' / 3000'}}</div>
     </div>
     <bubble-menu
       class="bubble-menu"
