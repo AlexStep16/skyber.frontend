@@ -404,21 +404,14 @@ export default {
     this.hash = this.$route.params.hash
     this.imageLoading = true
     this.showImagePreloader = true
-    axios
-      .post('test/dispatch/check', {
-        hash: this.hash,
-        fingerprint: window.VISITOR_ID,
-      })
-      .then((res) => {
-        if(!res.data) {
-          this.isAlreadySent = false
-        }
-        else {
-          this.isAlreadySent = true
-        }
-      })
+      
     this.$store.commit('SHOW_LOADER')
-    axios.get("test/getByHash/" + this.hash).then((res) => {
+
+    let getTestRequest = {
+      hash: this.hash,
+      fingerprint: window.VISITOR_ID,
+    }
+    axios.post("test", getTestRequest).then((res) => {
       res = res.data.data;
       this.settings = res.settings[0]
       if(this.settings.is_list) this.startTest = true
@@ -436,10 +429,27 @@ export default {
       if(res.fingerprint == window.VISITOR_ID) this.isMine = true
       else this.isMine = false
 
+
+      axios
+        .post('test/dispatch/check', {
+          hash: this.hash,
+          fingerprint: window.VISITOR_ID,
+        })
+        .then((res) => {
+          if(!res.data) {
+            this.isAlreadySent = false
+          }
+          else {
+            this.isAlreadySent = true
+          }
+        })
+
+    }).catch(() => {
+      this.$router.replace('/list')
     });
 
     axios
-      .get("test/questions/getByHash/" + this.hash)
+      .post("test/questions", getTestRequest)
       .then((res) => {
         res.data.data.forEach((element) => {
           let variants = JSON.parse(element.variants);
