@@ -28,6 +28,7 @@
     "vue-router": "^3.2.0",
     "vue-social-sharing": "^3.0.7",
     "vue-textarea-autosize": "^1.1.1",
+    "vue-yandex-metrika": "^1.8.3",
     "vue-youtube": "^1.4.0",
     "vue2-datepicker": "^3.9.0",
     "vuedraggable": "^2.24.3",

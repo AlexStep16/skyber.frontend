@@ -8,12 +8,18 @@ import VueYoutube from 'vue-youtube'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
 import VueSocialSharing from 'vue-social-sharing'
 import VueMeta from 'vue-meta'
+import VueYandexMetrika from 'vue-yandex-metrika'       
 import TextareaAutosize from 'vue-textarea-autosize'
 
 Vue.use(VueYoutube)
 Vue.use(VueSocialSharing)
 Vue.use(VueMeta)
 Vue.use(TextareaAutosize)
+Vue.use(VueYandexMetrika, {
+  id: 84641437,
+  router: router,
+  env: 'production'
+})
 
 require('@/store/subscriber')
 
