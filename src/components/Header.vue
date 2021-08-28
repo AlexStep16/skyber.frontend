@@ -87,7 +87,12 @@ export default {
     },
 
     showLoginButton() {
-      if(this.$route.path === '/list' || this.$route.path === '/privacy') return true
+      if (
+        this.$route.path === '/list'
+        || this.$route.path === '/privacy' 
+        || this.$route.name === 'PasswordRecovery' 
+        || this.$route.name === 'PasswordRecoveryChange'
+      ) return true
       return false
     }
   },
