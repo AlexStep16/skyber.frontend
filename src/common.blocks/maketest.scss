@@ -148,7 +148,7 @@
   font-family: "Roboto", sans-serif;
   font-size: 0.9em;
   color: #6669FB;
-  padding-left: 34px;
+  padding-left: 30px;
 }
 
 .test-question-description__textarea {
@@ -532,6 +532,12 @@ hr {
     margin: 0;
     margin-bottom: 10px;
   }
+}
+
+@media (max-width: 415px) {
+  .test-require__text {
+    width: 100px;
+}
 }
 
 @media (max-width: 360px) {

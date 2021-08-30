@@ -404,19 +404,7 @@ export default {
     this.hash = this.$route.params.hash
     this.imageLoading = true
     this.showImagePreloader = true
-    axios
-      .post('test/dispatch/check', {
-        hash: this.hash,
-        fingerprint: window.VISITOR_ID,
-      })
-      .then((res) => {
-        if(!res.data) {
-          this.isAlreadySent = false
-        }
-        else {
-          this.isAlreadySent = true
-        }
-      })
+    
     this.$store.commit('SHOW_LOADER')
     axios.get("test/getByHash/" + this.hash).then((res) => {
       res = res.data.data;
@@ -436,6 +424,22 @@ export default {
       if(res.fingerprint == window.VISITOR_ID) this.isMine = true
       else this.isMine = false
 
+      axios
+      .post('test/dispatch/check', {
+        hash: this.hash,
+        fingerprint: window.VISITOR_ID,
+      })
+      .then((res) => {
+        if(!res.data) {
+          this.isAlreadySent = false
+        }
+        else {
+          this.isAlreadySent = true
+        }
+      })
+
+    }).catch(() => {
+      this.$router.push('/list')
     });
 
     axios
