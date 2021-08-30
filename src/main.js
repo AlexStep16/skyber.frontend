@@ -16,7 +16,7 @@ Vue.use(VueSocialSharing)
 Vue.use(VueMeta)
 Vue.use(TextareaAutosize)
 Vue.use(VueYandexMetrika, {
-  id: 84641437,
+  id: process.env.VUE_APP_YANDEX_METRIKA_ID,
   router: router,
   env: 'production'
 })
@@ -27,7 +27,7 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL
 
-const fpPromise = FingerprintJS.load() //{token: 'tBBOBWl7ucK1ISF13dGL'}
+const fpPromise = FingerprintJS.load(process.env.VUE_APP_FINGERTOKEN)
 
 Vue.mixin({
   methods: {
