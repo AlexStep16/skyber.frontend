@@ -27,7 +27,7 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL
 
-const fpPromise = FingerprintJS.load(process.env.VUE_APP_FINGERTOKEN)
+const fpPromise = FingerprintJS.load({token: process.env.VUE_APP_FINGERTOKEN})
 
 Vue.mixin({
   methods: {
