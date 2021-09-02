@@ -1,0 +1,168 @@
+.tip {
+  width: auto;
+  height: auto;
+  min-width: 250px;
+  max-width: 320px;
+  min-height: 108px;
+  background: #ffffff;
+  border: 1px solid #bbbbbb;
+  border-radius: 10px;
+  position: absolute;
+  color: #444444;
+
+  font-family: 'Roboto', sans-serif;
+}
+
+.tip::before, .tip::after {
+  content: ''; 
+  position: absolute; 
+  left: 24px; top: -20px;
+  border: 10px solid transparent;
+  border-bottom: 10px solid #bbbbbb;
+}
+
+.tip::after {
+  border-bottom: 10px solid #ffffff;
+  top: -19px;
+ }
+
+.tip-body {
+  padding: 13px;
+}
+
+.tip-header {
+  font-size: 1em;
+}
+
+.tip-description {
+  font-size: 0.9em;
+  color: #757575;
+}
+
+.tip-footer {
+  font-size: 0.88em;
+  justify-content: space-between;
+  border-top: 1px solid #eceaea;
+  padding: 13px;
+
+  &__skip {
+    color: #757575;
+  }
+
+  &__next {
+    color: #6669fe;
+  }
+
+  &__skip:hover, &__next:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  &__counter {
+    color: #b9b9b9;
+  }
+}
+
+.tip-position-1 {
+  top: 145px;
+  left: -2px;
+}
+
+.tip-position-2 {
+  top: 70px;
+  left: -10px;
+}
+
+.tip-position-3 {
+  top: 120px;
+  left:-10px; 
+}
+
+.tip-position-4 {
+  top: 169px;
+  left: -10px;
+}
+
+.tip-position-5 {
+  top: 70px;
+  left: 0; 
+}
+
+.tip-position-6 {
+  box-shadow: 0 0 19px #b9b9b9;
+  border: none;
+  top: 104px;
+  left: auto;
+  right: 20px;
+
+  &::before, &::after {
+    left: auto;
+    right: 70px;
+  }
+}
+
+
+@media (max-width: 665px) {
+  .tip {
+    min-width: 160px;
+    max-width: 250px;
+  }
+
+  .tip-position-2, .tip-position-3, .tip-position-4 {
+    top:auto;
+    &::before, &::after {
+      left: auto;
+      right: 79px;
+      top:auto;
+      bottom: -20px;
+      border-top: 10px solid #bbbbbb;
+      border-bottom: 10px solid transparent;
+    }
+
+    &::after {
+      border-top: 10px solid #ffffff;
+      border-bottom: 10px solid transparent;
+      top:auto;
+      bottom: -19px;
+    }
+  }
+
+  .tip-position-2 {
+    bottom: 70px;
+    left: -135px;
+  }
+
+  .tip-position-3 {
+    bottom: 70px;
+    left: -120px;
+
+    &::before, &::after {
+      right: 50px;
+    }
+  }
+
+  .tip-position-4 {
+    bottom: 70px;
+    left: -110px;
+
+    &::before, &::after {
+      right: 15px;
+    }
+  }
+
+  .tip-position-6 {
+    top: 92px;
+    left: auto;
+    right: -3px;
+
+    &::before, &::after {
+      right: 54px;
+    }
+  }
+}
+
+@media (max-width: 540px) {
+  .tip-position-1 {
+    top: 125px;
+  }
+}

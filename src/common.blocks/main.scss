@@ -409,8 +409,38 @@ iframe {
   }
 }
 
-//media styles
+//z-indexes
 
+.z-index1 {
+  z-index: 10!important;
+}
+
+.z-index2 {
+  z-index: 100!important;
+}
+
+.z-index3 {
+  z-index: 1000!important;
+}
+
+.z-index4-665 {
+  z-index: auto;
+}
+
+.z-index4 {
+  z-index: 10000!important;
+}
+
+.z-index5 {
+  z-index: 100000!important;
+}
+
+//media styles
+@media (max-width: 665px) {
+  .z-index4-665 {
+    z-index: 10000!important;
+  }
+}
 @media (max-width: 470px) {
   .input_type-index {
     font-size: 0.85em;

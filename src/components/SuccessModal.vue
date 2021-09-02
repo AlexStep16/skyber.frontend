@@ -1,5 +1,5 @@
 <template>
-  <div class="modal modal_white flex flex-center">
+  <div class="modal modal_white-transparent flex flex-center">
     <div class="modal-container">
       <div
         class="popup-success bg-white-shadow flex flex-align-start flex-vertical"

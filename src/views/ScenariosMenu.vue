@@ -48,7 +48,8 @@
               </div>
             </div>
             <div class="scenarios-menu-item__options flex flex-vertical">
-              <div class="flex flex-align-center mt4">
+              <div class="scenarios-menu-item__option"><b>Показывать, если:</b></div>
+              <div class="flex flex-align-center mt5">
                 <input
                   class="custom-checkbox"
                   type="checkbox"

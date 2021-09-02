@@ -8,22 +8,42 @@
     <Header type="тесты" :save="true" @save="saveTest" />
     <div class="main">
       <div class="test-wrapper">
-        <Settings :hash="test.hash" :settings="settings" />
+        <div class="test-settings-wrapper" style="position: relative" :class="tips.current === 6 ? 'z-index4' : ''">
+          <Settings 
+            :hash="test.hash" 
+            :settings="settings"
+            :class="tips.current === 5 ? 'z-index4' : ''"
+            :tips="tips" 
+          />
+          <SimpleTip :tips="tips" class="tip-position-5" v-if="tips.current === 5" />
+          <SimpleTip :tips="tips" class="tip-position-6" v-if="tips.current === 6" />
+        </div>
 
         <div class="test inline-block mt7">
           <div class="test__block_wraper">
 
-            <div class="side-panel inline-block">
+            <div class="side-panel inline-block z-index4-665">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
-                <div class="side-panel-item pointer text-center" @click="addQuestion(questions.length - 1)">
+                <div 
+                  class="side-panel-tip-background z-index4" 
+                  v-if="[2, 3, 4].includes(tips.current)"
+                  :style="'top:' + (tips.current === 3 ? '51px' : (tips.current === 4 ? '99px' : ''))"
+                ></div>
+
+                <SimpleTip :tips="tips" class="tip-position-2" v-if="tips.current === 2" />
+                <div class="side-panel-item pointer text-center mt0 ml0" :class="tips.current === 2 ? 'z-index4' : ''" @click="addQuestion(questions.length - 1)">
                   <AddSVG class="svg-desktop" style="position:absolute" />
                   <AddSVGMobile class="svg-mobile" style="position:absolute" />
                 </div>
-                <div class="side-panel-item pointer text-center" @click="clickImage">
+
+                <SimpleTip :tips="tips" class="tip-position-3" v-if="tips.current === 3" />
+                <div class="side-panel-item pointer text-center" :class="tips.current === 3 ? 'z-index4' : ''" @click="clickImage">
                   <ImageSVG class="svg-desktop" />
                   <ImageSVGMobile class="svg-mobile" />
                 </div>
-                <div class="side-panel-item pointer text-center" @click="hideVideoBox = test.videoLink == null ? !hideVideoBox : hideVideoBox">
+
+                <SimpleTip :tips="tips" class="tip-position-4" v-if="tips.current === 4" />
+                <div class="side-panel-item pointer text-center" :class="tips.current === 4 ? 'z-index4' : ''" @click="hideVideoBox = test.videoLink == null ? !hideVideoBox : hideVideoBox">
                   <VideoSVG class="svg-desktop"  />
                   <VideoSVGMobile class="svg-mobile" />
                 </div>
@@ -31,8 +51,10 @@
             </div>
             
             <div class="test__block bg-white-shadow test__header"
+                 :class="tips.current === 1 ? 'z-index4' : ''"
                  @click="testFocuse"
             >
+              <SimpleTip :tips="tips" class="tip-position-1" v-if="tips.current === 1" />
               <div class="form form_type-test">
                 <div class="flex">
                   <textarea-autosize
@@ -329,6 +351,7 @@
       :edit="true"
       @closeModal="showSuccess = false" 
     />
+    <div class="modal modal_grey-trasparent" v-if="tips.showTips"></div>
   </div>
 </template>
 
@@ -352,6 +375,7 @@ import VariantDate from "@/components/MakeTest/VariantDate.vue";
 import VariantDateOutput from "@/components/MakeTest/VariantDateOutput.vue";
 import VariantTime from "@/components/MakeTest/VariantTime.vue";
 import VariantTimeOutput from "@/components/MakeTest/VariantTimeOutput.vue";
+import SimpleTip from "@/components/Tips/SimpleTip.vue";
 
 import MakeFooter from "@/components/MakeFooter.vue";
 import SuccessModal from "@/components/SuccessModal.vue";
@@ -430,6 +454,10 @@ export default {
       isTouchScreen: false,
       showSaveMiniLoader: false,
       showAddQuestionLoader: false,
+      tips: {
+        showTips: true,
+        current: 1,
+      }
     };
   },
   components: {
@@ -447,7 +475,7 @@ export default {
     Settings, DeleteSVG, AlignLeftSVG, AlignCenterSVG,
     AlignRightSVG, AddSVGMobile, ImageSVG,
     ImageSVGMobile, VideoSVG, VideoSVGMobile,
-    TipTapEmpty, 
+    TipTapEmpty, SimpleTip
   },
   computed: {
   },
@@ -864,7 +892,7 @@ export default {
       return (('ontouchstart' in window) ||
       (navigator.maxTouchPoints > 0) ||
       (navigator.msMaxTouchPoints > 0));
-    }
+    },
   },
 
   watch: {
@@ -916,6 +944,12 @@ export default {
     }, 3500)
 
     this.isTouchScreen = this.isTouchScreenMethod()
+
+    let showTips = this.$cookie.get('showTips');
+    if(showTips !== null) {
+      this.tips.current = 0
+      this.tips.showTips = (this.$cookie.get('showTips') === 'true')
+    }
   },
 
   destroyed(){

@@ -49,6 +49,16 @@
   background-color: #fff;
 }
 
+.side-panel-tip-background {
+  background: white;
+  border-radius: 100%;
+  width: 50px;
+  position: absolute;
+  height: 50px;
+  top: 4px;
+  left: 0px;
+}
+
 .test__block_wraper {
   display: flex;
   width: 700px;
@@ -400,6 +410,10 @@ hr {
 
   .container {
     margin-bottom: 100px;
+  }
+
+  .side-panel-tip-background {
+    display: none;
   }
 }
 

@@ -2,7 +2,7 @@
   <div id="app" data-server-rendered="true">
     <SlideUp />
     <router-view/>
-    <div class="modal modal_white" v-if="state">
+    <div class="modal modal_white z-index5" v-if="state">
       <Loader />
     </div>
     <MobileMenu />
