@@ -950,6 +950,9 @@ export default {
       this.tips.current = 0
       this.tips.showTips = (this.$cookie.get('showTips') === 'true')
     }
+    else {
+      this.tips.showTips = true
+    }
   },
 
   destroyed(){
