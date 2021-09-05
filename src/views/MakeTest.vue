@@ -45,7 +45,7 @@
                 <SimpleTip :tips="tips" class="tip-position-4" v-if="tips.current === 4" />
                 <div class="side-panel-item pointer text-center" :class="tips.current === 4 ? 'z-index4' : ''" @click="hideVideoBox = test.videoLink == null ? !hideVideoBox : hideVideoBox">
                   <VideoSVG class="svg-desktop"  />
-                  <VideoSVGMobile class="svg-mobile" />
+                  <VideoSVGMobile class="svg-mobile wd100" />
                 </div>
               </div>
             </div>
