@@ -22,7 +22,7 @@
         <div class="test inline-block mt7">
           <div class="test__block_wraper">
 
-            <div class="side-panel inline-block z-index4-665">
+            <div class="side-panel inline-block" :class="[2, 3, 4].includes(this.tips.current) ? 'z-index4-665' : ''">
               <div class="side-panel-inner pt6 pb6 flex flex-center flex-vertical" v-if="testFocused">
                 <div 
                   class="side-panel-tip-background z-index4" 

@@ -19,7 +19,7 @@ module.exports = {
     plugins: [
       new PrerenderSPAPlugin({
         staticDir: path.join(__dirname, 'dist'),
-        routes: [ '/privacy', '/test/create' ],
+        routes: [ '/', '/privacy', '/test/create' ],
 
         renderer: new Renderer({
           inject: {
