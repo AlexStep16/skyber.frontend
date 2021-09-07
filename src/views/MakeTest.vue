@@ -966,7 +966,7 @@ export default {
             { property: 'og:title', content: "Создание теста | Skyber"},
             { property: 'og:site_name', content: 'Skyber'},
             { property: 'og:type', content: 'website'},    
-            { name: 'robots', content: 'index,follow'} 
+            { name: 'robots', content: 'noindex,nofollow'} 
         ]
     }
   }

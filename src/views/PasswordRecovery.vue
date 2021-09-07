@@ -94,7 +94,7 @@ export default {
             { property: 'og:title', content: "Восстановление пароля | Skyber"},
             { property: 'og:site_name', content: 'Skyber'},
             {property: 'og:type', content: 'website'},    
-            {name: 'robots', content: 'index,nofollow'} 
+            {name: 'robots', content: 'noindex,nofollow'} 
         ]
     }
   },
