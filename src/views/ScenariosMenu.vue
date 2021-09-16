@@ -347,10 +347,9 @@ export default {
   },
   beforeMount() {
     this.$store.commit('SHOW_LOADER')
-    axios.post('/scenarios/check/access/', {
+    axios.post('test', {
       fingerprint: this.fingerprint,
       hash: this.$route.params.hash,
-
     }).then((res) => {
       if(res.status === 200) {
         this.getScenarios();

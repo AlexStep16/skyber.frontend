@@ -170,7 +170,7 @@ export default {
   beforeMount() {
     this.$store.commit('SHOW_LOADER')
     axios
-      .post("stats/", {hash: this.$route.params.hash, fingerprint: window.VISITOR_ID})
+      .post("test", {hash: this.$route.params.hash, fingerprint: window.VISITOR_ID})
       .then((res) => {
         res = res.data.data;
         let name = res.testName ? res.testName : res.pollName;
