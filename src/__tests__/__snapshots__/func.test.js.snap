@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component является экземпляром Vue 1`] = `
+<div
+  class="modal modal_black flex flex-center"
+>
+  <div
+    class="modal-container"
+  >
+    <div
+      class="modal-confirm-block flex flex-vertical flex-align-center"
+    >
+      <h2
+        class="modal-confirm-block__message"
+      >
+        qdw
+      </h2>
+       
+      <div
+        class="mt5"
+      >
+        <button
+          class="button-clasic button_theme-red button_theme-red_shadow mr7"
+        >
+          
+          
+        
+        </button>
+         
+        <button
+          class="button-clasic button_theme-blue button_theme-blue_shadow"
+        >
+          
+          
+        
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
