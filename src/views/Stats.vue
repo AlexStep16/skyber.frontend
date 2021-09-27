@@ -7,6 +7,9 @@
           <div class="stats-header__name h1-default mr5">Статистика для теста: {{ name || 'Без названия' }}</div>
         </div>
         <div class="stats-body">
+          <div class="modal modal_white modal-z-medium absolute" v-if="showLoader">
+            <Loader />
+          </div>
           <div class="stats-empty flex flex-center" v-if="questionsFilter().length === 0">
             <span class="stats-empty__span">На данный тест ещё нет статистики</span>
           </div>
@@ -28,6 +31,7 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import TestStatOutput from "@/components/Stats/TestStatOutput.vue";
+import Loader from "@/components/Loaders/Loader.vue";
 //import PollStatOutput from "@/components/Stats/PollStatOutput.vue";
 
 export default {
@@ -43,11 +47,12 @@ export default {
       pollAnsType: "",
       countPollAnswers: 0, */
       chartData: {},
+      showLoader: true,
     };
   },
 
   components: {
-    Header,
+    Header, Loader,
     //PollStatOutput,
     TestStatOutput,
   },
@@ -119,6 +124,7 @@ export default {
           });
           this.variantsPreparation(answersArray, question);
         });
+        this.showLoader = false
       });
     },
 
