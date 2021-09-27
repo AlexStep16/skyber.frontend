@@ -100,6 +100,8 @@
     "modulePathIgnorePatterns": [
       "./store"
     ],
-    "snapshotSerializers": ["jest-serializer-vue"]
+    "snapshotSerializers": [
+      "jest-serializer-vue"
+    ]
   }
 }
