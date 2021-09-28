@@ -19,6 +19,7 @@
         <div>
           <router-link
             :to="`/tests/${test.hash}`"
+            rel="nofollow"
             class="button button_type-list button_theme-roboto button_theme-purple"
           >
             Перейти к тесту
@@ -29,6 +30,7 @@
             <router-link
               :to="`/test/edit/${test.hash}`"
               title="Редактировать"
+              rel="nofollow"
               class="flex flex-center"
             >
               <PenSVG />
@@ -38,6 +40,7 @@
             <router-link
               :to="`/stats/${test.hash}`"
               title="Статистика"
+              rel="nofollow"
               class="flex flex-center"
             >
               <img src="/pictures/circle.svg" width="30px">
