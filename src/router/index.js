@@ -99,7 +99,7 @@ const routes = [
     component: MakeScenario,
   },
   {
-    path: '/test/create',
+    path: '/create/test',
     name: 'TestCreator',
    // meta: {title:'Создание теста'},
     component: TestCreator,
