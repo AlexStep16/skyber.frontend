@@ -318,6 +318,7 @@ export default {
       });
       if (stop) {
         this.infoMessage = {body: 'Вы ответили не на все вопросы', type: 'danger'}
+        this.showSendMiniLoader = false
         return false;
       }
       this.scoresCounter()
