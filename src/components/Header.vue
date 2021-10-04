@@ -12,7 +12,7 @@
           <router-link to="/list" class="flex flex-align-center"><span>Главная</span></router-link>
         </div>
         <div class="header-links-list__item mobile-hidden" :class="$route.name === 'MakeTest' ? 'header-links-list__item_selected' : ''">
-          <router-link to="/test/create" class="flex flex-align-center"><span>Создать тест</span></router-link>
+          <router-link to="/create/test" class="flex flex-align-center"><span>Создать тест</span></router-link>
         </div>
         <template v-if="isAuthorized">
           <!-- <div :class="$route.name === 'MakePoll' ? 'header-links-list__item header-links-list__item_selected' : 'header-links-list__item'">

@@ -5,7 +5,7 @@
         <HomeSVG :class="$route.path !== '/list' ? '' : 'd-none'" />
         <HomeSVGPurple :class="$route.path === '/list' ? '' : 'd-none'" />
       </router-link>
-      <router-link to="/test/create" class="mobile-menu-item flex flex-center">
+      <router-link to="/create/test" class="mobile-menu-item flex flex-center">
         <AddSVG :class="$route.name !== 'MakeTest' ? '' : 'd-none'" />
         <AddSVGPurple :class="$route.name === 'MakeTest' ? '' : 'd-none'" />
       </router-link>

@@ -742,7 +742,7 @@ export default {
       this.imageLoading = true
       axios.post("test/", {hash: hash, fingerprint: this.fingerprint}).then((res) => {
         if(!res) {
-          this.$router.push('/test/create')
+          this.$router.push({name: 'TestCreator'})
         }
         this.getTestQuestions()
         
@@ -771,7 +771,7 @@ export default {
             this.$router.replace('/list')
             break;
           case 'Not Found':
-            this.$router.push('/test/create')
+            this.$router.push({name: 'TestCreator'})
             break;
           default:
             this.infoMessage = {body: 'Что-то пошло не так. Попробуйте зайти позже', type: 'warning'}
