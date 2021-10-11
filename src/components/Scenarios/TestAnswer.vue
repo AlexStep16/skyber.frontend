@@ -24,6 +24,7 @@
           >
             <SuccessSVG />Успешно отправлено
           </h2>
+          {{ totalScores }}
         </div>
       </template>
       <div class="scenario-share mt7">
@@ -102,9 +103,9 @@ export default {
           let equal = null;
           let rangeList = []
           scenario.conditions.forEach((condition) => {
-            if(condition.condition === 'BT') bigger = condition.scores
-            if(condition.condition === 'LT') less = condition.scores
-            if(condition.condition === 'EQ') equal = condition.scores
+            if(condition.condition === 'BT') bigger = parseInt(condition.scores)
+            if(condition.condition === 'LT') less = parseInt(condition.scores)
+            if(condition.condition === 'EQ') equal = parseInt(condition.scores)
           })
           if(equal !== null) {
             rangeList.push([equal, equal])
