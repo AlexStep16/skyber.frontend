@@ -93,6 +93,7 @@ export default {
   methods: {
     getScenario() {
       this.showLoader = true
+      this.totalScores = parseInt(this.totalScores)
       axios.get('scenarios/' + this.hash).then(res => {
         this.scenarios = res.data.data
         this.scenarios.forEach((scenario) => {
