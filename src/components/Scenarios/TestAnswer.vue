@@ -1,6 +1,6 @@
 <template>
   <div class="scenario test__block bg-white-shadow mb7" :style="(showLoader || fakeLoader) ? 'min-height: 250px' : ''">
-    <div class="modal modal_white absolute" v-if="showLoader || fakeLoader">
+    <div class="modal modal_white absolute" style="z-index: 10">
       <Loader />
     </div>
     <div v-if="!showLoader && !fakeLoader">
