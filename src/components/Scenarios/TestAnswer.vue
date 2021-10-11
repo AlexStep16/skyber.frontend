@@ -24,7 +24,6 @@
           >
             <SuccessSVG />Успешно отправлено
           </h2>
-          {{ totalScores }}
         </div>
       </template>
       <div class="scenario-share mt7">
@@ -111,7 +110,7 @@ export default {
             rangeList.push([equal, equal])
           }
           if(bigger !== null && less !== null && less < bigger) {
-            rangeList.push([0, less-1], [bigger+1, 100000])
+            rangeList.push([-100000, less-1], [bigger+1, 100000])
           }
           else if(bigger !== null && less !== null && less >= bigger) {
             rangeList.push([bigger+1, less-1])
@@ -120,7 +119,7 @@ export default {
             rangeList.push([bigger+1, 100000])
           }
           else if(bigger === null && less !== null) {
-            rangeList.push([0, less-1])
+            rangeList.push([-100000, less-1])
           }
           rangeList.forEach((range) => {
             if(this.totalScores >= range[0] && this.totalScores <= range[1]) {
