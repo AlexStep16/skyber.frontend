@@ -34,6 +34,7 @@ export default {
         title: "Создание теста | Skyber",
         meta: [
             { name: 'description', content:  'Создавайте тесты и получайте мгновенные ссылки на них, делитесь с кем угодно и собирайте статистику по каждому вопросу!'},
+            { name: 'keywords', content:  'создать тест, тестирование, тесты, онлайн тест'},
             { property: 'og:title', content: "Создание теста | Skyber"},
             { property: 'og:site_name', content: 'Skyber'},
             { property: 'og:type', content: 'website'},    
