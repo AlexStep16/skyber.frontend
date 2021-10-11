@@ -67,8 +67,8 @@ export default {
             }
           })
         })
-        this.showRights = true
       }
+      this.showRights = true
       if (!this.settings.is_reanswer) {
         this.postQuestion.variants.forEach((variant) => {
           if(this.postQuestion.checked[0] !== variant.id) variant.disabled = true
