@@ -54,7 +54,7 @@ export default {
         let right_variants = Array.isArray(this.postQuestion.right_variants) ? this.postQuestion.right_variants : []
         this.postQuestion.variants.forEach(variant => {
           if(variantTrue.id === variant.id && (this.settings.is_wrong_questions || this.settings.is_right_questions)) variant.color = 'wrong'
-          else variant.color = 'neitral'
+          else if(this.selectedId === variant.id) variant.color = 'neitral'
         })
         right_variants.forEach((rightVar) => {
           this.postQuestion.variants.forEach(variant => {
