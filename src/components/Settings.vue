@@ -78,7 +78,7 @@
             name="setting-2"
             v-model="settings.is_wrong_questions"
           />
-          <label class="settings-item__text settings-item__before-right pointer" for="setting-2">Показывать неправильные вопросы</label>
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-2">Показывать неправильные ответы</label>
         </div>
 
         <div class="settings-item mt6">
@@ -89,7 +89,7 @@
             name="setting-3"
             v-model="settings.is_right_questions"
           />
-          <label class="settings-item__text settings-item__before-right pointer" for="setting-3">Показывать правильные вопросы</label>
+          <label class="settings-item__text settings-item__before-right pointer" for="setting-3">Показывать правильные ответы</label>
         </div>
 
         <div class="settings-item mt6">
